@@ -41,6 +41,9 @@ jobs:
       - name: Instalar las dependencias
         run: uv sync --all-extras --dev
 
+      - name: List files in src directory
+        run: ls -l ./src
+
       - name: Ejecutar las pruebas
         run: uv run ./src/migrate.py test ./src
 
