@@ -41,17 +41,17 @@ jobs:
       - name: Instalar las dependencias
         run: uv sync --all-extras --dev
 
-      - name: List files in src directory
-        run: ls -l ./src
+      # - name: Listar archivos (Esto lo tengo para hacer debugging)
+      #   run: ls -l ./src
 
       - name: Ejecutar las pruebas
-        run: uv run ./src/migrate.py test ./src
+        run: uv run /migrate.py test
 
       - name: Instalar coverage.py
         run: uv add coverage
 
       - name: Evaluar la cobertura
-        run: uv run -- coverage run ./src/manage.py test ./src
+        run: uv run -- coverage run ./manage.py test
 
       - name: Ejecutar formatter
         run: uv run ruff format
