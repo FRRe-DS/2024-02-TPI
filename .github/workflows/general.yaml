@@ -39,22 +39,10 @@ jobs:
             uv-${{ runner.os }}
 
       - name: Instalar las dependencias
-        run: uv sync --all-extras --dev
-
-      - name: Listar archivos de src (Esto lo tengo para hacer debugging)
-        run: ls -l ./src
-
-      - name: Listar archivos (Esto lo tengo para hacer debugging)
-        run: ls -l 
-
-      - name: mostrar donde estoy (Esto lo tengo para hacer debugging)
-        run: pwd
+        run: uv sync --all-extras --dev && uv add coverage && uv add ruff
 
       - name: Ejecutar las pruebas
         run: cd ./src && uv run ./manage.py test
-
-      - name: Instalar coverage.py
-        run: uv add coverage
 
       - name: Evaluar la cobertura
         run: cd ./src && uv run -- coverage run ./manage.py test
