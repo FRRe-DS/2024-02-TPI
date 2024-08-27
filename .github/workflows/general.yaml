@@ -41,23 +41,23 @@ jobs:
       - name: Instalar las dependencias
         run: uv sync --all-extras --dev
 
-      - name: Listar archivos (Esto lo tengo para hacer debugging)
+      - name: Listar archivos de src (Esto lo tengo para hacer debugging)
         run: ls -l ./src
+
+      - name: Listar archivos (Esto lo tengo para hacer debugging)
+        run: ls -l 
 
       - name: mostrar donde estoy (Esto lo tengo para hacer debugging)
         run: pwd
 
-      - name: moverme al directorio
-        run: cd ./src
-
       - name: Ejecutar las pruebas
-        run: uv run ./manage.py test
+        run: cd ./src && uv run ./manage.py test
 
       - name: Instalar coverage.py
         run: uv add coverage
 
       - name: Evaluar la cobertura
-        run: uv run -- coverage run ./manage.py test
+        run: cd ./src && uv run -- coverage run ./manage.py test
 
       - name: Ejecutar formatter
         run: uv run ruff format
