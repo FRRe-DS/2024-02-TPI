@@ -42,13 +42,13 @@ jobs:
         run: uv sync --all-extras --dev
 
       - name: Ejecutar las pruebas
-        run: uv run ./src/migrate.py test
+        run: uv run ./src/migrate.py test ./src
 
       - name: Instalar coverage.py
         run: uv add coverage
 
       - name: Evaluar la cobertura
-        run: uv run -- coverage run ./src/manage.py test
+        run: uv run -- coverage run ./src/manage.py test ./src
 
       - name: Ejecutar formatter
         run: uv run ruff format
