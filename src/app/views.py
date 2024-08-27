@@ -12,4 +12,4 @@ def saludo(request: HttpRequest) -> HttpResponse:
 
 
 def health_check(request: HttpRequest) -> HttpResponse:
-    return HttpResponse(status=200)
+    return HttpResponse(status=204)

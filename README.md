@@ -1,14 +1,21 @@
-[![General CI](https://github.com/lauacosta/desarrollo_software/actions/workflows/general.yaml/badge.svg)](https://github.com/lauacosta/desarrollo_software/actions/workflows/general.yaml)
+<h1 align=center><code>Trabajo Practico Final - Desarrollo de Software</code></h1>
+<div align=center>
+    <a href=https://github.com/lauacosta/desarrollo_software/actions/workflows/general.yaml>
+        <img src=https://github.com/lauacosta/desarrollo_software/actions/workflows/general.yaml/badge.svg>
+    </a>
+</div>
+<br>
 
 
-# Trabajo Practico Final - Desarrollo de Software
-
-## Como ejecutar:
 ### UV
 Para ejecutar el trabajo necesitan tener instalado [uv](https://docs.astral.sh/uv/), un manager de paquetes y de proyectos para Python. 
 ``` sh
-    uv run ./src/manage.py migrate
-    uv run ./src/manage.py runserver
+uv run ./src/manage.py migrate
+uv run ./src/manage.py runserver
+
+# Ahora en otra terminal pueden ejecutar curl para ver si la aplicación está funcionando.
+curl -v http://127.0.0.1:8000/health_check
+
 ```
 La intención con esto es ahorrarse la mayor cantidad de tiempo con respecto a problemas de versionado con pip y python, además de aprovechar el resto de funciones que ofrece el comando, las cuales les invito que [lean](https://docs.astral.sh/uv/getting-started/).
 
@@ -16,8 +23,8 @@ Si quieren ver ejemplos de su uso, pueden ver la [documentación](https://docs.a
 
 También pueden instalarse [Just](https://github.com/casey/just) para poder crear comandos y ahorrarse tipeo.
 ``` sh
-    # En ./src/Justfile
-    just serve
-    just test
+# En ./src/Justfile
+just test
+just serve
 ```
 
