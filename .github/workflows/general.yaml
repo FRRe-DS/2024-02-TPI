@@ -45,7 +45,7 @@ jobs:
       #   run: ls -l ./src
 
       - name: Ejecutar las pruebas
-        run: uv run /migrate.py test
+        run: uv run ./migrate.py test
 
       - name: Instalar coverage.py
         run: uv add coverage
