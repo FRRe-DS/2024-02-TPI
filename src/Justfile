@@ -1,0 +1,17 @@
+venv:
+    source .venv/bin/activate.fish
+
+serve:
+    ruff format ./
+    uv run ./manage.py migrate
+    uv run ./manage.py runserver
+
+test:
+    uv run ./manage.py migrate
+    uv run ./manage.py test
+
+check:
+    ruff check ./
+
+fmt:
+    ruff format ./
