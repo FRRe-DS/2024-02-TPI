@@ -3,8 +3,13 @@ venv:
 
 serve:
     uv run ruff format ./
+    uv run ./manage.py makemigrations
     uv run ./manage.py migrate
     uv run ./manage.py runserver
+
+migrate:
+    uv run ./manage.py makemigrations
+    uv run ./manage.py migrate
 
 test:
     uv run ./manage.py migrate
@@ -15,3 +20,6 @@ check:
 
 fmt:
     ruff format ./
+
+shell:
+    uv run ./manage.py shell
