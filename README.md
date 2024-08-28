@@ -6,7 +6,20 @@
 </div>
 <br>
 
+## Client
+Para trabajar en el cliente utilizamos [pnpm](https://pnpm.io/) con [vite](https://vitejs.dev/) como tooling.
+``` sh
+cd client
+pnpm install
+# Para ejecutar el servidor de desarrollo:
+pnpm run dev
 
+# Para crear los archivos estáticos:
+pnpm run build
+```
+
+
+## Server
 ### UV
 Para ejecutar el trabajo necesitan tener instalado [uv](https://docs.astral.sh/uv/), un manager de paquetes y de proyectos para Python. 
 ``` sh
