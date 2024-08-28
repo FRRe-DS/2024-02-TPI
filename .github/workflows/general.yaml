@@ -28,6 +28,9 @@ jobs:
         # Instala una versión específica de UV.
         run: curl -LsSf https://astral.sh/uv/0.3.2/install.sh | sh
 
+      - name: Ver donde estoy
+        run: pwd && ls -l
+
       - name: Set up python
         # Instala una versión específica de python, definida en pyprojects.toml.
         uses: actions/setup-python@v5
