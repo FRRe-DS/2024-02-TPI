@@ -55,5 +55,7 @@ class Imagenes(models.Model):
     fecha = models.DateField() 
 
 class Evento(models.Model):
+    nombre = models.CharField(max_length=100, primary_key=True)
+    lugar = models.CharField(max_length=100)
+    fecha = models.DateField() 
 
-class Tematica(models.Model):
