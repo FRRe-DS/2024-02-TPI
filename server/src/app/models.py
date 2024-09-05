@@ -83,42 +83,23 @@ class Evento(models.Model):
 # ready
 class EsculturaImagen(models.Model):
     id = models.AutoField(primary_key=True)
-    escultura_id = models.ForeignKey(
-        Escultura, on_delete=models.CASCADE, db_column="escultura_id"
-    )
-    imagen_id = models.ForeignKey(
-        Imagen, on_delete=models.CASCADE, db_column="imagen_id"
-    )
-
+    escultura_id = models.ForeignKey(Escultura, on_delete=models.CASCADE, db_column='escultura_id')
+    imagen_id = models.ForeignKey(Imagen, on_delete=models.CASCADE, db_column='imagen_id')
 
 # ready
 class Escultorevento(models.Model):
     id = models.AutoField(primary_key=True)
-    escultor_id = models.ForeignKey(
-        Escultor, on_delete=models.CASCADE, db_column="escultor_id"
-    )
-    evento_id = models.ForeignKey(
-        Evento, on_delete=models.CASCADE, db_column="evento_id"
-    )
+    escultor_id = models.ForeignKey(Escultor, on_delete=models.CASCADE, db_column='escultor_id')
+    evento_id = models.ForeignKey(Evento, on_delete=models.CASCADE, db_column='evento_id')
 
 
 # ready
 class VotoEscultura(models.Model):
     id = models.AutoField(primary_key=True)
-    escultura_id = models.ForeignKey(
-        Escultura, on_delete=models.CASCADE, db_column="escultura_id"
-    )
-    visitante_id = models.ForeignKey(
-        Visitante, on_delete=models.CASCADE, db_column="visitante_id"
-    )
-
-
-# ready
+    escultura_id = models.ForeignKey(Escultura, on_delete=models.CASCADE, db_column='escultura_id')
+    visitante_id = models.ForeignKey(Visitante, on_delete=models.CASCADE, db_column='visitante_id')
+#ready
 class VotoEscultor(models.Model):
     id = models.AutoField(primary_key=True)
-    escultor_id = models.ForeignKey(
-        Escultor, on_delete=models.CASCADE, db_column="escultor_id"
-    )
-    visitante_id = models.ForeignKey(
-        Visitante, on_delete=models.CASCADE, db_column="visitante_id"
-    )
+    escultor_id = models.ForeignKey(Escultor, on_delete=models.CASCADE, db_column='escultor_id')
+    visitante_id = models.ForeignKey(Visitante, on_delete=models.CASCADE, db_column='visitante_id')
