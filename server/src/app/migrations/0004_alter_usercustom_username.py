@@ -5,15 +5,22 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('app', '0003_rename_user_usercustom'),
+        ("app", "0003_rename_user_usercustom"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='usercustom',
-            name='username',
-            field=models.CharField(max_length=200, validators=[django.core.validators.RegexValidator(message='Un numero de usuario no debe contener numeros', regex='[\\w\\s]+')]),
+            model_name="usercustom",
+            name="username",
+            field=models.CharField(
+                max_length=200,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        message="Un numero de usuario no debe contener numeros",
+                        regex="[\\w\\s]+",
+                    )
+                ],
+            ),
         ),
     ]
