@@ -28,12 +28,13 @@ from django.db import models
 #     username = models.CharField(max_length=200)
 #     created = models.DateTimeField(auto_now_add=True)
 
-#falta el qr pero no se me ocurre como modelarlo
+#ready
 class Escultura(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     descripcion = models.CharField(max_length=300, blank=True, null=True)
     fecha_creacion = models.DateField() 
+    qr = models.FileField(upload_to='qr/', blank=True, null=True)
 
 #ready
 class Pais(models.Model):
@@ -61,7 +62,7 @@ class Adm_sistemas(models.Model):
     password = models.CharField(max_length=32)
 
 #ready
-class Imagenes(models.Model):
+class Imagen(models.Model):
     id = models.AutoField(primary_key=True)
     fecha = models.DateField() 
     imagen = models.FileField(upload_to='imagenes/', blank=True, null=True)
@@ -90,8 +91,31 @@ class Evento(models.Model):
     descripcion = models.CharField(max_length=255, blank=True, null=True)
     tematica_id = models.ForeignKey(Tematica, on_delete=models.CASCADE, db_column='tematica_id')
     
+#ready
+class EsculturaImagen(models.Model):
+    id = models.AutoField(primary_key=True)
+    escultura_id = models.ForeignKey(Escultura, on_delete=models, db_column='escultura_id')
+    imagen_id = models.ForeignKey(Imagen, on_delete=models, db_column='imagen_id')
 
+#ready
+class EsculturaImagen(models.Model):
+    id = models.AutoField(primary_key=True)
+    escultura_id = models.ForeignKey(Escultura, on_delete=models, db_column='escultura_id')
+    imagen_id = models.ForeignKey(Imagen, on_delete=models, db_column='imagen_id')
 
+#ready
+class Escultorevento(models.Model):
+    id = models.AutoField(primary_key=True)
+    escultor_id = models.ForeignKey(Escultor, on_delete=models, db_column='escultor_id')
+    evento_id = models.ForeignKey(Evento, on_delete=models, db_column='evento_id')
 
-
-
+#ready
+class VotoEscultura(models.Model):
+    id = models.AutoField(primary_key=True)
+    escultura_id = models.ForeignKey(Escultura, on_delete=models, db_column='escultura_id')
+    visitante_id = models.ForeignKey(Visitante, on_delete=models, db_column='visitante_id')
+#ready
+class VotoEscultor(models.Model):
+    id = models.AutoField(primary_key=True)
+    escultor_id = models.ForeignKey(Escultor, on_delete=models, db_column='escultor_id')
+    visitante_id = models.ForeignKey(Visitante, on_delete=models, db_column='visitante_id')
