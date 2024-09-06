@@ -1,10 +1,8 @@
 from rest_framework import serializers
-from app.models import UserCustom
+from app.models import Visitante
 
 
-class UserSerializer(serializers.ModelSerializer):
+class VisitanteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = UserCustom
+        model = Visitante
         fields = "__all__"
-
-    # TODO: Aca existe el bug de que acepta un integer o float como un string sin problemas.
