@@ -1,0 +1,19 @@
+.navigation__link {
+  all: unset;
+  display: flex;
+  gap: 10px;
+  cursor: pointer;
+  background-color: var(--dark-blue-300);
+}
+
+.navigation__menu {
+  display: grid;
+  gap: 16px;
+  list-style: none;
+}
+.navigation {
+  width: 180px;
+  background: var(--menu-linear-gradient);
+  color: white;
+  padding: 0 16px;
+}
