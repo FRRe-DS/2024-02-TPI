@@ -21,7 +21,8 @@ class Escultor(models.Model):
     nombre = models.CharField(max_length=100, blank=False, null=False)
     pais_id = models.ForeignKey(Pais, on_delete=models.CASCADE, db_column="pais_id")
     correo = models.EmailField(null=True, blank=True, unique=True)
-    # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes, este campo tendría que ser un URLField.
+    # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes,
+    # este campo tendría que ser un URLField.
     foto = models.FileField(upload_to="perfiles/", blank=True, null=True)
     bibliografia = models.CharField(max_length=400)
 
@@ -33,8 +34,11 @@ class Adm_sistemas(models.Model):
 class Imagen(models.Model):
     id = models.AutoField(primary_key=True)
     fecha = models.DateField()
-    # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes, este campo tendría que ser un URLField.
+    # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes, 
+    # este campo tendría que ser un URLField.
+    #
     # imagen = models.URLField(max_length=200)
+    #
     imagen = models.FileField(upload_to="imagenes/", blank=True, null=True)
     descripcion = models.CharField(max_length=255, blank=True, null=True)
 
