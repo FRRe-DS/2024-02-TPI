@@ -7,7 +7,7 @@ class Visitante(models.Model):
 class Escultura(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(max_length=300, blank=True, null=True)
+    descripcion = models.CharField(max_length=300, blank=False, null=False)
     fecha_creacion = models.DateField()
     # Tiene sentido almacenar los códigos QR si van a ser regenerados cada 10 minutos?
     qr = models.FileField(upload_to="qr/", blank=True, null=True)
@@ -20,16 +20,16 @@ class Escultor(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     pais_id = models.ForeignKey(Pais, on_delete=models.CASCADE, db_column="pais_id")
-    correo = models.EmailField(null=True, blank=True, unique=True)
+    correo = models.EmailField(null=False, blank=False, unique=True)
     # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes,
     # este campo tendría que ser un URLField.
     foto = models.FileField(upload_to="perfiles/", blank=True, null=True)
-    bibliografia = models.CharField(max_length=400)
+    bibliografia = models.CharField(max_length=400, blank=False, null=False)
 
 class Adm_sistemas(models.Model):
     id = models.AutoField(primary_key=True)
-    correo = models.EmailField(null=True, blank=True, unique=True)
-    password = models.CharField(max_length=32)
+    correo = models.EmailField(null=False, blank=False, unique=True)
+    password = models.CharField(max_length=32, blank=False)
 
 class Imagen(models.Model):
     id = models.AutoField(primary_key=True)
@@ -50,7 +50,7 @@ class Tematica(models.Model):
 class Lugar(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(max_length=255, blank=True, null=True)
+    descripcion = models.CharField(max_length=255, blank=False, null=False)
 
 class Evento(models.Model):
     id = models.AutoField(primary_key=True)
@@ -58,7 +58,7 @@ class Evento(models.Model):
     lugar_id = models.ForeignKey(Lugar, on_delete=models.CASCADE, db_column="lugar_id")
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
-    descripcion = models.CharField(max_length=255, blank=True, null=True)
+    descripcion = models.CharField(max_length=255, blank=False, null=False)
     tematica_id = models.ForeignKey(
         Tematica, on_delete=models.CASCADE, db_column="tematica_id"
     )
