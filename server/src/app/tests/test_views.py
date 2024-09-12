@@ -41,10 +41,10 @@ class VisitanteAPITest(APITestCase):
         )
 
     def test_add_visitante_400_BAD_REQUEST(self):
-        # La clase `EmailValidator` de Django ya se adhiere a los estándares de emails RFC 5321 y RFC 5322,
-        # y además nuestro escenario no tiene ninguna restricción especial en tanto a los correos que debe aceptar
-        # por lo que me parece que, de momento, estos controles son suficientes para nuestra aplicación y no haría
-        # falta suar librerías como hypothesis para controlar las posibles entradas.
+        # La clase `EmailValidator`, utilizada por `EmailField`, ya se adhiere a los estándares de emails RFC 5321 y RFC 5322.
+        # Además nuestro escenario no tiene ninguna restricción especial en tanto a los correos que debe aceptar
+        # por lo que me parece que, los controles que este validador realiza son suficientes para nuestra aplicación y no haría
+        # falta usar librerías como hypothesis para controlar sobre una amplia variedad de entradas.
 
         invalid_emails = [
             "",
