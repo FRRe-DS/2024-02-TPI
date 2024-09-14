@@ -1,57 +1,83 @@
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
-from app.models import *
-from app.serializers import * 
+from app.models import (
+    Visitante,
+    Escultor,
+    Escultura,
+    Pais,
+    Lugar,
+    Imagen,
+    Tematica,
+    AdminSistema,
+)
+from app.serializers import (
+    VisitanteSerializer,
+    EscultorSerializer,
+    PaisSerializer,
+    LugarSerializer,
+    ImagenSerializer,
+    TematicaSerializer,
+    EsculturaSerializer,
+    AdminSisSerializer,
+)
 from rest_framework import status, viewsets, permissions
 
-#GET
 
 @api_view(["GET"])
 def health_check(request: Request) -> Response:
     return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class VisitanteViewSet(viewsets.ModelViewSet):
     queryset = Visitante.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = VisitanteSerializer
 
+
 class EsculturaViewSet(viewsets.ModelViewSet):
     queryset = Escultura.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = EsculturaSerializer
+
 
 class EscultorViewSet(viewsets.ModelViewSet):
     queryset = Escultor.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = EscultorSerializer
 
+
 class ImagenViewSet(viewsets.ModelViewSet):
     queryset = Imagen.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = ImagenSerializer
+
 
 class PaisViewSet(viewsets.ModelViewSet):
     queryset = Pais.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = PaisSerializer
 
+
 class AdminSisViewSet(viewsets.ModelViewSet):
-    queryset = Adm_sistemas.objects.all()
+    queryset = AdminSistema.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = AdminSisSerializer
-    
+
+
 class TematicaViewSet(viewsets.ModelViewSet):
     queryset = Tematica.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = TematicaSerializer
+
 
 class LugarViewSet(viewsets.ModelViewSet):
     queryset = Lugar.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = LugarSerializer
 
-'''
+
+"""
 @api_view(["GET"])
 def getVisitantesData(request: Request) -> Response:
     users = Visitante.objects.all()
@@ -92,4 +118,4 @@ def addVisitante(request: Request) -> Response:
         return Response(status=status.HTTP_201_CREATED, data=serializer.data)
 
     return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.data)
-'''
+"""
