@@ -1,2 +1,8 @@
 /.venv
+<<<<<<< HEAD
 **.pyc
+||||||| parent of a3b3d61 (Se crearon las vistas para poder hacer CRUD en la BD usando ViewSets y un manejo en las urls de las vistas con el uso de routers, ambos provistos por Rest Framework, de esta manera es mas comodo realizar operaciones sobre la BD a traves de un formulario web)
+*.pyc
+=======
+*.sqlite3
+>>>>>>> a3b3d61 (Se crearon las vistas para poder hacer CRUD en la BD usando ViewSets y un manejo en las urls de las vistas con el uso de routers, ambos provistos por Rest Framework, de esta manera es mas comodo realizar operaciones sobre la BD a traves de un formulario web)
