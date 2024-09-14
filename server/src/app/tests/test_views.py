@@ -16,24 +16,38 @@ class HealthCheckAPITest(SimpleTestCase):
 class VisitanteAPITest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        self.get_url = reverse("getVisitantesData")
-        self.post_url = reverse("addVisitante")
+        # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `models.ModelViewSet`)
+        # De manera automática tendríamos implementadas funcionalidades básicas como listar (GET), crear (POST), destruir (DELETE), etcétera.
+        # Como estas funciones solo difieren en la cabecera HTTP que es enviada a la url y no en la url en sí, decidí darle un nombre descriptivo.
+        self.base_url = reverse("visitantes-list")
+
+        # INFO: (Lautaro) Esta funcion lambda tiene el proposito de generar dinamicamente endpoints como:
+        # - <GET/PUT/DELETE> /visitantes/<id>/
+        self.detail_url = lambda pk: reverse("visitantes-detail", kwargs={"pk": pk})
 
         Visitante.objects.create(correo="acostalautaro@ejemplo.com")
         Visitante.objects.create(correo="gonza_saucedo@ejemplo.com")
 
-    def test_get_visitante_data_200_OK(self):
-        response = self.client.get(self.get_url)
+    def test_get_visitantes_data_200_OK(self):
+        response = self.client.get(self.base_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
 
         expected_data = VisitanteSerializer(Visitante.objects.all(), many=True).data
         self.assertEqual(expected_data, response.data)
 
+    def test_get_visitante_200_OK(self):
+        visitante = Visitante.objects.first()
+
+        response = self.client.get(self.detail_url(visitante.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expected_data = VisitanteSerializer(visitante).data
+        self.assertEqual(expected_data, response.data)
+
     def test_add_user_201_CREATED(self):
         valid_emails = {"correo": "Xxenzo_vallejosxX@xbox.com"}
 
-        response = self.client.post(self.post_url, valid_emails, format="json")
+        response = self.client.post(self.base_url, valid_emails, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["correo"], "Xxenzo_vallejosxX@xbox.com")
         self.assertTrue(
@@ -59,5 +73,12 @@ class VisitanteAPITest(APITestCase):
 
         for email in invalid_emails:
             data = {"correo": email}
-            response = self.client.post(self.post_url, data, format="json")
+            response = self.client.post(self.base_url, data, format="json")
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_delete_visitante_204_NO_CONTENT(self):
+        visitante = Visitante.objects.first()
+
+        response = self.client.delete(self.detail_url(visitante.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Visitante.objects.filter(pk=visitante.pk).exists())
