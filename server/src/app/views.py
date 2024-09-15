@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -22,6 +23,27 @@ from app.serializers import (
     AdminSisSerializer,
 )
 from rest_framework import status, viewsets, permissions
+
+
+# Esto solo lo incluyo para tener un ejemplo.
+@api_view(["GET"])
+def celery_task_ejemplo(request: Request) -> JsonResponse:
+    from .tasks import count_visitantes
+
+    result = count_visitantes.delay()
+
+    return JsonResponse({"task_id": result.id, "status": "Task started!"})
+
+
+@api_view(["GET"])
+def check_task_status(request, task_id) -> JsonResponse:
+    from celery.result import AsyncResult
+
+    task_result = AsyncResult(task_id)
+
+    return JsonResponse(
+        {"task_id": task_id, "status": task_result.status, "result": task_result.result}
+    )
 
 
 @api_view(["GET"])
