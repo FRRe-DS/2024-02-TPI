@@ -1,13 +1,18 @@
 #!/usr/bin/env python
-"""Django's command-line utility for administrative tasks."""
-
 import os
 import sys
 
 
 def main():
-    """Run administrative tasks."""
+    os.environ.setdefault("DJANGO_ENV", "dev")
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
+
+    env = os.getenv("DJANGO_ENV")
+
+    if env != "prod" and env != "dev":
+        print("DJANGO_ENV debe tener los valores `prod` o `dev`")
+        exit(1)
+
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

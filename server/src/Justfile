@@ -1,22 +1,23 @@
-venv:
-    source .venv/bin/activate.fish
+# https://github.com/casey/just
 
-serve:
-    uv run ruff format ./
+serve mode="dev": migrate
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    if [ "{{mode}}" = "dev" ]; then \
+        DJANGO_ENV={{mode}} uv run manage.py runserver  
+    elif [ "{{mode}}" = "prod" ]; then \
+        DJANGO_ENV={{mode}} uv run gunicorn --workers 3 --log-level info --access-logfile '-' --error-logfile '-' backend.wsgi:application 
+    fi
+    
+migrate: fmt
     uv run ./manage.py makemigrations
     uv run ./manage.py migrate
-    uv run ./manage.py runserver
 
-migrate:
-    uv run ./manage.py makemigrations
-    uv run ./manage.py migrate
-
-test:
-    uv run ./manage.py migrate
-    uv run ./manage.py test
-
-check:
+check: fmt
     ruff check ./
+
+test: migrate check fmt
+    uv run ./manage.py test
 
 fmt:
     ruff format ./

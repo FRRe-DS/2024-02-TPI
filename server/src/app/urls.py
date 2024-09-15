@@ -17,13 +17,14 @@ router = routers.DefaultRouter()
 """
  INFO: (Lautaro) Aunque el sufijo `ViewSet` lo indica, no es suficientemente explícito sobre el efecto que tienen las CBVs:
  Una Class Base View (CBV), implementa un `Set` de vistas predeterminadas los diferentes métodos HTTP comúnmente usados en aplicaciones REST.
- Es importante saber que a la hora de escribir tests o probar la aplicación con clientes HTTP, que los nombres dados a las rutas en el método
+ Es importante saber que a la hora de escribir tests, que los nombres dados a las rutas en el método
  `register` de la clase `DefaultRouter`, solamente servirán como base para las vistas generadas por la clase.
  `DefaultRouter` genera automáticamente, por cada vista registrada, dos rutas:
+
  - <base>-list para métodos GET y POST.
  - <base>-detail para métodos GET, PUT, PATCH y DELETE.
  
- Son con estas rutas a las cuales los tests y clientes HTTP que usemos se tienen que referir.
+ Son con estas rutas a las cuales los tests que realicemos se tienen que referir.
 """
 router.register("api/visitantes", VisitanteViewSet, "visitantes")
 router.register("api/escultores", EscultorViewSet, "escultores")
