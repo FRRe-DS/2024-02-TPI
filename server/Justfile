@@ -1,15 +1,26 @@
 # https://github.com/casey/just
 
+# TODO: (Lautaro) Tal vez considerar Docker Compose para coordinar todos los procesos.
+
 serve mode="dev": migrate
     #!/usr/bin/env bash
     set -euxo pipefail
     if [ "{{mode}}" = "dev" ]; then \
-        DJANGO_ENV={{mode}} uv run ./src/manage.py runserver  
+        cd ./src/
+        DJANGO_ENV={{mode}} uv run ./manage.py runserver  
+        wait
     elif [ "{{mode}}" = "prod" ]; then \
         cd ./src/ &&
         DJANGO_ENV={{mode}} uv run gunicorn --workers 3 --timeout 30 --log-level info --access-logfile '-' --error-logfile '-' backend.wsgi:application 
     fi
-    
+
+celery:
+    cd ./src/ && celery -A backend worker --loglevel=info 
+
+redis:
+    docker run -d -p 6379:6379 redis:latest
+
+
 migrate: fmt
     uv run ./src/manage.py makemigrations
     uv run ./src/manage.py migrate
