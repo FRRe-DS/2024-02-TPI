@@ -6,11 +6,11 @@ from .views import (
     AdminSisViewSet,
     TematicaViewSet,
     LugarViewSet,
-    health_check,
     PaisViewSet,
 )
 from rest_framework import routers
 from django.urls import include, path
+from app import views
 
 router = routers.DefaultRouter()
 
@@ -37,7 +37,13 @@ router.register("api/lugar", LugarViewSet, "lugares")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("health_check/", health_check, name="health_check"),
+    path("health_check/", views.health_check, name="health_check"),
+    path("test_celery/", views.celery_task_ejemplo, name="celery_task_ejemplo"),
+    path(
+        "check_id_celery/<str:task_id>/",
+        views.check_task_status,
+        name="check_task_status",
+    ),
 ]
 
 """
