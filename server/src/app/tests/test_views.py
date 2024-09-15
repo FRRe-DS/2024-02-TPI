@@ -16,7 +16,7 @@ class HealthCheckAPITest(SimpleTestCase):
 class VisitanteAPITest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-        # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `models.ModelViewSet`)
+        # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `viewsets.ModelViewSet`)
         # De manera automática tendríamos implementadas funcionalidades básicas como listar (GET), crear (POST), destruir (DELETE), etcétera.
         # Como estas funciones solo difieren en la cabecera HTTP que es enviada a la url y no en la url en sí, decidí darle un nombre descriptivo.
         self.base_url = reverse("visitantes-list")
