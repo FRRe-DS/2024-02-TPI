@@ -11,6 +11,8 @@ dependencies = [
     "coverage>=7.6.1",
     "pygments>=2.18.0",
     "python-dotenv>=1.0.1",
+    "celery[redis]>=5.4.0",
+    "redis>=5.0.8",
 ]
 
 [build-system]

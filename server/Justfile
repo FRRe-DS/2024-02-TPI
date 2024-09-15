@@ -1,0 +1,27 @@
+# https://github.com/casey/just
+
+serve mode="dev": migrate
+    #!/usr/bin/env bash
+    set -euxo pipefail
+    if [ "{{mode}}" = "dev" ]; then \
+        DJANGO_ENV={{mode}} uv run ./src/manage.py runserver  
+    elif [ "{{mode}}" = "prod" ]; then \
+        cd ./src/ &&
+        DJANGO_ENV={{mode}} uv run gunicorn --workers 3 --timeout 30 --log-level info --access-logfile '-' --error-logfile '-' backend.wsgi:application 
+    fi
+    
+migrate: fmt
+    uv run ./src/manage.py makemigrations
+    uv run ./src/manage.py migrate
+
+check: fmt
+    ruff check ./
+
+test: migrate check fmt
+    uv run ./src/manage.py test ./src/
+
+fmt:
+    ruff format ./
+
+shell:
+    uv run ./src/manage.py shell
