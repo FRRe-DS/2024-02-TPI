@@ -1,7 +1,7 @@
 <h1 align=center><code>Trabajo Practico Final - Desarrollo de Software</code></h1>
 <div align=center>
-    <a href=https://github.com/lauacosta/desarrollo_software/actions/workflows/general.yaml>
-        <img src=https://github.com/lauacosta/desarrollo_software/actions/workflows/general.yaml/badge.svg>
+    <a href=https://github.com/FRRe-DS/2024-02-TPI/actions/workflows/general.yaml>
+        <img src=https://github.com/FRRe-DS/2024-02-TPI/actions/workflows/general.yaml/badge.svg>
     </a>
 </div>
 <br>
