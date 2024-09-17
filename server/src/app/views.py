@@ -1,4 +1,6 @@
 from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -10,7 +12,6 @@ from app.models import (
     Lugar,
     Imagen,
     Tematica,
-    AdminSistema,
 )
 from app.serializers import (
     VisitanteSerializer,
@@ -23,6 +24,8 @@ from app.serializers import (
     AdminSisSerializer,
 )
 from rest_framework import status, viewsets, permissions
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action 
 
 
 # Esto solo lo incluyo para tener un ejemplo.
@@ -82,9 +85,41 @@ class PaisViewSet(viewsets.ModelViewSet):
 
 
 class AdminSisViewSet(viewsets.ModelViewSet):
-    queryset = AdminSistema.objects.all()
+    queryset = User.objects.all()
     permission_classes = [permissions.AllowAny]
     serializer_class = AdminSisSerializer
+
+    #basicamente es el metodo post
+    #pero a este lo sobreescribo para que genere el token de cada nuevo admin
+    def create(self, request, *args, **kwargs):
+        serializer = AdminSisSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            userAdmin = User.objects.get(username=serializer.data['username']) 
+            userAdmin.set_password(serializer.data['password'])
+            userAdmin.save()
+
+            token = Token.objects.create(user=userAdmin)
+
+            return Response({'token': token.key}, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    #esta es la forma de obtener el token de un admin
+    #se obtiene haciendo un post con los datos pedidos a la rutaBase/get_token/
+    #es decir api/adminsis/get_token/
+    @action(detail=False, methods=['post'])
+    def get_token(self, request):
+        userAdmin = get_object_or_404(User, email=request.data['email'])
+
+        if not userAdmin.check_password(request.data['password']):
+            return Response({"error": "contra incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
+
+        token, created = Token.objects.get_or_create(user=userAdmin)
+
+        return Response({"token": token.key}, status=status.HTTP_200_OK)
 
 
 class TematicaViewSet(viewsets.ModelViewSet):

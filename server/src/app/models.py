@@ -30,12 +30,17 @@ class Escultor(models.Model):
     foto = models.FileField(upload_to="perfiles/", blank=True, null=True)
     bibliografia = models.CharField(max_length=400, blank=False, null=False)
 
+'''
+
+Para utilizar la autenticacion de token tenemos que usar el model user que brinda django
+Por ende cambie en el serializer eso y quedo sin uso esto, pero lo dejo por las dudas para mas adelante, si al final no lo usamos lo borramos nomas
 
 class AdminSistema(models.Model):
     id = models.AutoField(primary_key=True)
+    username = models.CharField(max_length=150, null = False, blank=False, unique=True)
     correo = models.EmailField(null=False, blank=False, unique=True)
     password = models.CharField(max_length=32, blank=False)
-
+'''
 
 class Imagen(models.Model):
     id = models.AutoField(primary_key=True)
