@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.models import User
 from .models import (
     Visitante,
     Evento,
@@ -8,7 +9,6 @@ from .models import (
     Pais,
     Tematica,
     Lugar,
-    AdminSistema,
 )
 
 
@@ -47,11 +47,12 @@ class PaisSerializer(serializers.ModelSerializer):
         model = Pais
         fields = "__all__"
 
-
+#Aca usamos el modelo que brinda django para la autenticaciones
+#Esta piola igual ya que encripta las password cuando las guarda y las desencripta cuando las trae
 class AdminSisSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AdminSistema
-        fields = "__all__"
+        model = User 
+        fields = ['id', 'username', 'email', 'password'] 
 
 
 class TematicaSerializer(serializers.ModelSerializer):
