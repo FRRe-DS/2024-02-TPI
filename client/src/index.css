@@ -1,11 +1,15 @@
 :root {
+  --grey-100: #ffffff;
+  --grey-200: #fcfcfc;
   --grey-300: #ecf0f6;
+  --grey-400: #d0d1d1;
   --dark-blue-300: #383f4f;
+  --primario: #277ee3;
+  --text-100: #b0b0b0;
+  --text-200: #a5a5a5;
+  --text-300: #5b5b5b;
+  --text-400: #000000;
   --menu-linear-gradient: linear-gradient(180deg, #000000 0%, #0a0026 100%);
-
-  --secondary-color: #2ecc71;
-  --font-size-base: 16px;
-  --padding-base: 10px;
 }
 
 /* Box sizing rules */
@@ -13,7 +17,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   font-weight: 400;
   font-style: normal;
   padding: 0;
@@ -21,22 +25,15 @@
 }
 
 /* Remove default margin */
-body,
-h1,
-h2,
-h3,
-h4,
-p,
-figure,
-blockquote,
-dl,
-dd {
+* {
   margin: 0;
+  padding: 0;
+  font-size: inherit;
 }
 
 /* Remove list styles on ul, ol elements with a list role, which suggests default styling will be removed */
-ul[role='list'],
-ol[role='list'] {
+ul[role="list"],
+ol[role="list"] {
   list-style: none;
 }
 
@@ -45,9 +42,13 @@ html:focus-within {
   scroll-behavior: smooth;
 }
 
+html,
+body {
+  min-height: 100%;
+}
+
 /* Set core body defaults */
 body {
-  min-height: 100vh;
   text-rendering: optimizeSpeed;
   line-height: 1.5;
 }
@@ -59,7 +60,8 @@ a:not([class]) {
 
 /* Make images easier to work with */
 img,
-picture {
+picture,
+svg {
   max-width: 100%;
   display: block;
 }
@@ -90,7 +92,5 @@ select {
 
 .mainContainer {
   display: flex;
-
   background-color: var(--grey-300);
-  min-height: 100vh;
 }

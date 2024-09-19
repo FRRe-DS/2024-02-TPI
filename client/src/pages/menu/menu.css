@@ -1,19 +1,125 @@
-.navigation__link {
-  all: unset;
-  display: flex;
-  gap: 10px;
-  cursor: pointer;
-  background-color: var(--dark-blue-300);
-}
-
-.navigation__menu {
-  display: grid;
-  gap: 16px;
-  list-style: none;
-}
 .navigation {
-  width: 180px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100vw;
+  height: 100vh;
   background: var(--menu-linear-gradient);
   color: white;
   padding: 0 16px;
+}
+
+.oculto {
+  width: 0;
+  overflow: hidden;
+}
+
+.navigation__btn {
+  display: block;
+}
+
+@media (min-width: 750px) {
+  .navigation {
+    width: 180px;
+  }
+
+  .navigation__btn {
+    display: none;
+  }
+
+  .salirBtn {
+    all: unset;
+    display: flex;
+    gap: 16px;
+    cursor: pointer;
+    color: var(--text-100);
+    padding: 16px 0;
+    transition: all 0.45s ease-out;
+  }
+  .salirBtn:hover,
+  .salirBtn:focus-visible {
+    color: var(--grey-100);
+  }
+
+  .navigation__link {
+    all: unset;
+    display: flex;
+    gap: 16px;
+    cursor: pointer;
+    color: var(--text-100);
+    padding: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    isolation: isolate;
+  }
+
+  .navigation__link::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: var(--primario);
+    opacity: 0.3;
+    inset: 0;
+    scale: 0 1;
+    transform-origin: right;
+    transition: scale 450ms;
+    opacity: 0.3;
+  }
+
+  .navigation__link:hover::after,
+  .navigation__link:focus-visible::after {
+    transform-origin: left;
+    scale: 1 1;
+  }
+
+  .navigation__link:active {
+    scale: 0.95;
+  }
+
+  .paginaActual {
+    all: unset;
+    display: flex;
+    gap: 16px;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 8px;
+    overflow: hidden;
+    position: relative;
+    isolation: isolate;
+    color: var(--grey-100);
+  }
+
+  .paginaActual::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    background: var(--primario);
+    opacity: 0.6;
+    inset: 0;
+  }
+
+  .navigation__menu {
+    display: grid;
+    gap: 16px;
+    list-style: none;
+  }
+  .navigation__options {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+  }
+
+  .logo {
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--text-300);
+  }
 }

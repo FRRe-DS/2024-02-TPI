@@ -1,10 +1,12 @@
-import Menu from './menu/Menu';
+import Menu from "./menu/Menu";
 
-export default function Eventos() {
+export default function Esculturas() {
   return (
-    <>
-      <Menu />
-      <div></div>
-    </>
+    <div className="mainContainer">
+      <Menu paginaActual={"Esculturas"} />
+      <div>
+        <h1>Esculturas</h1>
+      </div>
+    </div>
   );
 }
