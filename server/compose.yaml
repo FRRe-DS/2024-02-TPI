@@ -9,5 +9,15 @@ services:
         - action: sync
           path: .
           target: /app
+    depends_on:
+      - redis
+      - celery
+
   redis:
-    image: "redis@alpine"
+    image: "redis:alpine"
+
+  celery:
+    build: .
+    command: celery -A backend worker --loglevel=info
+    depends_on:
+      - redis
