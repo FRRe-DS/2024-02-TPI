@@ -11,7 +11,7 @@ serve mode="dev": migrate
         wait
     elif [ "{{mode}}" = "prod" ]; then \
         cd ./src/ &&
-        DJANGO_ENV={{mode}} uv run gunicorn --workers 3 --timeout 30 --log-level info --access-logfile '-' --error-logfile '-' backend.wsgi:application 
+        DJANGO_ENV={{mode}} uv run gunicorn -c ./gunicorn.conf.py backend.wsgi:application 
     fi
 
 celery:
