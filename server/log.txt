@@ -1,0 +1,34 @@
+Attaching to celery-1, redis-1, rest_api_django-1
+redis-1            | 1:C 20 Sep 2024 18:32:38.050 # WARNING Memory overcommit must be enabled! Without it, a background save or replication may fail under low memory condition. Being disabled, it can also cause failures without low memory condition, see https://github.com/jemalloc/jemalloc/issues/1328. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+redis-1            | 1:C 20 Sep 2024 18:32:38.050 * oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+redis-1            | 1:C 20 Sep 2024 18:32:38.050 * Redis version=7.4.0, bits=64, commit=00000000, modified=0, pid=1, just started
+redis-1            | 1:C 20 Sep 2024 18:32:38.050 # Warning: no config file specified, using the default config. In order to specify a config file use redis-server /path/to/redis.conf
+redis-1            | 1:M 20 Sep 2024 18:32:38.051 * monotonic clock: POSIX clock_gettime
+redis-1            | 1:M 20 Sep 2024 18:32:38.052 * Running mode=standalone, port=6379.
+redis-1            | 1:M 20 Sep 2024 18:32:38.054 * Server initialized
+redis-1            | 1:M 20 Sep 2024 18:32:38.055 * Loading RDB produced by version 7.4.0
+redis-1            | 1:M 20 Sep 2024 18:32:38.055 * RDB age 381 seconds
+redis-1            | 1:M 20 Sep 2024 18:32:38.055 * RDB memory usage when created 0.90 Mb
+redis-1            | 1:M 20 Sep 2024 18:32:38.055 * Done loading RDB, keys loaded: 0, keys expired: 0.
+redis-1            | 1:M 20 Sep 2024 18:32:38.055 * DB loaded from disk: 0.001 seconds
+redis-1            | 1:M 20 Sep 2024 18:32:38.055 * Ready to accept connections tcp
+celery-1           |  
+celery-1           |  -------------- celery@13a2f74db5eb v5.4.0 (opalescent)
+celery-1           | --- ***** ----- 
+celery-1           | -- ******* ---- Linux-5.15.153.1-microsoft-standard-WSL2-x86_64-with 2024-09-20 18:32:39
+celery-1           | - *** --- * --- 
+celery-1           | - ** ---------- [config]
+celery-1           | - ** ---------- .> app:         backend:0x7faa6a6d8350
+celery-1           | - ** ---------- .> transport:   redis://localhost:6379/0
+celery-1           | - ** ---------- .> results:     redis://localhost:6379/0
+celery-1           | - *** --- * --- .> concurrency: 8 (prefork)
+celery-1           | -- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+celery-1           | --- ***** ----- 
+celery-1           |  -------------- [queues]
+celery-1           |                 .> celery           exchange=celery(direct) key=celery
+celery-1           |                 
+celery-1           | 
+celery-1           | [tasks]
+celery-1           |   . app.tasks.count_visitantes
+celery-1           |   . backend.celery.debug_task
+celery-1           | 

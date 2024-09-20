@@ -11,18 +11,7 @@ daemon = False
 # https://docs.gunicorn.org/en/stable/settings.html#access-log-format
 # t: fecha, h: dirección remota, r: status line, s: status, b: largo de la respuesta
 # L: tiempo de respuesta en segundos, f: referrer, a: user agent
-access_log_format = """
-    {
-        "timestamp": "%(t)s",
-        "remote_addr": "%(h)s",
-        "request": "%(r)s",
-        "status": "%(s)s",
-        "bytes": "%(b)s",
-        "latency": "%(L)s",
-        "referer": "%(f)s",
-        "user_agent": "%(a)s"
-    } 
-"""
+access_log_format = '{"timestamp": "%(t)s", "remote_addr": "%(h)s", "request": "%(r)s", "status": "%(s)s", "bytes": "%(b)s", "latency": "%(L)s", "referer": "%(f)s", "user_agent": "%(a)s" }'
 loglevel = "info"
 
 limit_request_line = 4094

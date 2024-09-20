@@ -4,6 +4,9 @@ services:
     build: .
     ports:
       - "8000:8000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     develop:
       watch:
         - action: sync
@@ -19,5 +22,8 @@ services:
   celery:
     build: .
     command: celery -A backend worker --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     depends_on:
       - redis
