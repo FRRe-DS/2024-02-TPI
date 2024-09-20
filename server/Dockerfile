@@ -4,7 +4,7 @@ WORKDIR /app
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY ./src/ /app
+COPY ./src/ /app/
 
 EXPOSE 8000
 ENV DJANGO_ENV="prod"
