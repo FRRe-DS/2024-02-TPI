@@ -30,24 +30,41 @@ LOGGING = {
         },
     },
     "handlers": {
-        "console": {
+        "json": {
             "class": "logging.StreamHandler",
             "formatter": "json",
         },
     },
     "loggers": {
         "celery": {
-            "handlers": ["console"],
+            "handlers": ["json"],
             "level": "INFO",
+            "propagate": False,
         },
         "django": {
-            "handlers": ["console"],
+            "handlers": ["json"],
             "level": "INFO",
+            "propagate": True,
         },
-        "": {
-            "handlers": ["console"],
+        "app": {
+            "handlers": ["json"],
             "level": "INFO",
+            "propagate": True,
         },
+        "gunicorn.error": {
+            "handlers": ["json"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "gunicorn.access": {
+            "handlers": ["json"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+    "root": {
+        "handlers": ["json"],
+        "level": "INFO",
     },
 }
 
@@ -126,4 +143,5 @@ CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60
 
 CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
