@@ -35,6 +35,7 @@ services:
 
   celery:
     build: .
+    # user: django_tpi
     command: celery -A backend worker --loglevel=info
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0

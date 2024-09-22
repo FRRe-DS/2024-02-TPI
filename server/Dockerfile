@@ -1,7 +1,11 @@
 FROM python:3.12-alpine
 WORKDIR /app
 
-RUN apk add --no-cache gcc musl-dev linux-headers
+RUN apk add --no-cache gcc musl-dev linux-headers 
+
+# RUN adduser -D django_tpi
+
+# USER django_tpi
 
 COPY ./requirements.txt /app/requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
