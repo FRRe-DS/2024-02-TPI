@@ -1,4 +1,3 @@
-
 ## Server
 ### UV
 Para ejecutar el trabajo necesitan tener instalado [uv](https://docs.astral.sh/uv/), un manager de paquetes y de proyectos para Python. 

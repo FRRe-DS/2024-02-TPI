@@ -37,11 +37,11 @@ Si quieren ver ejemplos de su uso, pueden ver la [documentación](https://docs.a
 Les recomiendo instalarse [Just](https://github.com/casey/just) para poder crear comandos y ahorrarse tipeo.
 
 > [!IMPORTANT]
-> `just serve` utilizar `docker compose` para iniciar el servicio, asi que es necesario que tengas instalado docker.
+> `just serve` utiliza `docker compose` para iniciar el servicio, asi que es necesario que tengas instalado docker.
 
 ``` sh
 # En ./src/Justfile o en cualquier subdirectorio siguiente:
 just test
-just serve dev # Inicializa el servidor http con Django, configurado para desarrollo.
-just serve prod # Inicializa un servidor http con Gunicorn, configurado para producción.
+just serve dev # Inicializa el servidor configurado para desarrollo.
+just serve prod # Inicializa un servidor configurado para producción.
 ```
