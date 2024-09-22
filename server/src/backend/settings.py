@@ -44,7 +44,7 @@ LOGGING = {
         "django": {
             "handlers": ["json"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
         "app": {
             "handlers": ["json"],
