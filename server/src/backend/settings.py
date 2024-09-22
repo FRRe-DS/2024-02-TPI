@@ -39,7 +39,7 @@ LOGGING = {
         "celery": {
             "handlers": ["json"],
             "level": "INFO",
-            "propagate": False,
+            "propagate": True,
         },
         "django": {
             "handlers": ["json"],
@@ -49,7 +49,7 @@ LOGGING = {
         "app": {
             "handlers": ["json"],
             "level": "INFO",
-            "propagate": True,
+            "propagate": False,
         },
         "gunicorn.error": {
             "handlers": ["json"],
@@ -145,3 +145,4 @@ CELERY_TASK_TIME_LIMIT = 30 * 60
 CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
+CELERYD_HIJACK_ROOT_LOGGER = False
