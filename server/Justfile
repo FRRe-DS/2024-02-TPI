@@ -1,15 +1,7 @@
 # https://github.com/casey/just
 
 serve mode="dev": migrate
-    #!/usr/bin/env bash
-    set -euxo pipefail
-    if [ "{{mode}}" = "dev" ]; then \
-        cd ./src/
-        DJANGO_ENV={{mode}} uv run ./manage.py runserver  
-        wait
-    elif [ "{{mode}}" = "prod" ]; then \
-        docker compose up --build
-    fi
+    DJANGO_ENV={{mode}} docker compose up --build
 
 celery:
     cd ./src/ && celery -A backend worker --loglevel=info 

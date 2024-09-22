@@ -16,6 +16,7 @@ logging.config.dictConfig(settings.LOGGING)
 
 logger = logging.getLogger("celery")
 
+
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):
     logger.info(f"Request: {self.request!r}")
