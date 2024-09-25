@@ -7,7 +7,7 @@
   gap: 16px;
   width: 100vw;
   height: 100vh;
-  background: var(--menu-linear-gradient);
+  background: var(--grey-200);
   color: white;
   padding: 0 16px;
 }
@@ -21,9 +21,10 @@
   display: block;
 }
 
-@media (min-width: 750px) {
+@media (min-width: 650px) {
   .navigation {
     width: 180px;
+    border-right: 1px solid var(--grey-400);
   }
 
   .navigation__btn {
@@ -35,7 +36,7 @@
     display: flex;
     gap: 16px;
     cursor: pointer;
-    color: var(--text-100);
+    color: var(--text-200);
     padding: 16px 0;
     transition: all 0.45s ease-out;
   }
@@ -49,7 +50,7 @@
     display: flex;
     gap: 16px;
     cursor: pointer;
-    color: var(--text-100);
+    color: var(--text-200);
     padding: 8px;
     border-radius: 8px;
     overflow: hidden;
@@ -90,15 +91,15 @@
     overflow: hidden;
     position: relative;
     isolation: isolate;
-    color: var(--grey-100);
+    color: var(--primario);
   }
 
   .paginaActual::after {
     content: "";
     position: absolute;
     z-index: -1;
-    background: var(--primario);
-    opacity: 0.6;
+    background: var(--primario-100);
+
     inset: 0;
   }
 

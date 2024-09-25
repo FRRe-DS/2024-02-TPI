@@ -1,0 +1,59 @@
+.mainContainer {
+  position: fixed;
+  top: 0;
+  left: 180px;
+  display: flex;
+  width: calc(100vw - 180px);
+  height: 100vh;
+  background-color: var(--grey-300);
+  padding: 24px 48px;
+}
+
+.mainSection {
+  width: 100%;
+}
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.event-table {
+  width: 100%;
+  min-width: 700px;
+  border-collapse: collapse;
+}
+
+.event-table th,
+.event-table td {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.event-table th {
+  background-color: #f4f4f4;
+}
+
+.event-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.event-table .pagination {
+  text-align: center;
+  padding: 10px;
+}
+
+.page-link {
+  display: inline-block; /* Asegura que respete el alto */
+  height: 20px; /* Ajusta la altura */
+  line-height: 20px; /* Centra el contenido verticalmente */
+  padding: 0 10px; /* Ajusta el espacio horizontal según sea necesario */
+  text-decoration: none; /* Elimina el subrayado */
+  color: var(--primario); /* Color del texto */
+  font-size: 16px; /* Tamaño de la fuente (ajusta si es necesario) */
+}
+
+.page-link:hover {
+  text-decoration: underline;
+}

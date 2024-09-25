@@ -2,11 +2,12 @@
   --grey-100: #ffffff;
   --grey-200: #fcfcfc;
   --grey-300: #ecf0f6;
-  --grey-400: #d0d1d1;
+  --grey-400: #e3e3e3;
   --dark-blue-300: #383f4f;
+  --primario-100: #ecf6ff;
   --primario: #277ee3;
   --text-100: #b0b0b0;
-  --text-200: #a5a5a5;
+  --text-200: #201919;
   --text-300: #5b5b5b;
   --text-400: #000000;
   --menu-linear-gradient: linear-gradient(180deg, #000000 0%, #0a0026 100%);
@@ -51,6 +52,7 @@ body {
 body {
   text-rendering: optimizeSpeed;
   line-height: 1.5;
+  background-color: var(--grey-100);
 }
 
 /* A elements that don't have a class get default styles */
@@ -88,9 +90,4 @@ select {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-}
-
-.mainContainer {
-  display: flex;
-  background-color: var(--grey-300);
 }
