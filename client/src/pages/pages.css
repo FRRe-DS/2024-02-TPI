@@ -1,26 +1,48 @@
 .mainContainer {
-  position: fixed;
+  /* position: fixed;
   top: 0;
-  left: 180px;
+  left: 180px; */
   display: flex;
-  width: calc(100vw - 180px);
+  /* width: calc(100vw - 180px); */
+  width: 100vw;
   height: 100vh;
-  background-color: var(--grey-300);
-  padding: 24px 48px;
+  background-color: var(--grey-100);
+  overflow-x: hidden;
+  /* padding: 24px 48px; */
 }
 
 .mainSection {
   width: 100%;
+  flex: 1;
+  overflow-x: hidden;
+}
+
+.header-section {
+  padding: 24px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-title {
+  font-size: clamp(18px, 4vw, 22px);
+}
+
+.section-container {
+  padding: 0 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .table-container {
-  width: 100%;
   overflow-x: auto;
+  width: 100%;
+  border: 1px solid #ddd;
 }
 
 .event-table {
   width: 100%;
-  min-width: 700px;
   border-collapse: collapse;
 }
 
@@ -28,9 +50,11 @@
 .event-table td {
   padding: 10px;
   text-align: left;
-  border: 1px solid #ddd;
 }
 
+.event-table td {
+  border-top: 1px solid #ddd;
+}
 .event-table th {
   background-color: #f4f4f4;
 }
@@ -51,9 +75,13 @@
   padding: 0 10px; /* Ajusta el espacio horizontal según sea necesario */
   text-decoration: none; /* Elimina el subrayado */
   color: var(--primario); /* Color del texto */
-  font-size: 16px; /* Tamaño de la fuente (ajusta si es necesario) */
 }
 
 .page-link:hover {
   text-decoration: underline;
+}
+
+.action-btn__container {
+  display: flex;
+  gap: 8px;
 }
