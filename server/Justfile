@@ -3,13 +3,6 @@
 serve mode="dev": migrate
     DJANGO_ENV={{mode}} docker compose up --build
 
-celery:
-    cd ./src/ && celery -A backend worker --loglevel=info 
-
-redis:
-    docker run -d -p 6379:6379 redis:latest
-
-
 migrate: fmt
     uv run ./src/manage.py makemigrations
     uv run ./src/manage.py migrate
