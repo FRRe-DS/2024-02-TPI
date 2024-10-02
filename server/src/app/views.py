@@ -23,7 +23,7 @@ from app.serializers import (
     EsculturaSerializer,
     AdminSisSerializer,
 )
-from rest_framework import status, viewsets, permissions
+from rest_framework import status, viewsets, permissions, authentication
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action 
 
@@ -56,38 +56,70 @@ def health_check(request: Request) -> Response:
 
 class VisitanteViewSet(viewsets.ModelViewSet):
     queryset = Visitante.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = VisitanteSerializer
+
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 
 class EsculturaViewSet(viewsets.ModelViewSet):
     queryset = Escultura.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = EsculturaSerializer
+
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 
 class EscultorViewSet(viewsets.ModelViewSet):
     queryset = Escultor.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = EscultorSerializer
 
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 class ImagenViewSet(viewsets.ModelViewSet):
     queryset = Imagen.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = ImagenSerializer
 
 
 class PaisViewSet(viewsets.ModelViewSet):
     queryset = Pais.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = PaisSerializer
 
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 class AdminSisViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = AdminSisSerializer
+
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
     #basicamente es el metodo post
     #pero a este lo sobreescribo para que genere el token de cada nuevo admin
@@ -108,11 +140,11 @@ class AdminSisViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     #esta es la forma de obtener el token de un admin
-    #se obtiene haciendo un post con los datos pedidos a la rutaBase/get_token/
+    #se obtiene haciendo un post con el username y password del usuario a la rutaBase/get_token/
     #es decir api/adminsis/get_token/
-    @action(detail=False, methods=['post'])
+    @action(detail=False, methods=['post'], permission_classes=[permissions.AllowAny])
     def get_token(self, request):
-        userAdmin = get_object_or_404(User, email=request.data['email'])
+        userAdmin = get_object_or_404(User, username=request.data['username'])
 
         if not userAdmin.check_password(request.data['password']):
             return Response({"error": "contra incorrecta"}, status=status.HTTP_400_BAD_REQUEST)
@@ -124,15 +156,27 @@ class AdminSisViewSet(viewsets.ModelViewSet):
 
 class TematicaViewSet(viewsets.ModelViewSet):
     queryset = Tematica.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = TematicaSerializer
 
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 class LugarViewSet(viewsets.ModelViewSet):
     queryset = Lugar.objects.all()
-    permission_classes = [permissions.AllowAny]
     serializer_class = LugarSerializer
 
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 """
 @api_view(["GET"])
