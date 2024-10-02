@@ -1,4 +1,3 @@
-
 ## Server
 ### UV
 Para ejecutar el trabajo necesitan tener instalado [uv](https://docs.astral.sh/uv/), un manager de paquetes y de proyectos para Python. 
@@ -15,6 +14,10 @@ La intención con esto es ahorrarse la mayor cantidad de tiempo con respecto a p
 Si quieren ver ejemplos de su uso, pueden ver la [documentación](https://docs.astral.sh/uv/getting-started/) de la herramienta, el archivo `./.github/workflows/general.yaml` en workflows o los comandos en `./src/Justfile`.
 
 Les recomiendo instalarse [Just](https://github.com/casey/just) para poder crear comandos y ahorrarse tipeo.
+
+> [!IMPORTANT]
+> `just serve` utilizar `docker compose` para iniciar el servicio, asi que es necesario que tengas instalado docker.
+
 ``` sh
 # En ./src/Justfile o en cualquier subdirectorio siguiente:
 just test

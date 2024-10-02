@@ -18,6 +18,7 @@ pnpm run dev
 pnpm run build
 ```
 
+
 ## Server
 ### UV
 Para ejecutar el trabajo necesitan tener instalado [uv](https://docs.astral.sh/uv/), un manager de paquetes y de proyectos para Python. 
@@ -34,9 +35,13 @@ La intención con esto es ahorrarse la mayor cantidad de tiempo con respecto a p
 Si quieren ver ejemplos de su uso, pueden ver la [documentación](https://docs.astral.sh/uv/getting-started/) de la herramienta, el archivo `./.github/workflows/general.yaml` en workflows o los comandos en `./src/Justfile`.
 
 Les recomiendo instalarse [Just](https://github.com/casey/just) para poder crear comandos y ahorrarse tipeo.
+
+> [!IMPORTANT]
+> `just serve` utiliza `docker compose` para iniciar el servicio, asi que es necesario que tengas instalado docker.
+
 ``` sh
 # En ./src/Justfile o en cualquier subdirectorio siguiente:
 just test
-just serve dev # Inicializa el servidor http con Django, configurado para desarrollo.
-just serve prod # Inicializa un servidor http con Gunicorn, configurado para producción.
+just serve dev # Inicializa el servidor configurado para desarrollo.
+just serve prod # Inicializa un servidor configurado para producción.
 ```
