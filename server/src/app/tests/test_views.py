@@ -47,8 +47,6 @@ class VisitanteAPITest(APITestCase):
 
     def test_add_user_201_CREATED(self):
         valid_emails = {"correo": "Xxenzo_vallejosxX@xbox.com"}
-        user = User.objects.create_user('username', 'password')
-        self.client.force_authenticate(user)
 
         response = self.client.post(self.base_url, valid_emails, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
