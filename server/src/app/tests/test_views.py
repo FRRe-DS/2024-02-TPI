@@ -47,8 +47,6 @@ class VisitanteAPITest(APITestCase):
 
     def test_add_user_201_CREATED(self):
         valid_emails = {"correo": "Xxenzo_vallejosxX@xbox.com"}
-        user = User.objects.create_user('username', 'password')
-        self.client.force_authenticate(user)
 
         response = self.client.post(self.base_url, valid_emails, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -62,9 +60,6 @@ class VisitanteAPITest(APITestCase):
         # Además nuestro escenario no tiene ninguna restricción especial en tanto a los correos que debe aceptar
         # por lo que me parece que, los controles que este validador realiza son suficientes para nuestra aplicación y no haría
         # falta usar librerías como hypothesis para controlar sobre una amplia variedad de entradas.
-
-        user = User.objects.create_user('username', 'password')
-        self.client.force_authenticate(user)
 
         invalid_emails = [
             "",
