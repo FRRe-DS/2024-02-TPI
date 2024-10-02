@@ -39,6 +39,7 @@
   overflow-x: auto;
   width: 100%;
   border: 1px solid #ddd;
+  border-radius: 16px;
 }
 
 .event-table {
@@ -48,15 +49,19 @@
 
 .event-table th,
 .event-table td {
-  padding: 10px;
+  padding: 14px;
   text-align: left;
 }
 
 .event-table td {
+  padding: 8px 14px;
+  font-weight: 500;
   border-top: 1px solid #ddd;
 }
 .event-table th {
   background-color: #f4f4f4;
+  font-weight: 500;
+  color: var(--text-300);
 }
 
 .event-table tbody tr:nth-child(even) {
