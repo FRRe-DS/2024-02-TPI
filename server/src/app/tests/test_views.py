@@ -1,9 +1,10 @@
 from django.test import SimpleTestCase
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient, APITestCase
+from rest_framework.test import APIClient, APITestCase, force_authenticate
 
 from app.models import Visitante
+from django.contrib.auth.models import User
 from app.serializers import VisitanteSerializer
 
 
@@ -46,6 +47,8 @@ class VisitanteAPITest(APITestCase):
 
     def test_add_user_201_CREATED(self):
         valid_emails = {"correo": "Xxenzo_vallejosxX@xbox.com"}
+        user = User.objects.create_user('username', 'password')
+        self.client.force_authenticate(user)
 
         response = self.client.post(self.base_url, valid_emails, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -59,6 +62,9 @@ class VisitanteAPITest(APITestCase):
         # Además nuestro escenario no tiene ninguna restricción especial en tanto a los correos que debe aceptar
         # por lo que me parece que, los controles que este validador realiza son suficientes para nuestra aplicación y no haría
         # falta usar librerías como hypothesis para controlar sobre una amplia variedad de entradas.
+
+        user = User.objects.create_user('username', 'password')
+        self.client.force_authenticate(user)
 
         invalid_emails = [
             "",
@@ -78,6 +84,9 @@ class VisitanteAPITest(APITestCase):
 
     def test_delete_visitante_204_NO_CONTENT(self):
         visitante = Visitante.objects.first()
+
+        user = User.objects.create_user('username', 'password')
+        self.client.force_authenticate(user)
 
         response = self.client.delete(self.detail_url(visitante.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
