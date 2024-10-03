@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Btn from "../components/btn";
-import Filter from "../components/filter";
+import Filter from "../components/dateFilter";
 import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
