@@ -4,7 +4,7 @@ import Filter from "../components/filter";
 import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
-import { rankItem } from "@tanstack/match-sorter-utils";
+import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
 import {
   createColumnHelper,
   flexRender,
@@ -12,10 +12,18 @@ import {
   useReactTable,
   FilterFn,
   getFilteredRowModel,
-  getSortedRowModel,
 } from "@tanstack/react-table";
-
 import Acciones from "../components/acciones";
+
+declare module "@tanstack/react-table" {
+  //add fuzzy filter to the filterFns
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>;
+  }
+  interface FilterMeta {
+    itemRank: RankingInfo;
+  }
+}
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -48,7 +56,7 @@ const defaultData: Evento[] = [
   },
   {
     nombre: "Bienal 2026",
-    lugar: "Domo del centenario",
+    lugar: "Parque 2 de febrero",
     tematica: "Hierro",
     inicio: "02/10/2025",
     fin: "02/10/2025",
@@ -98,16 +106,21 @@ const columns = [
 
 export default function Eventos() {
   const [data, _setData] = useState(() => [...defaultData]);
+  const [globalFilter, setGlobalFilter] = useState("");
 
   const table = useReactTable({
     data,
     columns,
-    getCoreRowModel: getCoreRowModel(),
     filterFns: {
       fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
     },
-    // globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
+    state: {
+      globalFilter,
+    },
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
     getFilteredRowModel: getFilteredRowModel(), //client side filtering
+    getCoreRowModel: getCoreRowModel(),
   });
 
   return (
@@ -120,7 +133,11 @@ export default function Eventos() {
         </header>
         <div className="section-container">
           <div className="action-btn__container">
-            <Search text="Buscar por evento, lugar o temática" />
+            <Search
+              text="Buscar por evento, lugar o temática"
+              value={globalFilter ?? ""}
+              onChange={(value) => setGlobalFilter(String(value))}
+            />
             <Filter text="Fecha" />
           </div>
           <div className="table-container">
