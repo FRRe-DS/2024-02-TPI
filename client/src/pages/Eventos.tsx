@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Btn from "../components/btn";
-import Filter from "../components/dateFilter";
 import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
@@ -14,6 +13,7 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import Acciones from "../components/acciones";
+import DateFilter from "../components/dateFilter";
 
 declare module "@tanstack/react-table" {
   //add fuzzy filter to the filterFns
@@ -138,7 +138,7 @@ export default function Eventos() {
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
             />
-            <Filter text="Fecha" />
+            <DateFilter text="Fecha" />
           </div>
           <div className="table-container">
             <table className="event-table">
