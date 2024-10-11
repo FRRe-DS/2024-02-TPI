@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 
 from app.models import Visitante
+from django.contrib.auth.models import User
 from app.serializers import VisitanteSerializer
 
 
@@ -78,6 +79,9 @@ class VisitanteAPITest(APITestCase):
 
     def test_delete_visitante_204_NO_CONTENT(self):
         visitante = Visitante.objects.first()
+
+        user = User.objects.create_user("username", "password")
+        self.client.force_authenticate(user)
 
         response = self.client.delete(self.detail_url(visitante.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
