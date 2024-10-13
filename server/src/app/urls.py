@@ -8,6 +8,7 @@ from .views import (
     LugarViewSet,
     PaisViewSet,
     VotoEsculturaViewSet,
+    generarQR,
 )
 from rest_framework import routers
 from django.urls import include, path
@@ -35,7 +36,7 @@ router.register("api/pais", PaisViewSet, "paises")
 router.register("api/adminsis", AdminSisViewSet, "adminsis")
 router.register("api/tematica", TematicaViewSet, "tematicas")
 router.register("api/lugar", LugarViewSet, "lugares")
-router.register("api/VotoEscultura", VotoEsculturaViewSet, "votoEscultura")
+router.register("api/votoEscultura", VotoEsculturaViewSet, "votoEscultura")
 
 urlpatterns = [
     path("", include(router.urls)),
@@ -46,6 +47,7 @@ urlpatterns = [
         views.check_task_status,
         name="check_task_status",
     ),
+    path("generarQR/", views.generarQR, name="QR"),
 ]
 
 """

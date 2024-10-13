@@ -57,6 +57,27 @@ def health_check(request: Request) -> Response:
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@api_view(["GET"])
+def generarQR(request):
+    escultura_id = request.GET.get("escultura_id")
+    # aqui debemos poner la url de la pagina de votacion, a la cual deberemos pasarle la id de la escultura
+    url = "https://www.youtube.com/watch?v=pvETRmM4neQ&ab_channel=Jovaan"
+
+    if escultura_id == None:
+        return Response(
+            {"error": "Debe ingresar por query parameters el id de la escultura"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    return Response(
+        {
+            "qr": "http://api.qrserver.com/v1/create-qr-code/?data={}!&size=200x200".format(
+                url
+            )
+        }
+    )
+
+
 class VisitanteViewSet(viewsets.ModelViewSet):
     queryset = Visitante.objects.all()
     serializer_class = VisitanteSerializer
