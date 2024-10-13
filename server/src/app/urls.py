@@ -3,9 +3,7 @@ from .views import (
     EscultorViewSet,
     EsculturaViewSet,
     ImagenViewSet,
-    AdminSisViewSet,
     TematicaViewSet,
-    LugarViewSet,
     PaisViewSet,
 )
 from rest_framework import routers
@@ -31,9 +29,7 @@ router.register("api/escultores", EscultorViewSet, "escultores")
 router.register("api/esculturas", EsculturaViewSet, "esculturas")
 router.register("api/imagenes", ImagenViewSet, "imagenes")
 router.register("api/pais", PaisViewSet, "paises")
-router.register("api/adminsis", AdminSisViewSet, "adminsis")
 router.register("api/tematica", TematicaViewSet, "tematicas")
-router.register("api/lugar", LugarViewSet, "lugares")
 
 urlpatterns = [
     path("", include(router.urls)),
