@@ -1,6 +1,7 @@
 from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -12,6 +13,7 @@ from app.models import (
     Lugar,
     Imagen,
     Tematica,
+    VotoEscultura,
 )
 from app.serializers import (
     VisitanteSerializer,
@@ -22,6 +24,7 @@ from app.serializers import (
     TematicaSerializer,
     EsculturaSerializer,
     AdminSisSerializer,
+    VotoEsculturaSerializer,
 )
 from rest_framework import status, viewsets, permissions, authentication
 from rest_framework.authtoken.models import Token
@@ -184,6 +187,41 @@ class LugarViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
+
+class VotoEsculturaViewSet(viewsets.ModelViewSet):
+    queryset = VotoEscultura.objects.all()
+    serializer_class = VotoEsculturaSerializer
+
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            voto = VotoEscultura.objects.get(
+                escultura_id=request.data["escultura_id"],
+                correo_visitante=request.data["correo_visitante"],
+            )
+
+        except ObjectDoesNotExist:
+            serializer = VotoEsculturaSerializer(data=request.data)
+
+            if serializer.is_valid():
+                serializer.save()
+                return Response(
+                    {"status": "voto registrado"}, status=status.HTTP_201_CREATED
+                )
+
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(
+            {"status": "Este visitante ya a votado"}, status=status.HTTP_400_BAD_REQUEST
+        )
 
 
 """

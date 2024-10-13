@@ -105,9 +105,7 @@ class VotoEscultura(models.Model):
     escultura_id = models.ForeignKey(
         Escultura, on_delete=models.CASCADE, db_column="escultura_id"
     )
-    visitante_id = models.ForeignKey(
-        Visitante, on_delete=models.CASCADE, db_column="visitante_id"
-    )
+    correo_visitante = models.EmailField(null=False, blank=False, unique=True)
 
 
 class VotoEscultor(models.Model):

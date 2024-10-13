@@ -7,6 +7,7 @@ from .views import (
     TematicaViewSet,
     LugarViewSet,
     PaisViewSet,
+    VotoEsculturaViewSet,
 )
 from rest_framework import routers
 from django.urls import include, path
@@ -34,6 +35,7 @@ router.register("api/pais", PaisViewSet, "paises")
 router.register("api/adminsis", AdminSisViewSet, "adminsis")
 router.register("api/tematica", TematicaViewSet, "tematicas")
 router.register("api/lugar", LugarViewSet, "lugares")
+router.register("api/VotoEscultura", VotoEsculturaViewSet, "votoEscultura")
 
 urlpatterns = [
     path("", include(router.urls)),
