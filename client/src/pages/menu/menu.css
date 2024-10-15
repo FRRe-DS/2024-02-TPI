@@ -23,7 +23,6 @@
   width: 180px;
   border-right: 1px solid var(--grey-400);
 }
-
 .navigation__btn {
   display: none;
 }
@@ -125,5 +124,7 @@
   justify-content: center;
   align-items: center;
   padding: 8px 0;
+  -webkit-filter: invert(100%);
+  filter: invert(100%);
 }
 /* } */

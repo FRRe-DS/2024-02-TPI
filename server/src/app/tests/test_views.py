@@ -80,7 +80,7 @@ class VisitanteAPITest(APITestCase):
     def test_delete_visitante_204_NO_CONTENT(self):
         visitante = Visitante.objects.first()
 
-        user = User.objects.create_user('username', 'password')
+        user = User.objects.create_user("username", "password")
         self.client.force_authenticate(user)
 
         response = self.client.delete(self.detail_url(visitante.pk))
