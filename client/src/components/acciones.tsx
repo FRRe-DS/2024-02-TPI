@@ -10,7 +10,7 @@ type Evento = {
   descripcion: string;
 };
 
-export default function Acciones({ row }: { row: Row<Evento> }) {
+export default function Acciones({ row }: { row: Row<Evento>}) {
   const handleEdit = () => {
     alert(`Editando fila: ${row.original.nombre}`);
   };
