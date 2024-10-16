@@ -28,11 +28,14 @@ class VisitanteAPITest(APITestCase):
 
         Visitante.objects.create(correo="acostalautaro@ejemplo.com")
         Visitante.objects.create(correo="gonza_saucedo@ejemplo.com")
+        Visitante.objects.create(correo="enzovallejos@ejemplo.com")
+        Visitante.objects.create(correo="tobiasstegmayer@ejemplo.com")
+        Visitante.objects.create(correo="ivanniveyro@ejemplo.com")
 
     def test_get_visitantes_data_200_OK(self):
         response = self.client.get(self.base_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data), 5)
 
         expected_data = VisitanteSerializer(Visitante.objects.all(), many=True).data
         self.assertEqual(expected_data, response.data)

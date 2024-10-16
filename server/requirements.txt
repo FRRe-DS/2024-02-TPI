@@ -8,6 +8,7 @@ click-plugins==1.1.1
 click-repl==0.3.0
 coverage==7.6.1
 django==5.1
+django-cors-headers==4.5.0
 djangorestframework==3.15.2
 gunicorn==23.0.0
 kombu==5.4.1

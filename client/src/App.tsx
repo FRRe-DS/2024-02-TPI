@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Eventos from './pages/Eventos';
 import Escultores from './pages/Escultores';
 import Esculturas from './pages/Esculturas';
