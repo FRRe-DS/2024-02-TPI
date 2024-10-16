@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "./pages.css";
 
 export default function LoginAdmin() {
-  const [credentials, setCredentials] = useState({ usr: "", password: "" });
+  const [credentials, setCredentials] = useState({ usuario: "", password: "" });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,7 +25,7 @@ export default function LoginAdmin() {
           type="text"
           name="usuario"
           placeholder="Usuario"
-          value={credentials.usr}
+          value={credentials.usuario}
           onChange={handleChange}
           required
         />
