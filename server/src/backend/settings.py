@@ -77,28 +77,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "app",
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
     "rest_framework.authtoken",
     "corsheaders",
-||||||| 3d3b3f0
-=======
-    "rest_framework.authtoken",
->>>>>>> main
-||||||| 3d3b3f0
-=======
-    "rest_framework.authtoken",
->>>>>>> main
-||||||| 3d3b3f0
-=======
-    "rest_framework.authtoken",
->>>>>>> main
-||||||| 3d3b3f0
-=======
-    "rest_framework.authtoken",
->>>>>>> main
 ]
 
 MIDDLEWARE = [
@@ -160,10 +140,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
@@ -171,46 +147,7 @@ REST_FRAMEWORK = {
 }
 
 LANGUAGE_CODE = "es"
-||||||| 3d3b3f0
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
-=======
-LANGUAGE_CODE = "es"
->>>>>>> main
-||||||| 3d3b3f0
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
-=======
-LANGUAGE_CODE = "es"
->>>>>>> main
-||||||| 3d3b3f0
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
-=======
-LANGUAGE_CODE = "es"
->>>>>>> main
-||||||| 3d3b3f0
-
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
-
-LANGUAGE_CODE = "en-us"
-
-=======
-LANGUAGE_CODE = "es"
->>>>>>> main
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
