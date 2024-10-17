@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # https://docs.docker.com/compose/gettingstarted/
 # https://docs.docker.com/reference/compose-file/
 # Postgres ?
@@ -49,3 +50,58 @@ services:
 networks:
   default:
     driver: bridge
+||||||| 3d3b3f0
+=======
+# https://docs.docker.com/compose/gettingstarted/
+# https://docs.docker.com/reference/compose-file/
+# Postgres ?
+# Estaría bueno añadir herramientas para observabilidad como Grafana-Loki-Prometheus
+services:
+  rest_api_django:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+      - DJANGO_ENV=${DJANGO_ENV}
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:8000/health_check/']
+      interval: 60s
+      timeout: 10s
+      retries: 3
+    restart: always
+    networks:
+      - default
+
+  redis:
+    image: "redis:alpine"
+    restart: always
+    networks:
+      - default
+    ports:
+      - "6379:6379"
+
+  celery:
+    build: .
+    # user: django_tpi
+    command: celery -A backend worker --loglevel=info
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/0
+      - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    depends_on:
+      - redis
+    restart: always
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge
+>>>>>>> main
