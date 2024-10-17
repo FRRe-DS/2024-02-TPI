@@ -31,6 +31,7 @@ class VisitanteAPITest(APITestCase):
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         self.user = User.objects.create_user(username="testuser", password="password")
         self.token, _ = Token.objects.get_or_create(user=self.user)
@@ -44,6 +45,19 @@ class VisitanteAPITest(APITestCase):
         # INFO: (Lautaro) Esta funcion lambda tiene el proposito de generar dinamicamente endpoints como:
         # - <GET/PUT/DELETE> /visitantes/<id>/
         self.detail_url = lambda pk: reverse("visitantes-detail", kwargs={"pk": pk})
+||||||| 3d3b3f0
+        self.get_url = reverse("getVisitantesData")
+        self.post_url = reverse("addVisitante")
+=======
+        # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `viewsets.ModelViewSet`)
+        # De manera automática tendríamos implementadas funcionalidades básicas como listar (GET), crear (POST), destruir (DELETE), etcétera.
+        # Como estas funciones solo difieren en la cabecera HTTP que es enviada a la url y no en la url en sí, decidí darle un nombre descriptivo.
+        self.base_url = reverse("visitantes-list")
+
+        # INFO: (Lautaro) Esta funcion lambda tiene el proposito de generar dinamicamente endpoints como:
+        # - <GET/PUT/DELETE> /visitantes/<id>/
+        self.detail_url = lambda pk: reverse("visitantes-detail", kwargs={"pk": pk})
+>>>>>>> main
 ||||||| 3d3b3f0
         self.get_url = reverse("getVisitantesData")
         self.post_url = reverse("addVisitante")
@@ -137,6 +151,7 @@ class VisitanteAPITest(APITestCase):
             data = {"correo": email}
             response = self.client.post(self.base_url, data, format="json")
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
@@ -265,6 +280,19 @@ class EscultoresAPITest(APITestCase):
         response = self.client.delete(self.detail_url(escultor.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Escultor.objects.filter(pk=escultor.pk).exists())
+||||||| 3d3b3f0
+=======
+
+    def test_delete_visitante_204_NO_CONTENT(self):
+        visitante = Visitante.objects.first()
+
+        user = User.objects.create_user("username", "password")
+        self.client.force_authenticate(user)
+
+        response = self.client.delete(self.detail_url(visitante.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Visitante.objects.filter(pk=visitante.pk).exists())
+>>>>>>> main
 ||||||| 3d3b3f0
 =======
 

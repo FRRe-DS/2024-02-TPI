@@ -1,6 +1,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 amqp==5.2.0
 asgiref==3.8.1
 billiard==4.2.0
@@ -28,6 +29,35 @@ sqlparse==0.5.1
 tzdata==2024.1
 vine==5.1.0
 wcwidth==0.2.13
+||||||| 3d3b3f0
+=======
+amqp==5.2.0
+asgiref==3.8.1
+billiard==4.2.0
+celery==5.4.0
+click==8.1.7
+click-didyoumean==0.3.1
+click-plugins==1.1.1
+click-repl==0.3.0
+coverage==7.6.1
+django==5.1
+djangorestframework==3.15.2
+gunicorn==23.0.0
+kombu==5.4.1
+markdown==3.7
+packaging==24.1
+prompt-toolkit==3.0.47
+pygments==2.18.0
+python-dateutil==2.9.0.post0
+python-dotenv==1.0.1
+python-json-logger==2.0.7
+redis==5.0.8
+six==1.16.0
+sqlparse==0.5.1
+tzdata==2024.1
+vine==5.1.0
+wcwidth==0.2.13
+>>>>>>> main
 ||||||| 3d3b3f0
 =======
 amqp==5.2.0
