@@ -49,6 +49,9 @@ jobs:
       - name: Instalar las dependencias
         run: uv sync --all-extras --dev && uv add coverage && uv add ruff
 
+      - name: Ejecutar linter
+        run: uv run ruff check
+
       - name: Ejecutar las pruebas
         run: cd ./src && uv run ./manage.py test
 
@@ -57,9 +60,6 @@ jobs:
 
       - name: Ejecutar formatter
         run: uv run ruff format
-
-      - name: Ejecutar linter
-        run: uv run ruff check
 
       - name: Minimizar el cache de uv
         run: uv cache prune --ci
