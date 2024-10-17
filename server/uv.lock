@@ -227,6 +227,7 @@ wheels = [
 [[package]]
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 name = "gunicorn"
 version = "23.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -284,6 +285,22 @@ wheels = [
 
 [[package]]
 >>>>>>> main
+||||||| 3d3b3f0
+=======
+name = "kombu"
+version = "5.4.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "amqp" },
+    { name = "vine" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/16/2c/079a5d59a167543205fbf54d663bbdc171e2a29f4d45fa6a8bc315e57192/kombu-5.4.1.tar.gz", hash = "sha256:1c05178826dab811f8cab5b0a154d42a7a33d8bcdde9fa3d7b4582e43c3c03db", size = 442786 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c1/78/c556bf2954bd36f166959ac33d23cde4a8967e61cdb74678585a66edbae0/kombu-5.4.1-py3-none-any.whl", hash = "sha256:621d365f234e4c089596f3a2510f1ade07026efc28caca426161d8f458786cab", size = 201338 },
+]
+
+[[package]]
+>>>>>>> main
 name = "markdown"
 version = "3.7"
 source = { registry = "https://pypi.org/simple" }
@@ -293,6 +310,7 @@ wheels = [
 ]
 
 [[package]]
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 name = "packaging"
@@ -316,6 +334,21 @@ wheels = [
 ]
 
 [[package]]
+||||||| 3d3b3f0
+=======
+name = "prompt-toolkit"
+version = "3.0.47"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "wcwidth" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/47/6d/0279b119dafc74c1220420028d490c4399b790fc1256998666e3a341879f/prompt_toolkit-3.0.47.tar.gz", hash = "sha256:1e1b29cb58080b1e69f207c893a1a7bf16d127a5c30c9d17a25a5d77792e5360", size = 425859 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e8/23/22750c4b768f09386d1c3cc4337953e8936f48a888fa6dddfb669b2c9088/prompt_toolkit-3.0.47-py3-none-any.whl", hash = "sha256:0d7bfa67001d5e39d02c224b663abc33687405033a8c422d0d675a5a13361d10", size = 386411 },
+]
+
+[[package]]
+>>>>>>> main
 ||||||| 3d3b3f0
 =======
 name = "prompt-toolkit"
