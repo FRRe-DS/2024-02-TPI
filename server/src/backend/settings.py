@@ -78,16 +78,23 @@ INSTALLED_APPS = [
     "rest_framework",
     "app",
     "rest_framework.authtoken",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://localhost:5173",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -133,7 +140,14 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
+    ],
+}
+
 LANGUAGE_CODE = "es"
+
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
@@ -147,3 +161,4 @@ CELERY_BROKER_URL = "redis://localhost:6379/0"
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
 CELERYD_HIJACK_ROOT_LOGGER = False
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 5

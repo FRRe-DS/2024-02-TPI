@@ -1,0 +1,23 @@
+.btn-principal {
+  all: unset;
+  background-color: var(--primario);
+  color: var(--grey-100);
+  white-space: nowrap;
+  padding: 0 8px;
+  height: 40px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.btn-principal:hover {
+  opacity: 0.9;
+}
+
+.btn-principal:active {
+  scale: 0.9;
+}

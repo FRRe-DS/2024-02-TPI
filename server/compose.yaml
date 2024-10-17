@@ -11,11 +11,10 @@ services:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - DJANGO_ENV=${DJANGO_ENV}
-    develop:
-      watch:
-        - action: sync
-          path: .
-          target: /app
+    volumes:
+      - ./src/:/app 
+      - ./src/db.sqlite3:/app/db.sqlite3
+    command: sh -c "if [ $DJANGO_ENV = 'dev' ]; then python manage.py runserver 0.0.0.0:8000; else gunicorn -c ./gunicorn.conf.py backend.wsgi:application; fi"
 
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8000/health_check/']

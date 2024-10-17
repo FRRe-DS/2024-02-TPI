@@ -1,12 +1,13 @@
 from .views import (
+    EventoViewSet,
     VisitanteViewSet,
     EscultorViewSet,
     EsculturaViewSet,
     ImagenViewSet,
-    AdminSisViewSet,
     TematicaViewSet,
-    LugarViewSet,
     PaisViewSet,
+    AdminSisViewSet,
+    LugarViewSet,
 )
 from rest_framework import routers
 from django.urls import include, path
@@ -26,11 +27,13 @@ router = routers.DefaultRouter()
  
  Son con estas rutas a las cuales los tests que realicemos se tienen que referir.
 """
+
 router.register("api/visitantes", VisitanteViewSet, "visitantes")
 router.register("api/escultores", EscultorViewSet, "escultores")
 router.register("api/esculturas", EsculturaViewSet, "esculturas")
+router.register("api/eventos", EventoViewSet, "eventos")
 router.register("api/imagenes", ImagenViewSet, "imagenes")
-router.register("api/pais", PaisViewSet, "paises")
+router.register("api/paises", PaisViewSet, "paises")
 router.register("api/adminsis", AdminSisViewSet, "adminsis")
 router.register("api/tematica", TematicaViewSet, "tematicas")
 router.register("api/lugar", LugarViewSet, "lugares")

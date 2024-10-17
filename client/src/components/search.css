@@ -1,0 +1,31 @@
+.input-search__container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 300px;
+  padding: 8px 8px;
+  border: 1px solid var(--grey-400);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 450ms;
+  span {
+    color: var(--text-200);
+  }
+}
+
+.material-symbols-outlined {
+  transition: color 450ms;
+}
+
+.input-search__container:focus-within {
+  border-color: var(--primario);
+}
+
+.input-search__container:focus-within span {
+  color: var(--primario);
+}
+
+.input-search {
+  all: unset;
+  width: 100%;
+}

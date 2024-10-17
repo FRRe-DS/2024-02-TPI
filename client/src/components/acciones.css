@@ -1,0 +1,9 @@
+.acciones_container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.acciones {
+  color: var(--text-400);
+}
