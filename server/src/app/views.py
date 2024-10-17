@@ -66,8 +66,6 @@ class VisitanteViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
-        elif self.request.method == "POST":
-            return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
 
 
