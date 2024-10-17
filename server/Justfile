@@ -1,5 +1,4 @@
 # https://github.com/casey/just
-
 serve mode="dev": migrate
     DJANGO_ENV={{mode}} docker compose up --build
 
