@@ -73,6 +73,9 @@ class EventoViewSet(viewsets.ModelViewSet):
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
 
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
     def get_permissions(self):
         if self.request.method == "GET":
             return [permissions.AllowAny()]

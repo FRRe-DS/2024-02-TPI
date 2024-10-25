@@ -4,9 +4,16 @@ from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from rest_framework.authtoken.models import Token
 
-from app.models import Escultor, Pais, Visitante
+from app.models import Escultor, Pais, Visitante, Tematica, Evento, Lugar, Escultura
 from django.contrib.auth.models import User
-from app.serializers import EscultorSerializer, VisitanteSerializer
+from app.serializers import (
+    EscultorSerializer,
+    VisitanteSerializer,
+    TematicaSerializer,
+    EventoSerializer,
+    LugarSerializer,
+    EsculturaSerializer,
+)
 
 
 class HealthCheckAPITest(SimpleTestCase):
@@ -209,3 +216,276 @@ class EscultoresAPITest(APITestCase):
         response = self.client.delete(self.detail_url(escultor.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Escultor.objects.filter(pk=escultor.pk).exists())
+
+
+class TematicaAPITest(APITestCase):
+    def setUp(self):
+        # configuracion inicial: crea un usuario y token
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.token, _ = Token.objects.get_or_create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+
+        self.base_url = reverse("tematicas-list")
+        self.detail_url = lambda pk: reverse("tematicas-detail", kwargs={"pk": pk})
+        # crea datos de prueba
+        self.tematica = Tematica.objects.create(nombre="Tematica Test")
+
+    def test_get_tematica_list_200_OK(self):
+        response = self.client.get(self.base_url)
+        tematicas = Tematica.objects.all()
+        expected_data = TematicaSerializer(tematicas, many=True).data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+
+    def test_post_tematica_authenticated_201_CREATED(self):
+        data = {"nombre": "Nueva Tematica"}
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["nombre"], data["nombre"])
+        self.assertTrue(Tematica.objects.filter(nombre="Nueva Tematica").exists())
+
+    def test_post_tematica_unauthenticated_401_UNAUTHORIZED(self):
+        self.client.force_authenticate(
+            user=None
+        )  # elimina la autentificion forzadamente
+        data = {"nombre": "Tematica no autenticada"}
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_update_tematica_200_OK(self):
+        data = {"nombre": "Tematica Actualizada"}
+        response = self.client.put(
+            self.detail_url(self.tematica.pk), data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.tematica.refresh_from_db()
+        self.assertEqual(self.tematica.nombre, "Tematica Actualizada")
+
+    def test_delete_tematica_204_NO_CONTENT(self):
+        response = self.client.delete(self.detail_url(self.tematica.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Tematica.objects.filter(pk=self.tematica.pk).exists())
+
+
+class EventoAPITest(APITestCase):
+    def setUp(self):
+        # configuracion inicial: crea un usuario y token
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.token, _ = Token.objects.get_or_create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+
+        self.base_url = reverse("eventos-list")
+        self.detail_url = lambda pk: reverse("eventos-detail", kwargs={"pk": pk})
+
+        # crea los objetos de prueba que tienen FK,
+        self.lugar = Lugar.objects.create(nombre="Lugar de prueba")
+        self.tematica = Tematica.objects.create(nombre="Temática de prueba")
+
+        # datos de prueba
+        self.evento = Evento.objects.create(
+            nombre="Evento Prueba",
+            lugar_id=self.lugar,
+            fecha_inicio="2024-10-09",
+            fecha_fin="2024-10-10",
+            descripcion="Descripción de prueba",
+            tematica_id=self.tematica,
+        )
+
+    def test_get_evento_list_200_OK(self):
+        response = self.client.get(self.base_url)
+        eventos = Evento.objects.all()
+        serializer = EventoSerializer(eventos, many=True)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_get_evento_detail_200_OK(self):
+        response = self.client.get(self.detail_url(self.evento.pk))
+        serializer = EventoSerializer(self.evento)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
+
+    def test_post_evento_authenticated_201_CREATED(self):
+        data = {
+            "nombre": "Nuevo Evento",
+            "lugar_id": self.lugar.pk,
+            "fecha_inicio": "2023-02-01",
+            "fecha_fin": "2023-02-02",
+            "descripcion": "Descripción del nuevo evento",
+            "tematica_id": self.tematica.pk,
+        }
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Evento.objects.filter(nombre="Nuevo Evento").exists())
+
+    def test_post_evento_unauthenticated_401_UNAUTHORIZED(self):
+        self.client.force_authenticate(user=None)  # Elimina autenticación
+        data = {
+            "nombre": "Evento sin autenticación",
+            "lugar_id": self.lugar.pk,
+            "fecha_inicio": "2023-03-01",
+            "fecha_fin": "2023-03-02",
+            "descripcion": "Intento sin autenticación",
+            "tematica_id": self.tematica.pk,
+        }
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_update_evento_200_OK(self):
+        data = {
+            "nombre": "Evento Actualizado",
+            "lugar_id": self.lugar.pk,
+            "fecha_inicio": "2023-01-01",
+            "fecha_fin": "2023-01-02",
+            "descripcion": "Descripción actualizada",
+            "tematica_id": self.tematica.pk,
+        }
+        response = self.client.put(self.detail_url(self.evento.pk), data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.evento.refresh_from_db()
+        self.assertEqual(self.evento.nombre, "Evento Actualizado")
+
+    def test_delete_evento_204_NO_CONTENT(self):
+        response = self.client.delete(self.detail_url(self.evento.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Evento.objects.filter(pk=self.evento.pk).exists())
+
+
+class lugarAPITest(APITestCase):
+    def setUp(self):
+        # configuracion inicial: crea un usuario y token
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.token, _ = Token.objects.get_or_create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+
+        self.base_url = reverse("lugares-list")
+        self.detail_url = lambda pk: reverse("lugares-detail", kwargs={"pk": pk})
+        # crea datos de prueba
+        self.lugar = Lugar.objects.create(nombre="lugar Test")
+
+    def test_get_lugar_list_200_OK(self):
+        response = self.client.get(self.base_url)
+        lugares = Lugar.objects.all()
+        expected_data = LugarSerializer(lugares, many=True).data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+
+    def test_post_lugar_authenticated_201_CREATED(self):
+        # se pasa los dos datos, ya que en los models se establecio que la descripcion de esta entidad es not null
+        data = {
+            "nombre": "nuevo lugar",
+            "descripcion": "nueva descripcion",
+        }
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Lugar.objects.filter(nombre="nuevo lugar").exists())
+
+    def test_post_lugar_unauthenticated_401_UNAUTHORIZED(self):
+        self.client.force_authenticate(
+            user=None
+        )  # elimina la autentificion forzadamente
+        data = {"nombre": "view lugar no autenticado"}
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_update_lugar_200_OK(self):
+        data = {
+            "nombre": "lugar actualizado",
+            "descripcion": "lugar actualizado",
+        }
+
+        response = self.client.put(self.detail_url(self.lugar.pk), data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.lugar.refresh_from_db()
+        self.assertEqual(self.lugar.nombre, "lugar actualizado")
+
+    def test_delete_lugar_204_NO_CONTENT(self):
+        response = self.client.delete(self.detail_url(self.lugar.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Lugar.objects.filter(pk=self.lugar.pk).exists())
+
+
+# __
+class EsculturaAPITest(APITestCase):
+    def setUp(self):
+        # Crear un usuario
+        self.client = APIClient()
+        self.user = User.objects.create_user(username="testuser", password="testpass")
+        self.token, _ = Token.objects.get_or_create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+
+        # URLs para el endpoint de Escultura
+        self.base_url = reverse("esculturas-list")
+        self.detail_url = lambda pk: reverse("esculturas-detail", kwargs={"pk": pk})
+        # escultura para las pruebas
+        self.escultura = Escultura.objects.create(
+            nombre="Escultura de Prueba",
+            descripcion="Descripción de la escultura de prueba",
+            fecha_creacion="2024-01-01",
+            qr=None,  #
+        )
+
+    def test_get_esculturas_list_200_OK(self):
+        response = self.client.get(self.base_url)
+        esculturas = Escultura.objects.all()
+        expected_data = EsculturaSerializer(esculturas, many=True).data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
+
+    def test_get_escultura_detail_200_OK(self):
+        escultura = Escultura.objects.first()
+
+        response = self.client.get(self.detail_url(escultura.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expected_data = EsculturaSerializer(escultura).data
+        self.assertEqual(expected_data, response.data)
+
+    def test_create_escultura_authenticated_201_CREATED(self):
+        data = {
+            "nombre": "Escultura de Prueba",
+            "descripcion": "Descripción de la escultura de prueba",
+            "fecha_creacion": "2024-01-01",
+            "qr": None,
+        }
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Escultura.objects.filter(nombre="Escultura de Prueba").exists())
+
+    def test_create_escultura_unauthenticated_401_UNAUTHORIZED(self):
+        self.client.force_authenticate(
+            user=None
+        )  # elimina la autentificion forzadamente
+        data = {
+            "nombre": "Escultura de Prueba",
+            "descripcion": "Descripción de la escultura de prueba",
+            "fecha_creacion": "2024-01-01",
+            "qr": None,
+        }
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_update_escultura_200_OK(self):
+        data = {
+            "nombre": "Escultura Actualizada",
+            "descripcion": "Descripción actualizada",
+            "fecha_creacion": "2024-02-01",
+            "qr": None,
+        }
+        response = self.client.put(
+            self.detail_url(self.escultura.pk), data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.escultura.refresh_from_db()
+        self.assertEqual(self.escultura.nombre, "Escultura Actualizada")
+
+    def test_delete_escultura_204_NO_CONTENT(self):
+        escultura = Escultura.objects.first()
+
+        user = User.objects.create_user("username", "password")
+        self.client.force_authenticate(user)
+
+        response = self.client.delete(self.detail_url(escultura.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Escultura.objects.filter(pk=escultura.pk).exists())
