@@ -1,0 +1,64 @@
+:root{
+  --bg: #000;
+  --text: #fff;
+}
+
+/* modifico la scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #676767; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #dfdfdf; 
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(150, 150, 150)1c1; 
+}
+
+body{
+  color: var(--text);
+  background-color: var(--bg);
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  font-family: "Mulish", sans-serif;
+  /* font-family: "Dancing Script", cursive; */
+}
+
+header{
+  
+  padding: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+
+header img{
+  height: 60px;
+}
+
+header nav ul{
+  display: inline-flex;
+  gap: 32px;
+}
+
+header div{
+  width: 113px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px;
+
+}
+
+footer{
+  padding-block: 20px;
+  width: 100%;
+}
