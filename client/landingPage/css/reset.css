@@ -43,6 +43,7 @@ body {
 a {
   all: unset;
   text-decoration-skip-ink: auto;
+  cursor: pointer;
 }
 
 /* Make images easier to work with */
@@ -58,6 +59,11 @@ button,
 textarea,
 select {
   font: inherit;
+}
+
+button {
+  all: unset;
+  cursor: pointer;
 }
 
 /* Remove all animations, transitions and smooth scroll for people that prefer not to see them */

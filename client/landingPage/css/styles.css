@@ -1,6 +1,8 @@
-:root{
+:root {
   --bg: #000;
-  --text: #fff;
+  --bg-2: #fff;
+  --text-200: #343434;
+  --text-400: #fff;
 }
 
 /* modifico la scrollbar */
@@ -10,55 +12,222 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #676767; 
+  background: #676767;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #dfdfdf; 
+  background: #dfdfdf;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(150, 150, 150)1c1; 
+  background: rgb(150, 150, 150) 1c1;
 }
 
-body{
-  color: var(--text);
+body {
+  color: var(--text-400);
   background-color: var(--bg);
   display: grid;
   grid-template-rows: auto 1fr auto;
   font-family: "Mulish", sans-serif;
+
   /* font-family: "Dancing Script", cursive; */
 }
 
-header{
-  
-  padding: 10px;
+.sidebar {
+  position: fixed;
+  bottom: -100%;
+  left: 0;
+  height: 66px;
+  width: 100vw;
+  z-index: 999;
+  background-color: #000000;
+  box-shadow: 0 -10px 10px rgba(255, 255, 255, 0.1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: bottom 0.5s ease-in;
+}
+
+.sidebar ul {
+  margin: 0;
+  padding: 0;
   width: 100%;
+  font-size: 0.85rem;
   display: flex;
   justify-content: space-around;
+  cursor: pointer;
 }
 
-header img{
+.sidebar ul li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  width: 62px;
+}
+
+header {
+  padding-block: 10px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding-inline: clamp(10px, 5vw, 4rem);
+}
+
+#header {
+  position: sticky;
+  top: 0px;
+  left: 0px;
+  z-index: 10;
+  transition: top 0.3s ease;
+  background-color: var(--bg);
+}
+
+#header.hidden {
+  top: -100%;
+}
+
+header img {
   height: 60px;
+  min-width: fit-content;
 }
 
-header nav ul{
+header nav {
+  display: inline-flex;
+  align-items: center;
+}
+
+header nav ul {
   display: inline-flex;
   gap: 32px;
+  padding: 0;
+  margin: 0;
 }
 
-header div{
+header div {
   width: 113px;
   display: inline-flex;
   align-items: center;
   justify-content: flex-end;
   gap: 15px;
-
 }
 
-footer{
+header div button {
+  display: grid;
+  place-items: center;
+}
+
+footer {
   padding-block: 20px;
   width: 100%;
+}
+
+.footer-end {
+  width: 100%;
+  padding-inline: 4rem;
+  display: inline-flex;
+  flex-wrap: wrap-reverse;
+  justify-content: space-between;
+}
+
+.icons-size {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.redes-sociales {
+  display: inline-flex;
+  gap: 15px;
+}
+
+.sponsors {
+  display: inline-flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 3rem;
+  width: 100%;
+  padding-block: 3rem;
+}
+
+.sponsors img {
+  width: 150px;
+}
+
+.cursiva {
+  font-family: "Dancing Script", cursive;
+}
+
+.ubicacion {
+  width: 100%;
+  position: relative;
+  margin-bottom: 130px;
+}
+
+.map {
+  width: 100%;
+}
+
+.card-invitacion {
+  background-color: var(--bg-2);
+  border-radius: 20px;
+  height: 260px;
+  width: min(650px, 100% - 3rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  color: var(--bg);
+  position: absolute;
+  bottom: calc(-260px / 2);
+  left: 50%;
+  transform: translate(-50%);
+  text-align: center;
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
+  padding-inline: 10px;
+  padding-bottom: 8px;
+}
+
+.card-invitacion p:first-child {
+  font-size: clamp(2.5rem, 2.143rem + 0.952vw, 3rem);
+}
+
+.card-invitacion p:last-child {
+  color: var(--text-200);
+  font-size: clamp(1rem, 0.821rem + 0.476vw, 1.25rem);
+}
+
+.card-invitacion .cursiva {
+  font-size: clamp(3rem, 2.643rem + 0.952vw, 3.5rem);
+}
+
+.hero-section {
+  background-image: url(../images/fondoHeroSection.jpeg);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+@media (max-width: 600px) {
+  header nav {
+    display: none;
+  }
+
+  footer {
+    margin-bottom: 66px;
+  }
+
+  .footer-end {
+    justify-content: center;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .sidebar {
+    bottom: 0;
+    transition: bottom 0.5s ease-out;
+  }
 }
