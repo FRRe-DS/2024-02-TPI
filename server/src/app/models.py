@@ -6,15 +6,6 @@ class Visitante(models.Model):
     correo = models.EmailField(null=False, blank=False, unique=True)
 
 
-class Escultura(models.Model):
-    id = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(max_length=300, blank=False, null=False)
-    fecha_creacion = models.DateField()
-    # Tiene sentido almacenar los códigos QR si van a ser regenerados cada 10 minutos?
-    qr = models.FileField(upload_to="qr/", blank=True, null=True)
-
-
 class Pais(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
@@ -29,6 +20,18 @@ class Escultor(models.Model):
     # este campo tendría que ser un URLField.
     foto = models.FileField(upload_to="perfiles/", blank=True, null=True)
     bibliografia = models.CharField(max_length=400, blank=False, null=False)
+
+
+class Escultura(models.Model):
+    id = models.AutoField(primary_key=True)
+    escultor_id = models.ForeignKey(
+        Escultor, on_delete=models.CASCADE, db_column="escultor_id"
+    )
+    nombre = models.CharField(max_length=100, blank=False, null=False)
+    descripcion = models.CharField(max_length=300, blank=False, null=False)
+    fecha_creacion = models.DateField()
+    # Tiene sentido almacenar los códigos QR si van a ser regenerados cada 10 minutos?
+    qr = models.FileField(upload_to="qr/", blank=True, null=True)
 
 
 """
