@@ -3,6 +3,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from rest_framework.authtoken.models import Token
+import logging
 
 from app.models import Escultor, Pais, Visitante, Tematica, Evento, Lugar, Escultura
 from django.contrib.auth.models import User
@@ -22,13 +23,18 @@ class HealthCheckAPITest(SimpleTestCase):
         self.assertEqual(response.status_code, 204)
 
 
-class VisitanteAPITest(APITestCase):
+class BaseAPITest(APITestCase):
     def setUp(self):
         self.client = APIClient()
-
         self.user = User.objects.create_user(username="testuser", password="password")
         self.token, _ = Token.objects.get_or_create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        logging.disable(logging.CRITICAL)
+
+
+class VisitanteAPITest(BaseAPITest):
+    def setUp(self):
+        super().setUp()
 
         # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `viewsets.ModelViewSet`)
         # De manera automática tendríamos implementadas funcionalidades básicas como listar (GET), crear (POST), destruir (DELETE), etcétera.
@@ -104,13 +110,9 @@ class VisitanteAPITest(APITestCase):
         self.assertFalse(Visitante.objects.filter(pk=visitante.pk).exists())
 
 
-class EscultoresAPITest(APITestCase):
+class EscultoresAPITest(BaseAPITest):
     def setUp(self):
-        self.client = APIClient()
-
-        self.user = User.objects.create_user(username="testuser", password="password")
-        self.token, _ = Token.objects.get_or_create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        super().setUp()
 
         # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `viewsets.ModelViewSet`)
         # De manera automática tendríamos implementadas funcionalidades básicas como listar (GET), crear (POST), destruir (DELETE), etcétera.
@@ -218,17 +220,12 @@ class EscultoresAPITest(APITestCase):
         self.assertFalse(Escultor.objects.filter(pk=escultor.pk).exists())
 
 
-class TematicaAPITest(APITestCase):
+class TematicaAPITest(BaseAPITest):
     def setUp(self):
-        # configuracion inicial: crea un usuario y token
-        self.client = APIClient()
-        self.user = User.objects.create_user(username="testuser", password="testpass")
-        self.token, _ = Token.objects.get_or_create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        super().setUp()
 
         self.base_url = reverse("tematicas-list")
         self.detail_url = lambda pk: reverse("tematicas-detail", kwargs={"pk": pk})
-        # crea datos de prueba
         self.tematica = Tematica.objects.create(nombre="Tematica Test")
 
     def test_get_tematica_list_200_OK(self):
@@ -268,13 +265,9 @@ class TematicaAPITest(APITestCase):
         self.assertFalse(Tematica.objects.filter(pk=self.tematica.pk).exists())
 
 
-class EventoAPITest(APITestCase):
+class EventoAPITest(BaseAPITest):
     def setUp(self):
-        # configuracion inicial: crea un usuario y token
-        self.client = APIClient()
-        self.user = User.objects.create_user(username="testuser", password="testpass")
-        self.token, _ = Token.objects.get_or_create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        super().setUp()
 
         self.base_url = reverse("eventos-list")
         self.detail_url = lambda pk: reverse("eventos-detail", kwargs={"pk": pk})
@@ -352,13 +345,9 @@ class EventoAPITest(APITestCase):
         self.assertFalse(Evento.objects.filter(pk=self.evento.pk).exists())
 
 
-class lugarAPITest(APITestCase):
+class lugarAPITest(BaseAPITest):
     def setUp(self):
-        # configuracion inicial: crea un usuario y token
-        self.client = APIClient()
-        self.user = User.objects.create_user(username="testuser", password="testpass")
-        self.token, _ = Token.objects.get_or_create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        super().setUp()
 
         self.base_url = reverse("lugares-list")
         self.detail_url = lambda pk: reverse("lugares-detail", kwargs={"pk": pk})
@@ -408,13 +397,9 @@ class lugarAPITest(APITestCase):
 
 
 # __
-class EsculturaAPITest(APITestCase):
+class EsculturaAPITest(BaseAPITest):
     def setUp(self):
-        # Crear un usuario
-        self.client = APIClient()
-        self.user = User.objects.create_user(username="testuser", password="testpass")
-        self.token, _ = Token.objects.get_or_create(user=self.user)
-        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        super().setUp()
 
         # URLs para el endpoint de Escultura
         self.base_url = reverse("esculturas-list")
