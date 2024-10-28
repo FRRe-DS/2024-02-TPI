@@ -23,7 +23,7 @@ pnpm run build
 > [!IMPORTANT]
 > Para ejecutar la aplicación utilizamos `docker compose`, asi que es necesario que lo tengas instalado.
 
-![Visualización del compose.yaml](../assets/compose.svg)
+![Visualización del compose.yaml](assets/compose.svg)
 
 ``` sh
 # https://github.com/casey/just
