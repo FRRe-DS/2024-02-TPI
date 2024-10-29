@@ -574,29 +574,61 @@ footer {
   padding-block: 4.5rem;
   justify-content: center;
   align-items: center;
-}
-
-.container-art-gallery {
-  width: 100%;
-  padding-block: 2rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 30px;
-}
-
-.art-gallery {
-  display: flex;
-  gap: 14px;
   overflow: hidden;
 }
-.art-gallery img {
-  object-fit: cover;
-  object-position: center;
-  width: 500px;
-  height: 500px;
+
+.art-gallery-section h2 {
+  margin-bottom: 30px;
+}
+
+.slider {
+  height: var(--heigth);
+  padding-block: 30px;
+  width: 100%;
+}
+
+.slider .list {
+  width: 100%;
+
+  display: flex;
+  position: relative;
+}
+.arrow-left,
+.arrow-right {
+  color: #dddddd;
+  width: 50px;
+  height: 50px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
   cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.arrow-left {
+  left: 30px;
+  top: 50%;
+  transform: translatey(-50%);
+}
+
+.arrow-right {
+  right: 30px;
+  top: 50%;
+  transform: translatey(-50%);
+}
+
+.slider .list .item {
+  width: var(--width);
+  height: var(--heigth);
+
+  left: 100%;
+}
+
+.slider .list .item img {
+  width: 100%;
 }
 
 @keyframes down {
