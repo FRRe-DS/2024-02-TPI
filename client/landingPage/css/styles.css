@@ -397,7 +397,7 @@ footer {
   width: 200px;
 }
 
-#btn {
+.btn-secundarioV2 {
   padding: 10px 20px;
   text-transform: uppercase;
   border-radius: 20px;
@@ -413,14 +413,18 @@ footer {
   user-select: none;
 }
 
-#btn:hover,
-:focus {
+.btn-secundarioV2:hover,
+.btn-secundarioV2:focus {
   color: #ffffff;
   background: #008cff;
   border: 1px solid #008cff;
   text-shadow: 0 0 5px #ffffff, 0 0 10px #ffffff, 0 0 20px #ffffff;
   box-shadow: 0 0 5px #008cff, 0 0 20px #008cff, 0 0 50px #008cff,
     0 0 100px #008cff;
+}
+
+.btn-secundarioV2:active {
+  transform: scale(0.9);
 }
 
 .mosaico-gallery {
@@ -485,30 +489,6 @@ footer {
 
   transition: transform 0.3s ease, opacity 1s, scale 1s;
 }
-
-/* @keyframes show {
-  from {
-    opacity: 0;
-    scale: 25%;
-  }
-
-  to {
-    opacity: 1;
-    scale: 100%;
-  }
-}
-
-.mosaico-card-evento {
-  view-timeline-name: --image;
-  view-timeline-axis: block;
-
-  animation-timeline: --image;
-  animation-name: show;
-
-  animation-range: entry 25% cover 30%;
-
-  animation-fill-mode: both;
-} */
 
 .mosaico-card-evento:hover {
   transform: scale(0.9);
@@ -619,6 +599,140 @@ footer {
 .slider .list .item img {
   width: 100%;
 }
+
+.slider:hover .item {
+  animation-play-state: paused !important;
+  filter: grayscale(1);
+}
+.slider .item:hover {
+  filter: grayscale(0);
+}
+
+/* ---Seccion de eventos---- */
+.container-title {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: clamp(200px, 30vw, 400px);
+  background-image: linear-gradient(
+    80deg,
+    rgb(183, 155, 253),
+    rgb(148, 218, 255)
+  );
+
+  position: relative;
+  overflow: hidden;
+}
+
+.container-title h1 {
+  z-index: 20;
+  font-size: clamp(2rem, 0.571rem + 3.81vw, 4rem);
+}
+
+#left2 {
+  position: absolute;
+
+  height: 500px;
+  width: 500px;
+  border-radius: 50%;
+  background-image: linear-gradient(
+    80deg,
+    rgb(178, 190, 255),
+    rgba(122, 131, 252, 0.8)
+  );
+  filter: blur(80px);
+  animation: left 30s 1s infinite;
+}
+
+#right2 {
+  position: absolute;
+  right: 0;
+  height: 500px;
+  width: 500px;
+  border-radius: 50%;
+  background-image: linear-gradient(
+    80deg,
+    rgba(173, 226, 255, 0.8),
+    rgb(70, 190, 255, 0.9)
+  );
+  filter: blur(80px);
+  animation: left 45s 0.5s infinite;
+}
+
+.wrapped2 {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.events-gallery {
+  width: 100%;
+  display: grid;
+  width: min(1300px, 100% - 4rem);
+  place-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 24px;
+  padding-block: 4rem;
+}
+
+.event-card {
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  width: 100%;
+  height: 450px;
+  background-color: #008cff;
+  text-align: center;
+  padding: 24px 16px;
+  gap: 1.5rem;
+  box-shadow: inset 0 -120px 150px 0 rgba(0, 0, 0, 0.9);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
+}
+
+.card-content {
+  display: flex;
+  gap: 5px;
+  justify-content: flex-end;
+  flex-direction: column;
+  align-items: center;
+}
+
+.card-content h2 {
+  font-size: clamp(2rem, 1.643rem + 0.952vw, 2.5rem);
+  font-weight: 400;
+}
+
+.card-content div {
+  display: inline-flex;
+
+  gap: 10px;
+}
+
+.btn-secundarioV3 {
+  padding: 6px 8px;
+
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #ffffffe8;
+
+  background: transparent;
+  cursor: pointer;
+  box-shadow: transparent;
+  border: 1px solid #ffffffe8;
+  transition: 0.5s ease;
+  user-select: none;
+}
+
+/*---animaciones--- */
+
 @keyframes autoRun {
   from {
     left: 100%;
@@ -626,13 +740,6 @@ footer {
   to {
     left: calc(var(--width) * -1);
   }
-}
-.slider:hover .item {
-  animation-play-state: paused !important;
-  filter: grayscale(1);
-}
-.slider .item:hover {
-  filter: grayscale(0);
 }
 
 @keyframes down {
