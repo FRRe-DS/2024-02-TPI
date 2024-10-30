@@ -29,6 +29,7 @@ from app.serializers import (
 from rest_framework import status, viewsets, permissions, authentication
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
+import requests, random
 
 
 # Esto solo lo incluyo para tener un ejemplo.
@@ -61,7 +62,11 @@ def health_check(request: Request) -> Response:
 def generarQR(request):
     escultura_id = request.GET.get("escultura_id")
     # aqui debemos poner la url de la pagina de votacion, a la cual deberemos pasarle la id de la escultura
-    url = "https://www.youtube.com/watch?v=pvETRmM4neQ&ab_channel=Jovaan"
+    url = (
+        "https://enzovallejos.github.io/VotoEsculturaprueba/?id_escultura={id}".format(
+            id=escultura_id
+        )
+    )
 
     if escultura_id == None:
         return Response(
@@ -69,10 +74,19 @@ def generarQR(request):
             status=status.HTTP_400_BAD_REQUEST,
         )
 
+    # creo un hash random para el qr asi va a ser diferente cada vez
+    hash_id = random.getrandbits(128)
+    # acorto el link
+    url_short = ("https://ulvis.net/api.php?url={url}&custom= %032x" % hash_id).format(
+        url=url
+    )
+
+    r = requests.get(url_short)
+
     return Response(
         {
-            "qr": "http://api.qrserver.com/v1/create-qr-code/?data={}!&size=200x200".format(
-                url
+            "qr": "http://api.qrserver.com/v1/create-qr-code/?data={}&size=200x200".format(
+                r.text
             )
         }
     )
