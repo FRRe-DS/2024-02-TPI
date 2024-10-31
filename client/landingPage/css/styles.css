@@ -61,7 +61,7 @@ body {
   cursor: pointer;
 }
 
-.sidebar ul li {
+.sidebar ul li a {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -372,6 +372,10 @@ footer {
   margin-top: 10px;
 }
 
+.text-pretty {
+  text-wrap: pretty;
+}
+
 .mosaico-container {
   display: flex;
   flex-direction: column;
@@ -627,7 +631,8 @@ footer {
 
 .container-title h1 {
   z-index: 20;
-  font-size: clamp(2rem, 0.571rem + 3.81vw, 4rem);
+  text-align: center;
+  font-size: clamp(1.5rem, -0.286rem + 4.762vw, 4rem);
 }
 
 #left2 {
@@ -668,7 +673,6 @@ footer {
 }
 
 .events-gallery {
-  width: 100%;
   display: grid;
   width: min(1300px, 100% - 4rem);
   place-items: center;
@@ -694,6 +698,7 @@ footer {
   background-repeat: no-repeat;
   background-size: cover;
   cursor: pointer;
+  transition: transform 0.3s ease, opacity 1s, scale 1s;
 }
 
 .card-content {
@@ -729,6 +734,159 @@ footer {
   border: 1px solid #ffffffe8;
   transition: 0.5s ease;
   user-select: none;
+}
+
+/* ---seccion certamen--- */
+.section-certamen {
+  width: min(1300px, 100% - 4rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.h2-mas-p {
+  padding-top: 64px;
+  width: 100%;
+  display: grid;
+  gap: 20px;
+}
+.h2-mas-p div h2 {
+  font-size: clamp(1.5rem, 1.143rem + 0.952vw, 2rem);
+}
+
+.divider-sm {
+  border-radius: 50px;
+  height: 2px;
+  background-color: var(--bg-2);
+  width: 50px;
+  margin-top: 10px;
+}
+
+.info-certamen {
+  display: grid;
+  gap: 10px;
+}
+
+.grid-escultores {
+  display: grid;
+  place-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 3rem;
+  padding-block: 3rem 5rem;
+}
+
+.card-escultor {
+  border-radius: 20px;
+  width: 100%;
+  position: relative;
+  transition: transform 0.3s ease, opacity 1s, scale 1s;
+}
+
+.escultor-img {
+  border-radius: 20px 20px 0 0;
+  filter: grayscale();
+  width: 100%;
+}
+
+.btn-primarioV2 {
+  background-color: var(--bg);
+  border-radius: 20px;
+  padding: 8px 10px;
+}
+
+.space {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nombre-origen {
+  background-color: var(--bg-2);
+  width: 100%;
+  padding: 20px 30px 30px 30px;
+  border-radius: 0 0 20px 20px;
+}
+.nombre-origen .space h3 {
+  font-size: 1.5rem;
+  color: var(--bg);
+}
+
+.nombre-origen p {
+  font-size: 1.25rem;
+  color: var(--bg);
+}
+.btn-votar {
+  position: absolute;
+  z-index: 10;
+  bottom: calc(-64px / 2);
+  left: 50%;
+  transform: translatex(-50%);
+
+  color: var(--text-400);
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  background-image: linear-gradient(
+    -25deg,
+    rgba(116, 206, 255, 1),
+    rgba(137, 140, 255, 1)
+  );
+  padding: 14px 18px;
+  border-radius: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+}
+
+.white {
+  background-color: var(--bg-2);
+  color: var(--bg);
+}
+
+.white-text {
+  color: var(--text-400) !important;
+}
+
+.black {
+  background-color: var(--bg);
+  color: var(--text-400);
+}
+
+.boceto {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.lightbox {
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.lightbox-content {
+  max-width: 90%;
+  max-height: 80%;
+  opacity: 0;
+  transition: 0.4s ease;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 /*---animaciones--- */

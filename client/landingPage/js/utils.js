@@ -39,3 +39,30 @@ const hiddenImgElements = document.querySelectorAll(".hiddenImg");
 hiddenElements.forEach((el) => observer.observe(el));
 
 hiddenImgElements.forEach((el) => observer.observe(el));
+
+// Ventana modal para ver imagenes en pantalla grande
+function openLightbox(image) {
+  const lightbox = document.getElementById("lightbox");
+  const lightboxImage = document.getElementById("lightboxImage");
+
+  const img = document.querySelector(".lightbox-content");
+
+  lightboxImage.src = image.src; // Establece la imagen seleccionada en el lightbox
+  lightbox.style.display = "flex"; // Muestra el lightbox
+
+  setTimeout(() => {
+    img.style.opacity = "1";
+  }, 200);
+}
+
+function closeLightbox() {
+  const lightbox = document.getElementById("lightbox");
+
+  const img = document.querySelector(".lightbox-content");
+
+  img.style.opacity = "0";
+
+  setTimeout(() => {
+    lightbox.style.display = "none";
+  }, 300);
+}
