@@ -6,7 +6,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from app.models import (
     Evento,
-    Visitante,
+    Votante,
     Escultor,
     Escultura,
     Pais,
@@ -16,7 +16,7 @@ from app.models import (
 )
 from app.serializers import (
     EventoSerializer,
-    VisitanteSerializer,
+    VotanteSerializer,
     EscultorSerializer,
     PaisSerializer,
     LugarSerializer,
@@ -30,18 +30,24 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 
 
-# Esto solo lo incluyo para tener un ejemplo.
 @api_view(["GET"])
 def celery_task_ejemplo(request: Request) -> JsonResponse:
-    from .tasks import count_visitantes
+    """
+    Ejemplo temporal para chequear que la integración entre celery y Django funcione correctamente.
+    """
 
-    result = count_visitantes.delay()
+    from .tasks import count_votantes
+
+    result = count_votantes.delay()
 
     return JsonResponse({"task_id": result.id, "status": "Task started!"})
 
 
 @api_view(["GET"])
 def check_task_status(request, task_id) -> JsonResponse:
+    """
+    Ejemplo temporal para chequear que la integración entre celery y Django funcione correctamente.
+    """
     from celery.result import AsyncResult
 
     task_result = AsyncResult(task_id)
@@ -53,12 +59,44 @@ def check_task_status(request, task_id) -> JsonResponse:
 
 @api_view(["GET"])
 def health_check(request: Request) -> Response:
+    """
+    Endpoint para consultar el estado del servidor.
+    """
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class VisitanteViewSet(viewsets.ModelViewSet):
-    queryset = Visitante.objects.all()
-    serializer_class = VisitanteSerializer
+class VotanteViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos Votantes.
+
+    Provee operatciones CRUD para el control de Votantes.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/votantes/
+      -  create: POST /api/votantes/
+      -  retrieve: GET /api/votantes/{id}/
+      -  update: PUT /api/votantes/{id}/
+      -  partial_update: PATCH /api/votantes/{id}/
+      -  destroy: DELETE /api/votantes/{id}/
+      -  archive: POST /api/votantes/{id}/archive/
+      -  featured: GET /api/votantes/featured/
+
+    Campos de busqueda:
+        - id
+        - correo
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
+    queryset = Votante.objects.all()
+    serializer_class = VotanteSerializer
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -70,6 +108,40 @@ class VisitanteViewSet(viewsets.ModelViewSet):
 
 
 class EventoViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos Eventos.
+
+    Provee operatciones CRUD para el control de Eventos.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/eventos/
+      -  create: POST /api/eventos/
+      -  retrieve: GET /api/eventos/{id}/
+      -  update: PUT /api/eventos/{id}/
+      -  partial_update: PATCH /api/eventos/{id}/
+      -  destroy: DELETE /api/eventos/{id}/
+      -  archive: POST /api/eventos/{id}/archive/
+      -  featured: GET /api/eventos/featured/
+
+    Campos de busqueda:
+        - id
+        - nombre
+        - lugar_id
+        - fecha_inicio
+        - fecha_fin
+        - descripcion
+        - tematica_id
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
 
@@ -83,6 +155,38 @@ class EventoViewSet(viewsets.ModelViewSet):
 
 
 class EsculturaViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos Esculturas.
+
+    Provee operatciones CRUD para el control de Esculturas.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/esculturas/
+      -  create: POST /api/esculturas/
+      -  retrieve: GET /api/esculturas/{id}/
+      -  update: PUT /api/esculturas/{id}/
+      -  partial_update: PATCH /api/esculturas/{id}/
+      -  destroy: DELETE /api/esculturas/{id}/
+      -  archive: POST /api/esculturas/{id}/archive/
+      -  featured: GET /api/esculturas/featured/
+
+    Campos de busqueda:
+        - id
+        - nombre
+        - descripcion
+        - fecha_creacion
+        - qr
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
     queryset = Escultura.objects.all()
     serializer_class = EsculturaSerializer
 
@@ -96,6 +200,39 @@ class EsculturaViewSet(viewsets.ModelViewSet):
 
 
 class EscultorViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos Escultor.
+
+    Provee operatciones CRUD para el control de Escultor.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/escultores/
+      -  create: POST /api/escultores/
+      -  retrieve: GET /api/escultores/{id}/
+      -  update: PUT /api/escultores/{id}/
+      -  partial_update: PATCH /api/escultores/{id}/
+      -  destroy: DELETE /api/escultores/{id}/
+      -  archive: POST /api/escultores/{id}/archive/
+      -  featured: GET /api/escultores/featured/
+
+    Campos de busqueda:
+        - id
+        - nombre
+        - correo
+        - pais_id
+        - foto
+        - bibliografia
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
     queryset = Escultor.objects.all()
     serializer_class = EscultorSerializer
 
@@ -109,11 +246,71 @@ class EscultorViewSet(viewsets.ModelViewSet):
 
 
 class ImagenViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos Imagen.
+
+    Provee operatciones CRUD para el control de Imagen.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/imagenes/
+      -  create: POST /api/imagenes/
+      -  retrieve: GET /api/imagenes/{id}/
+      -  update: PUT /api/imagenes/{id}/
+      -  partial_update: PATCH /api/imagenes/{id}/
+      -  destroy: DELETE /api/imagenes/{id}/
+      -  archive: POST /api/imagenes/{id}/archive/
+      -  featured: GET /api/imagenes/featured/
+
+    Campos de busqueda:
+        - id
+        - fecha
+        - imagen
+        - descripcion
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
     queryset = Imagen.objects.all()
     serializer_class = ImagenSerializer
 
 
 class PaisViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos Pais.
+
+    Provee operatciones CRUD para el control de Pais.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/paises/
+      -  create: POST /api/paises/
+      -  retrieve: GET /api/paises/{id}/
+      -  update: PUT /api/paises/{id}/
+      -  partial_update: PATCH /api/paises/{id}/
+      -  destroy: DELETE /api/paises/{id}/
+      -  archive: POST /api/paises/{id}/archive/
+      -  featured: GET /api/paises/featured/
+
+    Campos de busqueda:
+        - id
+        - nombre
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
     queryset = Pais.objects.all()
     serializer_class = PaisSerializer
 
@@ -174,6 +371,36 @@ class AdminSisViewSet(viewsets.ModelViewSet):
 
 
 class TematicaViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos Tematica.
+
+    Provee operatciones CRUD para el control de Tematica.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/tematica/
+      -  create: POST /api/tematica/
+      -  retrieve: GET /api/tematica/{id}/
+      -  update: PUT /api/tematica/{id}/
+      -  partial_update: PATCH /api/tematica/{id}/
+      -  destroy: DELETE /api/tematica/{id}/
+      -  archive: POST /api/tematica/{id}/archive/
+      -  featured: GET /api/tematica/featured/
+
+    Campos de busqueda:
+        - id
+        - nombre
+        - descripcion
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
     queryset = Tematica.objects.all()
     serializer_class = TematicaSerializer
 
@@ -187,6 +414,36 @@ class TematicaViewSet(viewsets.ModelViewSet):
 
 
 class LugarViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos Lugar.
+
+    Provee operatciones CRUD para el control de Lugar.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/lugar/
+      -  create: POST /api/lugar/
+      -  retrieve: GET /api/lugar/{id}/
+      -  update: PUT /api/lugar/{id}/
+      -  partial_update: PATCH /api/lugar/{id}/
+      -  destroy: DELETE /api/lugar/{id}/
+      -  archive: POST /api/lugar/{id}/archive/
+      -  featured: GET /api/lugar/featured/
+
+    Campos de busqueda:
+        - id
+        - nombre
+        - descripcion
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
     queryset = Lugar.objects.all()
     serializer_class = LugarSerializer
 
