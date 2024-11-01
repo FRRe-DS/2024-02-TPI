@@ -1,12 +1,20 @@
 from django.db import models
 
 
-class Visitante(models.Model):
+class Votante(models.Model):
+    """
+    Almacena la información de un votante.
+    """
+
     id = models.AutoField(primary_key=True)
     correo = models.EmailField(null=False, blank=False, unique=True)
 
 
 class Escultura(models.Model):
+    """
+    Almacena la información de una escultura.
+    """
+
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     descripcion = models.CharField(max_length=300, blank=False, null=False)
@@ -16,11 +24,19 @@ class Escultura(models.Model):
 
 
 class Pais(models.Model):
+    """
+    Almacena la información de un pais.
+    """
+
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
 
 
 class Escultor(models.Model):
+    """
+    Almacena la información de un escultor, está relacionado con :model:`app.Pais`.
+    """
+
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     pais_id = models.ForeignKey(Pais, on_delete=models.CASCADE, db_column="pais_id")
@@ -45,6 +61,10 @@ class AdminSistema(models.Model):
 
 
 class Imagen(models.Model):
+    """
+    Almacena la información de una imagen, está relacionado con :model:`app.Escultura`.
+    """
+
     id = models.AutoField(primary_key=True)
     fecha = models.DateField()
     # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes,
@@ -57,18 +77,30 @@ class Imagen(models.Model):
 
 
 class Tematica(models.Model):
+    """
+    Almacena la información de una temática
+    """
+
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     descripcion = models.CharField(max_length=255, blank=True, null=True)
 
 
 class Lugar(models.Model):
+    """
+    Almacena la información de un lugar.
+    """
+
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     descripcion = models.CharField(max_length=255, blank=False, null=False)
 
 
 class Evento(models.Model):
+    """
+    Almacena la información de un evento, está relacionado con :model:`app.Lugar` y :model:`app.Tematica`.
+    """
+
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
     lugar_id = models.ForeignKey(Lugar, on_delete=models.CASCADE, db_column="lugar_id")
@@ -81,6 +113,10 @@ class Evento(models.Model):
 
 
 class EsculturaImagen(models.Model):
+    """
+    Almacena la información de una escultura y las imagenes que le corresponde, está relacionado con :model:`app.Escultura` y :model:`app.Imagen`.
+    """
+
     id = models.AutoField(primary_key=True)
     escultura_id = models.ForeignKey(
         Escultura, on_delete=models.CASCADE, db_column="escultura_id"
@@ -91,6 +127,10 @@ class EsculturaImagen(models.Model):
 
 
 class Escultorevento(models.Model):
+    """
+    Almacena la información de un Escultor y los eventos en donde participa, está relacionado con :model:`app.Escultor` y :model:`app.Evento`.
+    """
+
     id = models.AutoField(primary_key=True)
     escultor_id = models.ForeignKey(
         Escultor, on_delete=models.CASCADE, db_column="escultor_id"
@@ -101,20 +141,28 @@ class Escultorevento(models.Model):
 
 
 class VotoEscultura(models.Model):
+    """
+    Almacena la información de los votos que tiene una escultura, está relacionado con :model:`app.Escultura` y :model:`app.Votante`.
+    """
+
     id = models.AutoField(primary_key=True)
     escultura_id = models.ForeignKey(
         Escultura, on_delete=models.CASCADE, db_column="escultura_id"
     )
-    visitante_id = models.ForeignKey(
-        Visitante, on_delete=models.CASCADE, db_column="visitante_id"
+    votante_id = models.ForeignKey(
+        Votante, on_delete=models.CASCADE, db_column="votante_id"
     )
 
 
 class VotoEscultor(models.Model):
+    """
+    Almacena la información de los votos que tiene un escultor, está relacionado con :model:`app.Escultor` y :model:`app.Votante`.
+    """
+
     id = models.AutoField(primary_key=True)
     escultor_id = models.ForeignKey(
         Escultor, on_delete=models.CASCADE, db_column="escultor_id"
     )
-    visitante_id = models.ForeignKey(
-        Visitante, on_delete=models.CASCADE, db_column="visitante_id"
+    votante_id = models.ForeignKey(
+        Votante, on_delete=models.CASCADE, db_column="votante_id"
     )

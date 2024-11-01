@@ -5,11 +5,11 @@ from rest_framework.test import APIClient, APITestCase
 from rest_framework.authtoken.models import Token
 import logging
 
-from app.models import Escultor, Pais, Visitante, Tematica, Evento, Lugar, Escultura
+from app.models import Escultor, Pais, Votante, Tematica, Evento, Lugar, Escultura
 from django.contrib.auth.models import User
 from app.serializers import (
     EscultorSerializer,
-    VisitanteSerializer,
+    VotanteSerializer,
     TematicaSerializer,
     EventoSerializer,
     LugarSerializer,
@@ -32,39 +32,39 @@ class BaseAPITest(APITestCase):
         logging.disable(logging.CRITICAL)
 
 
-class VisitanteAPITest(BaseAPITest):
+class VotanteAPITest(BaseAPITest):
     def setUp(self):
         super().setUp()
 
         # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `viewsets.ModelViewSet`)
         # De manera automática tendríamos implementadas funcionalidades básicas como listar (GET), crear (POST), destruir (DELETE), etcétera.
         # Como estas funciones solo difieren en la cabecera HTTP que es enviada a la url y no en la url en sí, decidí darle un nombre descriptivo.
-        self.base_url = reverse("visitantes-list")
+        self.base_url = reverse("votantes-list")
 
         # INFO: (Lautaro) Esta funcion lambda tiene el proposito de generar dinamicamente endpoints como:
-        # - <GET/PUT/DELETE> /visitantes/<id>/
-        self.detail_url = lambda pk: reverse("visitantes-detail", kwargs={"pk": pk})
+        # - <GET/PUT/DELETE> /votantes/<id>/
+        self.detail_url = lambda pk: reverse("votantes-detail", kwargs={"pk": pk})
 
-        Visitante.objects.create(correo="acostalautaro@ejemplo.com")
-        Visitante.objects.create(correo="gonza_saucedo@ejemplo.com")
-        Visitante.objects.create(correo="enzovallejos@ejemplo.com")
-        Visitante.objects.create(correo="tobiasstegmayer@ejemplo.com")
-        Visitante.objects.create(correo="ivanniveyro@ejemplo.com")
+        Votante.objects.create(correo="acostalautaro@ejemplo.com")
+        Votante.objects.create(correo="gonza_saucedo@ejemplo.com")
+        Votante.objects.create(correo="enzovallejos@ejemplo.com")
+        Votante.objects.create(correo="tobiasstegmayer@ejemplo.com")
+        Votante.objects.create(correo="ivanniveyro@ejemplo.com")
 
-    def test_get_visitantes_data_200_OK(self):
+    def test_get_votantes_data_200_OK(self):
         response = self.client.get(self.base_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
 
-        expected_data = VisitanteSerializer(Visitante.objects.all(), many=True).data
+        expected_data = VotanteSerializer(Votante.objects.all(), many=True).data
         self.assertEqual(expected_data, response.data)
 
-    def test_get_visitante_200_OK(self):
-        visitante = Visitante.objects.first()
+    def test_get_votante_200_OK(self):
+        votante = Votante.objects.first()
 
-        response = self.client.get(self.detail_url(visitante.pk))
+        response = self.client.get(self.detail_url(votante.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        expected_data = VisitanteSerializer(visitante).data
+        expected_data = VotanteSerializer(votante).data
         self.assertEqual(expected_data, response.data)
 
     def test_add_user_201_CREATED(self):
@@ -74,10 +74,10 @@ class VisitanteAPITest(BaseAPITest):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["correo"], "Xxenzo_vallejosxX@xbox.com")
         self.assertTrue(
-            Visitante.objects.filter(correo="Xxenzo_vallejosxX@xbox.com").exists()
+            Votante.objects.filter(correo="Xxenzo_vallejosxX@xbox.com").exists()
         )
 
-    def test_add_visitante_400_BAD_REQUEST(self):
+    def test_add_votante_400_BAD_REQUEST(self):
         # La clase `EmailValidator`, utilizada por `EmailField`, ya se adhiere a los estándares de emails RFC 5321 y RFC 5322.
         # Además nuestro escenario no tiene ninguna restricción especial en tanto a los correos que debe aceptar
         # por lo que me parece que, los controles que este validador realiza son suficientes para nuestra aplicación y no haría
@@ -99,15 +99,15 @@ class VisitanteAPITest(BaseAPITest):
             response = self.client.post(self.base_url, data, format="json")
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_delete_visitante_204_NO_CONTENT(self):
-        visitante = Visitante.objects.first()
+    def test_delete_votante_204_NO_CONTENT(self):
+        votante = Votante.objects.first()
 
         user = User.objects.create_user("username", "password")
         self.client.force_authenticate(user)
 
-        response = self.client.delete(self.detail_url(visitante.pk))
+        response = self.client.delete(self.detail_url(votante.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(Visitante.objects.filter(pk=visitante.pk).exists())
+        self.assertFalse(Votante.objects.filter(pk=votante.pk).exists())
 
 
 class EscultoresAPITest(BaseAPITest):
@@ -120,7 +120,7 @@ class EscultoresAPITest(BaseAPITest):
         self.base_url = reverse("escultores-list")
 
         # INFO: (Lautaro) Esta funcion lambda tiene el proposito de generar dinamicamente endpoints como:
-        # - <GET/PUT/DELETE> /visitantes/<id>/
+        # - <GET/PUT/DELETE> /votantes/<id>/
         self.detail_url = lambda pk: reverse("escultores-detail", kwargs={"pk": pk})
 
         pais = Pais.objects.create(nombre="Argentina")
@@ -209,7 +209,7 @@ class EscultoresAPITest(BaseAPITest):
             response = self.client.post(self.base_url, escultor, format="json")
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-    def test_delete_visitante_204_NO_CONTENT(self):
+    def test_delete_votante_204_NO_CONTENT(self):
         escultor = Escultor.objects.first()
 
         user = User.objects.create_user("username", "password")
