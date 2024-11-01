@@ -6,10 +6,10 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Define las rutas relativas para la base de datos y el archivo de inserciones
 DB_PATH = os.path.join(
-    BASE_DIR, "src", "app", "db.sqlite3"
+    BASE_DIR, "..", "db.sqlite3"
 )  # Carpeta "db" para la base de datos
 INSERT_SQL_FILE = os.path.join(
-    BASE_DIR, "src", "scripts", "insert_data.sql"
+    BASE_DIR, "insert_data.sql"
 )  # Carpeta "scripts" para el archivo SQL
 
 
@@ -21,7 +21,9 @@ def is_database_empty(db_path):
         cursor = conn.cursor()
 
         # Obtener la lista de tablas en la base de datos
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        cursor.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'app_%';"
+        )
         tables = [row[0] for row in cursor.fetchall()]
 
         # Revisar si alguna tabla tiene datos
@@ -41,7 +43,7 @@ def populate_database(db_path, sql_file):
         cursor = conn.cursor()
 
         # Leer el archivo SQL y ejecutar las sentencias
-        with open(sql_file, "r") as file:
+        with open(sql_file, "r", encoding="utf-8") as file:
             sql_script = file.read()
 
         # Ejecutar el script de inserción

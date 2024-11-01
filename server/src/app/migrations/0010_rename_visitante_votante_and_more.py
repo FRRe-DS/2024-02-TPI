@@ -5,34 +5,43 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('app', '0009_remove_imagen_fecha_imagen_escultura_id_and_more'),
+        ("app", "0009_remove_imagen_fecha_imagen_escultura_id_and_more"),
     ]
 
     operations = [
         migrations.RenameModel(
-            old_name='Visitante',
-            new_name='Votante',
+            old_name="Visitante",
+            new_name="Votante",
         ),
         migrations.RemoveField(
-            model_name='votoescultor',
-            name='visitante_id',
+            model_name="votoescultor",
+            name="visitante_id",
         ),
         migrations.RemoveField(
-            model_name='votoescultura',
-            name='visitante_id',
+            model_name="votoescultura",
+            name="visitante_id",
         ),
         migrations.AddField(
-            model_name='votoescultor',
-            name='votante_id',
-            field=models.ForeignKey(db_column='votante_id', default=1, on_delete=django.db.models.deletion.CASCADE, to='app.votante'),
+            model_name="votoescultor",
+            name="votante_id",
+            field=models.ForeignKey(
+                db_column="votante_id",
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.votante",
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='votoescultura',
-            name='votante_id',
-            field=models.ForeignKey(db_column='votante_id', default=2, on_delete=django.db.models.deletion.CASCADE, to='app.votante'),
+            model_name="votoescultura",
+            name="votante_id",
+            field=models.ForeignKey(
+                db_column="votante_id",
+                default=2,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.votante",
+            ),
             preserve_default=False,
         ),
     ]

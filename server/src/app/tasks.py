@@ -1,8 +1,8 @@
-from .models import Visitante
+from .models import Votante
 from celery import shared_task
 
 
 @shared_task
-def count_visitantes():
+def count_voatantes():
     # time.sleep(20)
-    return Visitante.objects.count()
+    return Votante.objects.count()
