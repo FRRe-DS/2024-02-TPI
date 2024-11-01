@@ -5,16 +5,20 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('app', '0002_delete_adminsistema'),
+        ("app", "0002_delete_adminsistema"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='escultura',
-            name='escultor_id',
-            field=models.ForeignKey(db_column='escultor_id', default=1, on_delete=django.db.models.deletion.CASCADE, to='app.escultor'),
+            model_name="escultura",
+            name="escultor_id",
+            field=models.ForeignKey(
+                db_column="escultor_id",
+                default=1,
+                on_delete=django.db.models.deletion.CASCADE,
+                to="app.escultor",
+            ),
             preserve_default=False,
         ),
     ]

@@ -6,7 +6,7 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from app.models import (
     Evento,
-    Visitante,
+    Votante,
     Escultor,
     Escultura,
     Pais,
@@ -16,7 +16,7 @@ from app.models import (
 )
 from app.serializers import (
     EventoSerializer,
-    VisitanteSerializer,
+    VotanteSerializer,
     EscultorSerializer,
     PaisSerializer,
     LugarSerializer,
@@ -56,9 +56,9 @@ def health_check(request: Request) -> Response:
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class VisitanteViewSet(viewsets.ModelViewSet):
-    queryset = Visitante.objects.all()
-    serializer_class = VisitanteSerializer
+class VotanteViewSet(viewsets.ModelViewSet):
+    queryset = Votante.objects.all()
+    serializer_class = VotanteSerializer
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]

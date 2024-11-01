@@ -1,6 +1,6 @@
 from .views import (
     EventoViewSet,
-    VisitanteViewSet,
+    VotanteViewSet,
     EscultorViewSet,
     EsculturaViewSet,
     ImagenViewSet,
@@ -28,7 +28,7 @@ router = routers.DefaultRouter()
  Son con estas rutas a las cuales los tests que realicemos se tienen que referir.
 """
 
-router.register("api/visitantes", VisitanteViewSet, "visitantes")
+router.register("api/votantes", VotanteViewSet, "votantes")
 router.register("api/escultores", EscultorViewSet, "escultores")
 router.register("api/esculturas", EsculturaViewSet, "esculturas")
 router.register("api/eventos", EventoViewSet, "eventos")
