@@ -4,7 +4,7 @@ serve mode="dev": migrate inicializacion
 
 migrate: fmt
     uv run ./src/manage.py makemigrations
-    uv run ./src/manage.py migrate
+    uv run ./src/manage.py migrate --run-syncdb
 
 check: fmt
     ruff check ./
