@@ -1,4 +1,7 @@
 from django.db import models
+from django.core.files.base import ContentFile
+from PIL import Image
+import io
 
 
 class Votante(models.Model):
@@ -10,25 +13,13 @@ class Votante(models.Model):
     correo = models.EmailField(null=False, blank=False, unique=True)
 
 
-class Escultura(models.Model):
-    """
-    Almacena la información de una escultura.
-    """
-
-    id = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(max_length=300, blank=False, null=False)
-    fecha_creacion = models.DateField()
-    # Tiene sentido almacenar los códigos QR si van a ser regenerados cada 10 minutos?
-    qr = models.FileField(upload_to="qr/", blank=True, null=True)
-
-
 class Pais(models.Model):
     """
     Almacena la información de un pais.
     """
 
     id = models.AutoField(primary_key=True)
+    iso = models.CharField(max_length=2, blank=False, null=False)
     nombre = models.CharField(max_length=100, blank=False, null=False)
 
 
@@ -38,26 +29,53 @@ class Escultor(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
-    nombre = models.CharField(max_length=100, blank=False, null=False)
+    nombre = models.CharField(max_length=40, blank=False, null=False)
+    apellido = models.CharField(max_length=30, blank=False, null=False)
     pais_id = models.ForeignKey(Pais, on_delete=models.CASCADE, db_column="pais_id")
     correo = models.EmailField(null=False, blank=False, unique=True)
+    fecha_nacimiento = models.DateField(blank=True, null=True)
     # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes,
     # este campo tendría que ser un URLField.
     foto = models.FileField(upload_to="perfiles/", blank=True, null=True)
     bibliografia = models.CharField(max_length=400, blank=False, null=False)
 
+    def save(self, *args, **kwargs):
+        if self.foto:
+            # Abrir la imagen usando PIL
+            img = Image.open(self.foto)
 
-"""
+            # Convertir a RGB si no lo está
+            if img.mode != "RGB":
+                img = img.convert("RGB")
 
-Para utilizar la autenticacion de token tenemos que usar el model user que brinda django
-Por ende cambie en el serializer eso y quedo sin uso esto, pero lo dejo por las dudas para mas adelante, si al final no lo usamos lo borramos nomas
+            # Convertir la imagen a webp
+            img_io = io.BytesIO()
+            # Puedes ajustar la calidad
+            img.save(img_io, format="WEBP", quality=100)
+            img_content = ContentFile(
+                img_io.getvalue(), name=self.foto.name.split(".")[0] + ".webp"
+            )
 
-class AdminSistema(models.Model):
+            # Reemplazar la imagen original
+            self.foto = img_content
+
+        super(Escultor, self).save(*args, **kwargs)
+
+
+class Escultura(models.Model):
+    """
+    Almacena la información de una escultura.
+    """
+
     id = models.AutoField(primary_key=True)
-    username = models.CharField(max_length=150, null = False, blank=False, unique=True)
-    correo = models.EmailField(null=False, blank=False, unique=True)
-    password = models.CharField(max_length=32, blank=False)
-"""
+    escultor_id = models.ForeignKey(
+        Escultor, on_delete=models.CASCADE, db_column="escultor_id"
+    )
+    nombre = models.CharField(max_length=100, blank=False, null=False)
+    descripcion = models.CharField(max_length=300, blank=False, null=False)
+    fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
+    # Tiene sentido almacenar los códigos QR si van a ser regenerados cada 10 minutos?
+    qr = models.FileField(upload_to="qr/", blank=True, null=True)
 
 
 class Imagen(models.Model):
@@ -66,14 +84,34 @@ class Imagen(models.Model):
     """
 
     id = models.AutoField(primary_key=True)
-    fecha = models.DateField()
-    # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes,
-    # este campo tendría que ser un URLField.
-    #
-    # imagen = models.URLField(max_length=200)
-    #
+    fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
+    escultura_id = models.ForeignKey(
+        Escultura, on_delete=models.CASCADE, db_column="escultura_id"
+    )
     imagen = models.FileField(upload_to="imagenes/", blank=True, null=True)
     descripcion = models.CharField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.imagen:
+            # Abrir la imagen usando PIL
+            img = Image.open(self.imagen)
+
+            # Convertir a RGB si no lo está
+            if img.mode != "RGB":
+                img = img.convert("RGB")
+
+            # Convertir la imagen a webp
+            img_io = io.BytesIO()
+            # Puedes ajustar la calidad
+            img.save(img_io, format="WEBP", quality=100)
+            img_content = ContentFile(
+                img_io.getvalue(), name=self.imagen.name.split(".")[0] + ".webp"
+            )
+
+            # Reemplazar la imagen original
+            self.imagen = img_content
+
+        super(Imagen, self).save(*args, **kwargs)
 
 
 class Tematica(models.Model):
@@ -112,20 +150,6 @@ class Evento(models.Model):
     )
 
 
-class EsculturaImagen(models.Model):
-    """
-    Almacena la información de una escultura y las imagenes que le corresponde, está relacionado con :model:`app.Escultura` y :model:`app.Imagen`.
-    """
-
-    id = models.AutoField(primary_key=True)
-    escultura_id = models.ForeignKey(
-        Escultura, on_delete=models.CASCADE, db_column="escultura_id"
-    )
-    imagen_id = models.ForeignKey(
-        Imagen, on_delete=models.CASCADE, db_column="imagen_id"
-    )
-
-
 class Escultorevento(models.Model):
     """
     Almacena la información de un Escultor y los eventos en donde participa, está relacionado con :model:`app.Escultor` y :model:`app.Evento`.
@@ -152,6 +176,14 @@ class VotoEscultura(models.Model):
     votante_id = models.ForeignKey(
         Votante, on_delete=models.CASCADE, db_column="votante_id"
     )
+
+    # Si hacemos consultas que combinan  votaciones por escultor_id y votante_id esta es la mejor opcion
+    # Esto puede acelerar las consultas que involucran ambas columnas. por ejemplo, si buscamos votaciones por escultor_id y votante_id
+
+    class Meta:
+        indexes = [
+            models.Index(fields=["escultura_id", "votante_id"]),
+        ]
 
 
 class VotoEscultor(models.Model):
