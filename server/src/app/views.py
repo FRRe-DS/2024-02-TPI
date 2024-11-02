@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
+
 from app.models import (
     Evento,
     Votante,
@@ -125,7 +126,7 @@ class EventoViewSet(viewsets.ModelViewSet):
       -  archive: POST /api/eventos/{id}/archive/
       -  featured: GET /api/eventos/featured/
 
-    Campos de busqueda:
+    Campos de filtrado:
         - id
         - nombre
         - lugar_id
@@ -144,6 +145,7 @@ class EventoViewSet(viewsets.ModelViewSet):
 
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
+    filterset_fields = ["tematica_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]

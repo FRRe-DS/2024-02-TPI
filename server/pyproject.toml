@@ -19,6 +19,7 @@ dependencies = [
     "gunicorn>=23.0.0",
     "docutils>=0.21.2",
     "whitenoise>=6.8.2",
+    "django-filter>=24.3",
 ]
 
 [build-system]
