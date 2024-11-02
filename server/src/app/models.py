@@ -1,4 +1,7 @@
 from django.db import models
+from django.core.files.base import ContentFile
+from PIL import Image
+import io
 
 
 class Votante(models.Model):
@@ -23,6 +26,27 @@ class Escultor(models.Model):
     # este campo tendría que ser un URLField.
     foto = models.FileField(upload_to="perfiles/", blank=True, null=True)
     bibliografia = models.CharField(max_length=400, blank=False, null=False)
+
+    def save(self, *args, **kwargs):
+        if self.foto:
+            # Abrir la imagen usando PIL
+            img = Image.open(self.foto)
+
+            # Convertir a RGB si no lo está
+            if img.mode != "RGB":
+                img = img.convert("RGB")
+
+            # Convertir la imagen a webp
+            img_io = io.BytesIO()
+            img.save(img_io, format="WEBP", quality=100)  # Puedes ajustar la calidad
+            img_content = ContentFile(
+                img_io.getvalue(), name=self.foto.name.split(".")[0] + ".webp"
+            )
+
+            # Reemplazar la imagen original
+            self.foto = img_content
+
+        super(Escultor, self).save(*args, **kwargs)
 
 
 class Escultura(models.Model):
@@ -63,6 +87,27 @@ class Imagen(models.Model):
     #
     imagen = models.FileField(upload_to="imagenes/", blank=True, null=True)
     descripcion = models.CharField(max_length=255, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if self.imagen:
+            # Abrir la imagen usando PIL
+            img = Image.open(self.imagen)
+
+            # Convertir a RGB si no lo está
+            if img.mode != "RGB":
+                img = img.convert("RGB")
+
+            # Convertir la imagen a webp
+            img_io = io.BytesIO()
+            img.save(img_io, format="WEBP", quality=100)  # Puedes ajustar la calidad
+            img_content = ContentFile(
+                img_io.getvalue(), name=self.imagen.name.split(".")[0] + ".webp"
+            )
+
+            # Reemplazar la imagen original
+            self.imagen = img_content
+
+        super(Imagen, self).save(*args, **kwargs)
 
 
 class Tematica(models.Model):
