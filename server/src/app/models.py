@@ -169,7 +169,7 @@ class VotoEscultura(models.Model):
     )
 
     # Si hacemos consultas que combinan  votaciones por escultor_id y votante_id esta es la mejor opcion
-    # Esto puede acelerar las consultas que involucran ambas columnas.
+    # Esto puede acelerar las consultas que involucran ambas columnas. por ejemplo, si buscamos votaciones por escultor_id y votante_id
 
     class Meta:
         indexes = [
