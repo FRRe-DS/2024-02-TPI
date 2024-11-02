@@ -1,7 +1,6 @@
 import sqlite3
 from sqlite3 import Error
 from faker import Faker
-import random
 from urls_imagenes import urls_esculturas
 
 fake = Faker("es_ES")

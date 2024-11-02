@@ -3,6 +3,6 @@ from celery import shared_task
 
 
 @shared_task
-def count_voatantes():
+def count_votantes():
     # time.sleep(20)
     return Votante.objects.count()

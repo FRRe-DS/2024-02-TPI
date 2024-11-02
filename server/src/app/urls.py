@@ -47,17 +47,5 @@ urlpatterns = [
         views.check_task_status,
         name="check_task_status",
     ),
+    path("admin/doc/", include("django.contrib.admindocs.urls")),
 ]
-
-"""
-urlpatterns = [
-    router.urls,
-    path("", views.getVisitantesData, name="getVisitantesData"),
-    path("add/", views.addVisitante, name="addVisitante"),
-    path("health_check/", views.health_check, name="health_check"),
-    path("getescultor/", views.getEscultor, name="getEscultor"),
-    path("getesculturas/", views.getEsculturas, name="getEscultoras"),
-    path("geteventos/", views.getEventos, name="getEventos"),
-    path("getimagenes/", views.getImg, name="getImg")
-]
-"""

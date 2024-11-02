@@ -1,18 +1,29 @@
-FROM python:3.12-alpine
+# https://github.com/astral-sh/uv-docker-example/blob/main/multistage.Dockerfile
+FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
-RUN apk add --no-cache gcc musl-dev linux-headers 
+ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 
-# RUN adduser -D -h /home/grupo2 grupo2
-# WORKDIR /home/grupo2/app
 WORKDIR /app
 
-COPY ./requirements.txt requirements.txt
-# COPY ./requirements.txt /home/grupo2/app/requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt
-# COPY ./src/ /home/grupo2/app/
-COPY ./src/ /app
+RUN --mount=type=cache,target=/root/.cache/uv \
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project --no-dev
 
-# USER grupo2 
+ADD . /app
+
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen --no-dev
+
+FROM python:3.12-slim-bookworm
+
+WORKDIR /app
+
+COPY --from=builder --chown=app:app /app /app
+
+ENV PATH="/app/.venv/bin:$PATH"
+
+ADD ./src /app
+
 EXPOSE 8000
 CMD ["gunicorn", "-c", "./gunicorn.conf.py", "backend.wsgi:application"]
-
