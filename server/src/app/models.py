@@ -19,7 +19,8 @@ class Escultor(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=40, blank=False, null=False)
     apellido = models.CharField(max_length=30, blank=False, null=False)
-    pais_id = models.ForeignKey(Pais, on_delete=models.CASCADE, db_column="pais_id")
+    pais_id = models.ForeignKey(
+        Pais, on_delete=models.CASCADE, db_column="pais_id")
     correo = models.EmailField(null=False, blank=False, unique=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
     # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes,
@@ -38,7 +39,8 @@ class Escultor(models.Model):
 
             # Convertir la imagen a webp
             img_io = io.BytesIO()
-            img.save(img_io, format="WEBP", quality=100)  # Puedes ajustar la calidad
+            # Puedes ajustar la calidad
+            img.save(img_io, format="WEBP", quality=100)
             img_content = ContentFile(
                 img_io.getvalue(), name=self.foto.name.split(".")[0] + ".webp"
             )
@@ -99,7 +101,8 @@ class Imagen(models.Model):
 
             # Convertir la imagen a webp
             img_io = io.BytesIO()
-            img.save(img_io, format="WEBP", quality=100)  # Puedes ajustar la calidad
+            # Puedes ajustar la calidad
+            img.save(img_io, format="WEBP", quality=100)
             img_content = ContentFile(
                 img_io.getvalue(), name=self.imagen.name.split(".")[0] + ".webp"
             )
@@ -125,7 +128,8 @@ class Lugar(models.Model):
 class Evento(models.Model):
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
-    lugar_id = models.ForeignKey(Lugar, on_delete=models.CASCADE, db_column="lugar_id")
+    lugar_id = models.ForeignKey(
+        Lugar, on_delete=models.CASCADE, db_column="lugar_id")
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     descripcion = models.CharField(max_length=255, blank=False, null=False)
@@ -163,6 +167,14 @@ class VotoEscultura(models.Model):
     votante_id = models.ForeignKey(
         Votante, on_delete=models.CASCADE, db_column="votante_id"
     )
+
+    # Si hacemos consultas que combinan  votaciones por escultor_id y votante_id esta es la mejor opcion
+    # Esto puede acelerar las consultas que involucran ambas columnas.
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['escultor_id', 'votante_id']),
+        ]
 
 
 class VotoEscultor(models.Model):
