@@ -106,6 +106,7 @@ class VotoEscultura(models.Model):
         Escultura, on_delete=models.CASCADE, db_column="escultura_id"
     )
     correo_visitante = models.EmailField(null=False, blank=False, unique=True)
+    puntaje = models.PositiveIntegerField()
 
 
 class VotoEscultor(models.Model):

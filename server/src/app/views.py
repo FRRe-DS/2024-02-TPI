@@ -237,6 +237,12 @@ class VotoEsculturaViewSet(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
     def create(self, request, *args, **kwargs):
+        if (request.data["puntaje"] < 1) or (request.data["puntaje"] > 5):
+            return Response(
+                {"status": "ingrese un puntaje valido"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
         try:
             voto = VotoEscultura.objects.get(
                 escultura_id=request.data["escultura_id"],
