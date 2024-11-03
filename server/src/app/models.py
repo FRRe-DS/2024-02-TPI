@@ -76,6 +76,8 @@ class Escultura(models.Model):
     fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
     # Tiene sentido almacenar los códigos QR si van a ser regenerados cada 10 minutos?
     qr = models.FileField(upload_to="qr/", blank=True, null=True)
+    puntaje = models.PositiveIntegerField()
+    puntaje = models.PositiveIntegerField()
 
 
 class Imagen(models.Model):
@@ -184,17 +186,3 @@ class VotoEscultura(models.Model):
         indexes = [
             models.Index(fields=["escultura_id", "votante_id"]),
         ]
-
-
-class VotoEscultor(models.Model):
-    """
-    Almacena la información de los votos que tiene un escultor, está relacionado con :model:`app.Escultor` y :model:`app.Votante`.
-    """
-
-    id = models.AutoField(primary_key=True)
-    escultor_id = models.ForeignKey(
-        Escultor, on_delete=models.CASCADE, db_column="escultor_id"
-    )
-    votante_id = models.ForeignKey(
-        Votante, on_delete=models.CASCADE, db_column="votante_id"
-    )
