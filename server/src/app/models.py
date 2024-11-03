@@ -76,8 +76,7 @@ class Escultura(models.Model):
     fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
     # Tiene sentido almacenar los códigos QR si van a ser regenerados cada 10 minutos?
     qr = models.FileField(upload_to="qr/", blank=True, null=True)
-    puntaje = models.PositiveIntegerField()
-    puntaje = models.PositiveIntegerField()
+    puntaje = models.PositiveIntegerField(blank=False, null=True)
 
 
 class Imagen(models.Model):

@@ -407,6 +407,7 @@ class EsculturaAPITest(BaseAPITest):
         self.detail_url = lambda pk: reverse("esculturas-detail", kwargs={"pk": pk})
 
         pais = Pais.objects.create(
+                iso="ar",
             nombre="Argentina",
         )
 
@@ -444,6 +445,7 @@ class EsculturaAPITest(BaseAPITest):
 
     def test_create_escultura_authenticated_201_CREATED(self):
         pais = Pais.objects.create(
+            iso="ar",
             nombre="Argentina",
         )
 
@@ -463,7 +465,7 @@ class EsculturaAPITest(BaseAPITest):
             "nombre": "Escultura de Prueba",
             "descripcion": "Descripción de la escultura de prueba",
             "fecha_creacion": "2024-01-01",
-            "qr": None,
+            "qr": None
         }
 
         response = self.client.post(self.base_url, data, format="json")
@@ -474,6 +476,7 @@ class EsculturaAPITest(BaseAPITest):
         self.client.force_authenticate(user=None)
 
         pais = Pais.objects.create(
+            iso="ar",
             nombre="Argentina",
         )
 
@@ -488,10 +491,10 @@ class EsculturaAPITest(BaseAPITest):
 
         expected_data = EscultorSerializer(escultor).data
         data = {
+            "escultor_id": expected_data,
             "nombre": "Escultura de Prueba",
             "descripcion": "Descripción de la escultura de prueba",
             "fecha_creacion": "2024-01-01",
-            "escultor_id": expected_data,
             "qr": None,
         }
         response = self.client.post(self.base_url, data, format="json")
@@ -499,6 +502,7 @@ class EsculturaAPITest(BaseAPITest):
 
     def test_update_escultura_200_OK(self):
         pais = Pais.objects.create(
+            iso="ar",
             nombre="Argentina",
         )
 
@@ -513,11 +517,11 @@ class EsculturaAPITest(BaseAPITest):
 
         expected_data = EscultorSerializer(escultor).data
         data = {
+            "escultor_id": expected_data,
             "nombre": "Escultura de Prueba",
             "descripcion": "Descripción de la escultura de prueba",
             "fecha_creacion": "2024-01-01",
-            "escultor_id": expected_data,
-            "qr": None,
+            "qr": None
         }
 
         response = self.client.put(
