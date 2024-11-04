@@ -529,7 +529,7 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
             )
             return Response(
                 {"status": "Usted ya ha votado a este escultor"},
-                status=status.HTTP_400_BAD_REQUEST,
+                status=status.HTTP_403_FORBIDDEN,
             )
         except ObjectDoesNotExist:
             serialized_data = VotoEscultorSerializer(data=request.data)
