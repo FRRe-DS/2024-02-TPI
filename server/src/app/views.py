@@ -1,34 +1,39 @@
-from django.http import JsonResponse
+import random
+
+import requests
 from django.contrib.auth.models import User
+from django.db.models import ObjectDoesNotExist
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from rest_framework.decorators import api_view
+from rest_framework import authentication, permissions, status, viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action, api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from app.models import (
-    Evento,
-    Votante,
     Escultor,
     Escultura,
-    Pais,
-    Lugar,
+    Evento,
     Imagen,
+    Lugar,
+    Pais,
     Tematica,
+    Votante,
+    VotoEscultor,
 )
 from app.serializers import (
-    EventoSerializer,
-    VotanteSerializer,
-    EscultorSerializer,
-    PaisSerializer,
-    LugarSerializer,
-    ImagenSerializer,
-    TematicaSerializer,
-    EsculturaSerializer,
     AdminSisSerializer,
+    EscultorSerializer,
+    EsculturaSerializer,
+    EventoSerializer,
+    ImagenSerializer,
+    LugarSerializer,
+    PaisSerializer,
+    TematicaSerializer,
+    VotanteSerializer,
+    VotoEscultorSerializer,
 )
-from rest_framework import status, viewsets, permissions, authentication
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import action
 
 
 @api_view(["GET"])
@@ -64,6 +69,38 @@ def health_check(request: Request) -> Response:
     Endpoint para consultar el estado del servidor.
     """
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(["GET"])
+def generarQR(request):
+    escultor_id = request.GET.get("escultor_id")
+    # aqui debemos poner la url de la pagina de votacion, a la cual deberemos pasarle la id de la escultura
+    url = "https://enzovallejos.github.io/VotoEscultorprueba/?id_escultura={id}".format(
+        id=escultor_id
+    )
+
+    if escultor_id is None:
+        return Response(
+            {"error": "Debe ingresar por query parameters el id de la escultura"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    # creo un hash random para el qr asi va a ser diferente cada vez
+    hash_id = random.getrandbits(128)
+    # acorto el link
+    url_short = ("https://ulvis.net/api.php?url={url}&custom= %032x" % hash_id).format(
+        url=url
+    )
+
+    r = requests.get(url_short)
+
+    return Response(
+        {
+            "qr": "http://api.qrserver.com/v1/create-qr-code/?data={}&size=200x200".format(
+                r.text
+            )
+        }
+    )
 
 
 class VotanteViewSet(viewsets.ModelViewSet):
@@ -456,3 +493,56 @@ class LugarViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
+
+class VotoEscultorViewSet(viewsets.ModelViewSet):
+    queryset = VotoEscultor.objects.all()
+    serializer_class = VotoEscultorSerializer
+
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
+
+    def create(self, request, *args, **kwargs):
+        try:
+            puntaje = int(request.data["puntaje"])
+        except (ValueError, TypeError):
+            return Response(
+                {"status": "El puntaje debe ser un número entre 1 y 5 inclusivo"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if puntaje < 1 or puntaje > 5:
+            return Response(
+                {"status": "Ingrese un puntaje entre 1 y 5 inclusivo"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            VotoEscultor.objects.get(
+                escultor_id=request.data["escultor_id"],
+                votante_id=request.data["votante_id"],
+            )
+            return Response(
+                {"status": "Usted ya ha votado a este escultor"},
+                status=status.HTTP_403_FORBIDDEN,
+            )
+        except ObjectDoesNotExist:
+            serialized_data = VotoEscultorSerializer(data=request.data)
+
+            if serialized_data.is_valid():
+                serialized_data.save()
+                return Response(
+                    {"status": "voto registrado"}, status=status.HTTP_201_CREATED
+                )
+            else:
+                return Response(
+                    {
+                        "status": f"Ocurrió un error al serializar los datos. err: {serialized_data.errors}"
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )

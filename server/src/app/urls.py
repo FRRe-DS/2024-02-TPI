@@ -6,6 +6,7 @@ from .views import (
     ImagenViewSet,
     TematicaViewSet,
     PaisViewSet,
+    VotoEscultorViewSet,
     AdminSisViewSet,
     LugarViewSet,
 )
@@ -37,6 +38,7 @@ router.register("api/paises", PaisViewSet, "paises")
 router.register("api/adminsis", AdminSisViewSet, "adminsis")
 router.register("api/tematica", TematicaViewSet, "tematicas")
 router.register("api/lugar", LugarViewSet, "lugares")
+router.register("api/voto_escultor", VotoEscultorViewSet, "voto_escultor")
 
 urlpatterns = [
     path("", include(router.urls)),
@@ -47,5 +49,6 @@ urlpatterns = [
         views.check_task_status,
         name="check_task_status",
     ),
+    path("generarQR/", views.generarQR, name="QR"),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
 ]
