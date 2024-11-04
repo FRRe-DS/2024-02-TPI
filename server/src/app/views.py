@@ -103,6 +103,7 @@ def generarQR(request):
         }
     )
 
+
 class VotanteViewSet(viewsets.ModelViewSet):
     """
     ViewSet para manejar objetos Votantes.
@@ -493,6 +494,7 @@ class LugarViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
 
 class VotoEsculturaViewSet(viewsets.ModelViewSet):
     queryset = VotoEscultura.objects.all()
