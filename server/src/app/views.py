@@ -1,38 +1,39 @@
-from django.http import JsonResponse
+import random
+
+import requests
 from django.contrib.auth.models import User
+from django.db.models import ObjectDoesNotExist
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from django.core.exceptions import ObjectDoesNotExist
-from rest_framework.decorators import api_view
+from rest_framework import authentication, permissions, status, viewsets
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action, api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from app.models import (
-    Evento,
-    Votante,
     Escultor,
     Escultura,
-    Pais,
-    Lugar,
+    Evento,
     Imagen,
+    Lugar,
+    Pais,
     Tematica,
-    VotoEscultura,
+    Votante,
+    VotoEscultor,
 )
 from app.serializers import (
-    EventoSerializer,
-    VotanteSerializer,
-    EscultorSerializer,
-    PaisSerializer,
-    LugarSerializer,
-    ImagenSerializer,
-    TematicaSerializer,
-    EsculturaSerializer,
     AdminSisSerializer,
-    VotoEsculturaSerializer,
+    EscultorSerializer,
+    EsculturaSerializer,
+    EventoSerializer,
+    ImagenSerializer,
+    LugarSerializer,
+    PaisSerializer,
+    TematicaSerializer,
+    VotanteSerializer,
+    VotoEscultorSerializer,
 )
-from rest_framework import status, viewsets, permissions, authentication
-from rest_framework.authtoken.models import Token
-from rest_framework.decorators import action
-import requests, random
 
 
 @api_view(["GET"])
@@ -72,15 +73,13 @@ def health_check(request: Request) -> Response:
 
 @api_view(["GET"])
 def generarQR(request):
-    escultura_id = request.GET.get("escultura_id")
+    escultor_id = request.GET.get("escultor_id")
     # aqui debemos poner la url de la pagina de votacion, a la cual deberemos pasarle la id de la escultura
-    url = (
-        "https://enzovallejos.github.io/VotoEsculturaprueba/?id_escultura={id}".format(
-            id=escultura_id
-        )
+    url = "https://enzovallejos.github.io/VotoEscultorprueba/?id_escultura={id}".format(
+        id=escultor_id
     )
 
-    if escultura_id == None:
+    if escultor_id is None:
         return Response(
             {"error": "Debe ingresar por query parameters el id de la escultura"},
             status=status.HTTP_400_BAD_REQUEST,
@@ -496,9 +495,9 @@ class LugarViewSet(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
 
-class VotoEsculturaViewSet(viewsets.ModelViewSet):
-    queryset = VotoEscultura.objects.all()
-    serializer_class = VotoEsculturaSerializer
+class VotoEscultorViewSet(viewsets.ModelViewSet):
+    queryset = VotoEscultor.objects.all()
+    serializer_class = VotoEscultorSerializer
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -509,73 +508,41 @@ class VotoEsculturaViewSet(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
     def create(self, request, *args, **kwargs):
-        if (request.data["puntaje"] < 1) or (request.data["puntaje"] > 5):
+        try:
+            puntaje = int(request.data["puntaje"])
+        except (ValueError, TypeError):
             return Response(
-                {"status": "ingrese un puntaje valido"},
+                {"status": "El puntaje debe ser un número entre 1 y 5 inclusivo"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if puntaje < 1 or puntaje > 5:
+            return Response(
+                {"status": "Ingrese un puntaje entre 1 y 5 inclusivo"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-            voto = VotoEscultura.objects.get(
-                escultura_id=request.data["escultura_id"],
+            VotoEscultor.objects.get(
+                escultor_id=request.data["escultor_id"],
                 votante_id=request.data["votante_id"],
             )
-
+            return Response(
+                {"status": "Usted ya ha votado a este escultor"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         except ObjectDoesNotExist:
-            serializer = VotoEsculturaSerializer(data=request.data)
+            serialized_data = VotoEscultorSerializer(data=request.data)
 
-            if serializer.is_valid():
-                serializer.save()
+            if serialized_data.is_valid():
+                serialized_data.save()
                 return Response(
                     {"status": "voto registrado"}, status=status.HTTP_201_CREATED
                 )
-
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        return Response(
-            {"status": "Este visitante ya a votado"}, status=status.HTTP_400_BAD_REQUEST
-        )
-
-
-"""
-@api_view(["GET"])
-def getVisitantesData(request: Request) -> Response:
-    users = Visitante.objects.all()
-    serializer = VisitanteSerializer(users, many=True)
-    return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-@api_view(["GET"])
-def getEscultor(request: Request)-> Response:
-    escultores = Escultor.objects.all()
-    serializer = EscultorSerializer(escultores, many=True)
-    return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-@api_view(["GET"])
-def getEsculturas(request: Request)-> Response:
-    esculturas = Escultura.objects.all()
-    serializer = EsculturaSerializer(esculturas, many=True)
-    return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-@api_view(["GET"])
-def getEventos(request: Request)-> Response:
-    evento = Evento.objects.all()
-    serializer = EventoSerializer(evento, many=True)
-    return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-@api_view(["GET"])
-def getImg(request: Request)-> Response:
-    img = Imagen.objects.all()
-    serializer = ImagenSerializer(img, many=True)
-    return Response(status=status.HTTP_200_OK, data=serializer.data)
-
-#POST
-
-@api_view(["POST"])
-def addVisitante(request: Request) -> Response:
-    serializer = VisitanteSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(status=status.HTTP_201_CREATED, data=serializer.data)
-
-    return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.data)
-"""
+            else:
+                return Response(
+                    {
+                        "status": f"Ocurrió un error al serializar los datos. err: {serialized_data.errors}"
+                    },
+                    status=status.HTTP_400_BAD_REQUEST,
+                )

@@ -92,26 +92,30 @@ class Imagen(models.Model):
     descripcion = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if self.imagen:
-            # Abrir la imagen usando PIL
-            img = Image.open(self.imagen)
+        if self.imagen and self.imagen.name:
+            try:
+                img_data = self.imagen.read()
+                img = Image.open(io.BytesIO(img_data))
 
-            # Convertir a RGB si no lo está
-            if img.mode != "RGB":
-                img = img.convert("RGB")
+                if img.mode != "RGB":
+                    img = img.convert("RGB")
 
-            # Convertir la imagen a webp
-            img_io = io.BytesIO()
-            # Puedes ajustar la calidad
-            img.save(img_io, format="WEBP", quality=100)
-            img_content = ContentFile(
-                img_io.getvalue(), name=self.imagen.name.split(".")[0] + ".webp"
-            )
+                img_io = io.BytesIO()
+                img.save(img_io, format="WEBP", quality=100)
 
-            # Reemplazar la imagen original
-            self.imagen = img_content
+                filename = self.imagen.name.rsplit(".", 1)[0]
 
-        super(Imagen, self).save(*args, **kwargs)
+                img_content = ContentFile(img_io.getvalue(), name=f"{filename}.webp")
+
+                self.imagen = img_content
+
+            except Exception as e:
+                print(f"Error processing image: {e}")
+            finally:
+                if hasattr(img, "close"):
+                    img.close()
+
+        super().save(*args, **kwargs)
 
 
 class Tematica(models.Model):
@@ -150,7 +154,7 @@ class Evento(models.Model):
     )
 
 
-class Escultorevento(models.Model):
+class EscultorEvento(models.Model):
     """
     Almacena la información de un Escultor y los eventos en donde participa, está relacionado con :model:`app.Escultor` y :model:`app.Evento`.
     """
@@ -162,29 +166,6 @@ class Escultorevento(models.Model):
     evento_id = models.ForeignKey(
         Evento, on_delete=models.CASCADE, db_column="evento_id"
     )
-
-
-class VotoEscultura(models.Model):
-    """
-    Almacena la información de los votos que tiene una escultura, está relacionado con :model:`app.Escultura` y :model:`app.Votante`.
-    """
-
-    id = models.AutoField(primary_key=True)
-    escultura_id = models.ForeignKey(
-        Escultura, on_delete=models.CASCADE, db_column="escultura_id"
-    )
-    votante_id = models.ForeignKey(
-        Votante, on_delete=models.CASCADE, db_column="votante_id"
-    )
-    puntaje = models.PositiveIntegerField()
-
-    # Si hacemos consultas que combinan  votaciones por escultor_id y votante_id esta es la mejor opcion
-    # Esto puede acelerar las consultas que involucran ambas columnas. por ejemplo, si buscamos votaciones por escultor_id y votante_id
-
-    class Meta:
-        indexes = [
-            models.Index(fields=["escultura_id", "votante_id"]),
-        ]
 
 
 class VotoEscultor(models.Model):
@@ -199,3 +180,4 @@ class VotoEscultor(models.Model):
     votante_id = models.ForeignKey(
         Votante, on_delete=models.CASCADE, db_column="votante_id"
     )
+    puntaje = models.PositiveIntegerField()

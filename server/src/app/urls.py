@@ -6,8 +6,7 @@ from .views import (
     ImagenViewSet,
     TematicaViewSet,
     PaisViewSet,
-    VotoEsculturaViewSet,
-    generarQR,
+    VotoEscultorViewSet,
     AdminSisViewSet,
     LugarViewSet,
 )
@@ -39,7 +38,7 @@ router.register("api/paises", PaisViewSet, "paises")
 router.register("api/adminsis", AdminSisViewSet, "adminsis")
 router.register("api/tematica", TematicaViewSet, "tematicas")
 router.register("api/lugar", LugarViewSet, "lugares")
-router.register("api/votoEscultura", VotoEsculturaViewSet, "votoEscultura")
+router.register("api/voto_escultor", VotoEscultorViewSet, "voto_escultor")
 
 urlpatterns = [
     path("", include(router.urls)),

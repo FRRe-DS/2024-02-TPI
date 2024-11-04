@@ -9,7 +9,7 @@ from .models import (
     Pais,
     Tematica,
     Lugar,
-    VotoEscultura,
+    VotoEscultor,
 )
 
 
@@ -19,9 +19,9 @@ class VotanteSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class VotoEsculturaSerializer(serializers.ModelSerializer):
+class VotoEscultorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = VotoEscultura
+        model = VotoEscultor
         fields = "__all__"
 
 
