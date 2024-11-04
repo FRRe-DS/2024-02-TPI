@@ -1,10 +1,10 @@
 # https://github.com/casey/just
-serve mode="dev": migrate
+serve mode="dev": migrate inicializacion
     DJANGO_ENV={{mode}} docker compose up --build
 
 migrate: fmt
     uv run ./src/manage.py makemigrations
-    uv run ./src/manage.py migrate
+    uv run ./src/manage.py migrate --run-syncdb
 
 check: fmt
     ruff check ./
@@ -17,3 +17,7 @@ fmt:
 
 shell:
     uv run ./src/manage.py shell
+
+
+inicializacion: 
+    uv run ./src/scripts/inicializacion_db.py

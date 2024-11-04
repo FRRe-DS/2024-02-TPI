@@ -1,6 +1,6 @@
 from .views import (
     EventoViewSet,
-    VisitanteViewSet,
+    VotanteViewSet,
     EscultorViewSet,
     EsculturaViewSet,
     ImagenViewSet,
@@ -28,7 +28,7 @@ router = routers.DefaultRouter()
  Son con estas rutas a las cuales los tests que realicemos se tienen que referir.
 """
 
-router.register("api/visitantes", VisitanteViewSet, "visitantes")
+router.register("api/votantes", VotanteViewSet, "votantes")
 router.register("api/escultores", EscultorViewSet, "escultores")
 router.register("api/esculturas", EsculturaViewSet, "esculturas")
 router.register("api/eventos", EventoViewSet, "eventos")
@@ -47,17 +47,5 @@ urlpatterns = [
         views.check_task_status,
         name="check_task_status",
     ),
+    path("admin/doc/", include("django.contrib.admindocs.urls")),
 ]
-
-"""
-urlpatterns = [
-    router.urls,
-    path("", views.getVisitantesData, name="getVisitantesData"),
-    path("add/", views.addVisitante, name="addVisitante"),
-    path("health_check/", views.health_check, name="health_check"),
-    path("getescultor/", views.getEscultor, name="getEscultor"),
-    path("getesculturas/", views.getEsculturas, name="getEscultoras"),
-    path("geteventos/", views.getEventos, name="getEventos"),
-    path("getimagenes/", views.getImg, name="getImg")
-]
-"""
