@@ -1,0 +1,130 @@
+.navigation {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100vw;
+  height: 100vh;
+  background: var(--grey-200);
+  color: white;
+  padding: 0 16px;
+}
+/* 
+.oculto {
+  width: 0;
+  overflow: hidden;
+}
+
+.navigation__btn {
+  display: block;
+}  */
+
+/* @media (min-width: 650px) { */
+.navigation {
+  width: 180px;
+  border-right: 1px solid var(--grey-400);
+}
+.navigation__btn {
+  display: none;
+}
+
+.salirBtn {
+  all: unset;
+  display: flex;
+  gap: 16px;
+  cursor: pointer;
+  color: var(--text-200);
+  padding: 16px 0;
+  transition: all 0.45s ease-out;
+}
+.salirBtn:hover,
+.salirBtn:focus-visible {
+  color: var(--grey-100);
+}
+
+.navigation__link {
+  all: unset;
+  display: flex;
+
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  color: var(--text-200);
+  padding: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  transition: color 450ms;
+}
+
+.navigation__link {
+  color: var(--text-300);
+}
+
+.navigation__link::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--primario-100);
+
+  inset: 0;
+  scale: 0 1;
+  transform-origin: right;
+  transition: scale 450ms;
+}
+
+.navigation__link:hover::after,
+.navigation__link:focus-visible::after {
+  transform-origin: left;
+  scale: 1 1;
+}
+
+.navigation__link:active {
+  scale: 0.95;
+}
+
+.paginaActual {
+  all: unset;
+  display: flex;
+  gap: 16px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  isolation: isolate;
+  color: var(--primario);
+  align-items: center;
+}
+
+.paginaActual::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  background: var(--primario-100);
+
+  inset: 0;
+}
+
+.navigation__menu {
+  display: grid;
+  gap: 16px;
+  list-style: none;
+}
+.navigation__options {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.logo {
+  height: 70px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 8px 0;
+  -webkit-filter: invert(100%);
+  filter: invert(100%);
+}
+/* } */

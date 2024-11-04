@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import (
-    Visitante,
+    Votante,
     Evento,
     Escultura,
     Escultor,
@@ -13,9 +13,9 @@ from .models import (
 )
 
 
-class VisitanteSerializer(serializers.ModelSerializer):
+class VotanteSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Visitante
+        model = Votante
         fields = "__all__"
 
 

@@ -14,7 +14,12 @@ dependencies = [
     "celery[redis]>=5.4.0",
     "redis>=5.0.8",
     "python-json-logger>=2.0.7",
-    "requests>=2.32.3",
+    "django-cors-headers>=4.5.0",
+    "pillow>=11.0.0",
+    "gunicorn>=23.0.0",
+    "docutils>=0.21.2",
+    "whitenoise>=6.8.2",
+    "django-filter>=24.3",
 ]
 
 [build-system]
