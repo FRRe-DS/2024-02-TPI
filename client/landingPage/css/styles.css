@@ -221,7 +221,11 @@ footer {
 }
 
 .hero-section {
-  background-image: linear-gradient(80deg, rgb(5, 124, 172), rgb(199, 10, 114));
+  background-image: linear-gradient(
+    80deg,
+    rgb(183, 155, 253),
+    rgb(148, 218, 255)
+  );
   min-height: calc(100dvh - 80px);
   max-width: 100%;
   overflow: hidden !important;
@@ -292,6 +296,7 @@ footer {
     rgb(5, 124, 172),
     rgba(43, 247, 202, 0.5)
   );
+
   filter: blur(80px);
   animation: down 40s infinite;
 }
@@ -302,10 +307,15 @@ footer {
   height: 500px;
   width: 500px;
   border-radius: 50%;
-  background-image: linear-gradient(
+  /* background-image: linear-gradient(
     80deg,
     rgba(245, 207, 82, 0.8),
     rgb(199, 10, 114)
+  ); */
+  background-image: linear-gradient(
+    80deg,
+    rgba(90, 82, 245, 0.8),
+    rgb(237, 148, 255)
   );
   filter: blur(80px);
   animation: up 30s infinite;
@@ -319,8 +329,8 @@ footer {
   border-radius: 50%;
   background-image: linear-gradient(
     80deg,
-    rgb(5, 124, 172),
-    rgba(183, 253, 52, 0.8)
+    rgb(155, 194, 253),
+    rgb(253, 140, 130)
   );
   filter: blur(80px);
   animation: left 30s 1s infinite;
@@ -334,8 +344,8 @@ footer {
   border-radius: 50%;
   background-image: linear-gradient(
     80deg,
-    rgba(26, 248, 18, 0.6),
-    rgba(199, 10, 52, 0.8)
+    rgba(117, 82, 245, 0.8),
+    rgb(237, 148, 255)
   );
   filter: blur(80px);
   animation: left 40s 0.5s infinite;
@@ -902,6 +912,87 @@ footer {
   cursor: pointer;
 }
 
+.pantalla-completa {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.container-votar {
+  display: grid;
+  grid-template-columns: 60% 40%;
+  width: 100%;
+  border-radius: 20px;
+  margin-inline: 48px;
+  max-width: 1000px;
+  background: var(--bg-2);
+  color: var(--bg);
+  z-index: 10px !important;
+
+  overflow: hidden;
+}
+
+.formulario-voto {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 3rem clamp(3rem, 2.286rem + 1.905vw, 4rem);
+}
+
+.formulario-voto h1 {
+  font-size: 1.5rem;
+}
+
+form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.input-email {
+  all: unset;
+  background-color: #f4f4f4;
+  border: 1px solid #929292;
+  border-radius: 8px;
+  padding: 8px 14px;
+  text-align: left;
+  min-width: 100%;
+  width: 100%;
+}
+
+.btn-enviar-email {
+  font-weight: 700;
+  color: #497fff;
+  display: inline-flex;
+  gap: 5px;
+  justify-content: center;
+  align-items: center;
+}
+
+.btn-enviar-email i {
+  font-size: 16px;
+}
+
+.formulario-voto p {
+  color: var(--text-200);
+  margin-bottom: 1.5rem;
+}
+
+.container-votar img {
+  width: 100%;
+  height: clamp(28.125rem, 25.893rem + 5.952vw, 31.25rem);
+  object-fit: cover;
+  filter: grayscale();
+}
+
 /*---animaciones--- */
 
 @keyframes autoRun {
@@ -975,6 +1066,14 @@ footer {
 }
 
 @media (max-width: 850px) {
+  .container-votar {
+    grid-template-columns: 1fr;
+  }
+
+  .container-votar img {
+    display: none;
+  }
+
   .mosaico-gallery {
     grid-template-areas:
       "one two"
