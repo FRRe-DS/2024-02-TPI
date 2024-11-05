@@ -232,6 +232,7 @@ dependencies = [
     { name = "pygments" },
     { name = "python-dotenv" },
     { name = "python-json-logger" },
+    { name = "qrcode", extra = ["pil"] },
     { name = "redis" },
     { name = "requests" },
     { name = "whitenoise" },
@@ -254,6 +255,7 @@ requires-dist = [
     { name = "pygments", specifier = ">=2.18.0" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "python-json-logger", specifier = ">=2.0.7" },
+    { name = "qrcode", extras = ["pil"], specifier = ">=8.0" },
     { name = "redis", specifier = ">=5.0.8" },
     { name = "requests", specifier = ">=2.32.3" },
     { name = "whitenoise", specifier = ">=6.8.2" },
@@ -467,6 +469,23 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/4f/da/95963cebfc578dabd323d7263958dfb68898617912bb09327dd30e9c8d13/python-json-logger-2.0.7.tar.gz", hash = "sha256:23e7ec02d34237c5aa1e29a070193a4ea87583bb4e7f8fd06d3de8264c4b2e1c", size = 10508 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/35/a6/145655273568ee78a581e734cf35beb9e33a370b29c5d3c8fee3744de29f/python_json_logger-2.0.7-py3-none-any.whl", hash = "sha256:f380b826a991ebbe3de4d897aeec42760035ac760345e57b812938dc8b35e2bd", size = 8067 },
+]
+
+[[package]]
+name = "qrcode"
+version = "8.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "colorama", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d7/db/6fc9631cac1327f609d2c8ae3680ecd987a2e97472437f2de7ead1235156/qrcode-8.0.tar.gz", hash = "sha256:025ce2b150f7fe4296d116ee9bad455a6643ab4f6e7dce541613a4758cbce347", size = 42743 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/74/ab/df8d889fd01139db68ae9e5cb5c8f0ea016823559a6ecb427582d52b07dc/qrcode-8.0-py3-none-any.whl", hash = "sha256:9fc05f03305ad27a709eb742cf3097fa19e6f6f93bb9e2f039c0979190f6f1b1", size = 45710 },
+]
+
+[package.optional-dependencies]
+pil = [
+    { name = "pillow" },
 ]
 
 [[package]]

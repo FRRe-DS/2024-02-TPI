@@ -1,15 +1,17 @@
+from io import BytesIO
+import uuid
+import qrcode
 import logging
-import requests
 from app.utils import PositiveInt
 from django.contrib.auth.models import User
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import authentication, permissions, status, viewsets
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import action, api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.request import Request
 from rest_framework.response import Response
-import secrets
 
 from app.models import (
     Escultor,
@@ -73,10 +75,9 @@ def health_check(request: Request) -> Response:
 
 # TODO: Medir si genera un cuello de botella al bloquear el hilo.
 # TODO: Revisar los permisos.
+@permission_classes([IsAuthenticated])
 @api_view(["GET"])
-def generarQR(request: Request) -> Response:
-    logging.info("Generando QR...")
-
+def generarQR(request: Request) -> HttpResponse:
     escultor_id = request.query_params.get("escultor_id")
     if escultor_id is None:
         error = "Debe ingresar por query parameters el id del escultor"
@@ -104,30 +105,28 @@ def generarQR(request: Request) -> Response:
             status=status.HTTP_404_NOT_FOUND,
         )
 
-    logging.info("Construyendo la URL...")
+    logging.info(f"Generando QR para {escultor_id}...")
 
-    voto_url = (
-        f"https://enzovallejos.github.io/VotoEscultorprueba/?escultor_id={escultor_id}"
+    random_val = uuid.uuid4().hex[:8]
+    voto_url = f"https://enzovallejos.github.io/VotoEscultorprueba/?escultor_id={escultor_id}&randval={random_val}"
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
     )
-    hash = secrets.token_hex(16)
-    logging.info("Acortando la URL...")
-    short_url_api = f"https://ulvis.net/api.php?url={voto_url}&custom={hash}"
-    try:
-        response = requests.get(short_url_api)
-        response.raise_for_status()
-    except requests.RequestException as e:
-        error = "Error al acortar la URL."
-        logging.error(f"{error}: {e}")
-        return Response({"error": error}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    qr.add_data(voto_url)
+    qr.make(fit=True)
 
-    short_url = response.text
-    qr_url = f"http://api.qrserver.com/v1/create-qr-code/?data={short_url}&size=200x200"
+    img = qr.make_image(fill="black", back_color="white")
 
-    logging.info("Generando QR... listo!")
-    return Response(
-        {"qr": qr_url},
-        status=status.HTTP_200_OK,
-    )
+    buffer = BytesIO()
+    img.save(buffer, format="PNG", optimize=True)
+    buffer.seek(0)
+
+    logging.info(f"Generando QR para escultor_id: {escultor_id}... listo!")
+    return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
 
 
 class VotanteViewSet(viewsets.ModelViewSet):
