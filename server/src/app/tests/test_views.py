@@ -1,25 +1,20 @@
 from django.test import SimpleTestCase
+import logging
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from rest_framework.authtoken.models import Token
-import logging
 
-from app.models import Escultor, Pais, Votante, Tematica, Evento, Lugar
+from app.models import Escultor, Pais, Votante, Tematica, Evento, Lugar, Escultura
 from django.contrib.auth.models import User
 from app.serializers import (
     EscultorSerializer,
+    EsculturaSerializer,
     VotanteSerializer,
     TematicaSerializer,
     EventoSerializer,
     LugarSerializer,
 )
-
-
-class HealthCheckAPITest(SimpleTestCase):
-    def test_health_check(self):
-        response = self.client.get(reverse("health_check"))
-        self.assertEqual(response.status_code, 204)
 
 
 class BaseAPITest(APITestCase):
@@ -29,6 +24,47 @@ class BaseAPITest(APITestCase):
         self.token, _ = Token.objects.get_or_create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
         logging.disable(logging.CRITICAL)
+
+
+class HealthCheckAPITest(SimpleTestCase):
+    def test_health_check(self):
+        response = self.client.get(reverse("health_check"))
+        self.assertEqual(response.status_code, 204)
+
+
+class QRAPITest(BaseAPITest):
+    def setUp(self):
+        super().setUp()
+        pais = Pais.objects.create(nombre="Argentina")
+
+        self.escultor = Escultor.objects.create(
+            nombre="Lautaro Acosta Quintana",
+            pais_id=pais,
+            correo="acostalautaro@ejemplo.com",
+            bibliografia="...",
+        )
+
+    def test_qr_generation_valid_id_200_OK(self):
+        response = self.client.get(
+            reverse("generar_qr"), {"escultor_id": self.escultor.id}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("qr", response.data)
+
+    def test_qr_generation_invalid_id_400_BAD_REQUEST(self):
+        response = self.client.get(reverse("generar_qr"), {"escultor_id": -2})
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response.data)
+
+    def test_qr_generation_nonexistent_id_400_BAD_REQUEST(self):
+        response = self.client.get(reverse("generar_qr"), {"escultor_id": 2})
+        self.assertEqual(response.status_code, 404)
+        self.assertIn("error", response.data)
+
+    def test_qr_generation_no_id_400_BAD_REQUEST(self):
+        response = self.client.get(reverse("generar_qr"))
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("error", response.data)
 
 
 class VotanteAPITest(BaseAPITest):
@@ -397,143 +433,139 @@ class lugarAPITest(BaseAPITest):
         self.assertFalse(Lugar.objects.filter(pk=self.lugar.pk).exists())
 
 
-# class EsculturaAPITest(BaseAPITest):
-#     def setUp(self):
-#         super().setUp()
+class EsculturaAPITest(BaseAPITest):
+    def setUp(self):
+        super().setUp()
 
-#         self.base_url = reverse("esculturas-list")
-#         self.detail_url = lambda pk: reverse("esculturas-detail", kwargs={"pk": pk})
+        self.base_url = reverse("esculturas-list")
+        self.detail_url = lambda pk: reverse("esculturas-detail", kwargs={"pk": pk})
 
-#         pais = Pais.objects.create(
-#             nombre="Argentina",
-#         )
+        pais = Pais.objects.create(
+            nombre="Argentina",
+        )
 
-#         escultor = Escultor.objects.create(
-#             nombre="Gonza",
-#             apellido="Saucedo",
-#             pais_id=pais,
-#             correo="gonzubi@saucedo.gmail",
-#             fecha_nacimiento="2024-11-01",
-#             bibliografia="...",
-#         )
+        escultor = Escultor.objects.create(
+            nombre="Gonza",
+            apellido="Saucedo",
+            pais_id=pais,
+            correo="gonzubi@saucedo.gmail",
+            fecha_nacimiento="2024-11-01",
+            bibliografia="...",
+        )
 
-#         self.escultura = Escultura.objects.create(
-#             nombre="Escultura de Prueba",
-#             escultor_id=escultor,
-#             descripcion="Descripción de la escultura de prueba",
-#             fecha_creacion="2024-01-01",
-#             qr=None,
-#         )
+        self.escultura = Escultura.objects.create(
+            nombre="Escultura de Prueba",
+            escultor_id=escultor,
+            descripcion="Descripción de la escultura de prueba",
+            fecha_creacion="2024-01-01",
+            qr=None,
+        )
 
-#     def test_get_esculturas_list_200_OK(self):
-#         response = self.client.get(self.base_url)
-#         esculturas = Escultura.objects.all()
-#         expected_data = EsculturaSerializer(esculturas, many=True).data
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.assertEqual(response.data, expected_data)
+    def test_get_esculturas_list_200_OK(self):
+        response = self.client.get(self.base_url)
+        esculturas = Escultura.objects.all()
+        expected_data = EsculturaSerializer(esculturas, many=True).data
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, expected_data)
 
-#     def test_get_escultura_detail_200_OK(self):
-#         escultura = Escultura.objects.first()
+    def test_get_escultura_detail_200_OK(self):
+        escultura = Escultura.objects.first()
 
-#         response = self.client.get(self.detail_url(escultura.pk))
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         expected_data = EsculturaSerializer(escultura).data
-#         self.assertEqual(expected_data, response.data)
+        response = self.client.get(self.detail_url(escultura.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expected_data = EsculturaSerializer(escultura).data
+        self.assertEqual(expected_data, response.data)
 
-#     def test_create_escultura_authenticated_201_CREATED(self):
-#         pais = Pais.objects.create(
-#             nombre="Argentina",
-#         )
+    def test_create_escultura_authenticated_201_CREATED(self):
+        pais = Pais.objects.create(
+            nombre="Argentina",
+        )
 
-#         escultor = Escultor.objects.create(
-#             nombre="Gonza",
-#             apellido="Saucedo",
-#             pais_id=pais,
-#             correo="gonzubi@saucedo0.gmail",
-#             fecha_nacimiento="2024-11-01",
-#             bibliografia="...",
-#         )
+        escultor = Escultor.objects.create(
+            nombre="Gonza",
+            apellido="Saucedo",
+            pais_id=pais,
+            correo="gonzubi@saucedo0.gmail",
+            fecha_nacimiento="2024-11-01",
+            bibliografia="...",
+        )
 
-#         expected_data = EscultorSerializer(escultor).data
+        data = {
+            "escultor_id": escultor.id,
+            "nombre": "Escultura de Prueba",
+            "descripcion": "Descripción de la escultura de prueba",
+            "fecha_creacion": "2024-01-01",
+        }
 
-#         data = {
-#             "escultor_id": expected_data,
-#             "nombre": "Escultura de Prueba",
-#             "descripcion": "Descripción de la escultura de prueba",
-#             "fecha_creacion": "2024-01-01",
-#             "qr": None,
-#         }
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(Escultura.objects.filter(nombre="Escultura de Prueba").exists())
 
-#         response = self.client.post(self.base_url, data, format="json")
-#         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-#         self.assertTrue(Escultura.objects.filter(nombre="Escultura de Prueba").exists())
+    def test_create_escultura_unauthenticated_401_UNAUTHORIZED(self):
+        self.client.force_authenticate(user=None)
 
-#     def test_create_escultura_unauthenticated_401_UNAUTHORIZED(self):
-#         self.client.force_authenticate(user=None)
+        pais = Pais.objects.create(
+            nombre="Argentina",
+        )
 
-#         pais = Pais.objects.create(
-#             nombre="Argentina",
-#         )
+        escultor = Escultor.objects.create(
+            nombre="Gonza",
+            apellido="Saucedo",
+            pais_id=pais,
+            correo="gonzubi@saucedo1.gmail",
+            fecha_nacimiento="2024-11-01",
+            bibliografia="...",
+        )
 
-#         escultor = Escultor.objects.create(
-#             nombre="Gonza",
-#             apellido="Saucedo",
-#             pais_id=pais,
-#             correo="gonzubi@saucedo1.gmail",
-#             fecha_nacimiento="2024-11-01",
-#             bibliografia="...",
-#         )
+        expected_data = EscultorSerializer(escultor).data
+        data = {
+            "nombre": "Escultura de Prueba",
+            "descripcion": "Descripción de la escultura de prueba",
+            "fecha_creacion": "2024-01-01",
+            "escultor_id": expected_data,
+            "qr": None,
+        }
+        response = self.client.post(self.base_url, data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-#         expected_data = EscultorSerializer(escultor).data
-#         data = {
-#             "nombre": "Escultura de Prueba",
-#             "descripcion": "Descripción de la escultura de prueba",
-#             "fecha_creacion": "2024-01-01",
-#             "escultor_id": expected_data,
-#             "qr": None,
-#         }
-#         response = self.client.post(self.base_url, data, format="json")
-#         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+    def test_update_escultura_200_OK(self):
+        pais = Pais.objects.create(
+            nombre="Argentina",
+        )
 
-#     def test_update_escultura_200_OK(self):
-#         pais = Pais.objects.create(
-#             nombre="Argentina",
-#         )
+        escultor = Escultor.objects.create(
+            nombre="Gonza",
+            apellido="Saucedo",
+            pais_id=pais,
+            correo="gonzubi@saucedo2.gmail",
+            fecha_nacimiento="2024-11-01",
+            bibliografia="...",
+        )
 
-#         escultor = Escultor.objects.create(
-#             nombre="Gonza",
-#             apellido="Saucedo",
-#             pais_id=pais,
-#             correo="gonzubi@saucedo2.gmail",
-#             fecha_nacimiento="2024-11-01",
-#             bibliografia="...",
-#         )
+        data = {
+            "nombre": "Escultura Actualizada",
+            "descripcion": "Descripción de la escultura de prueba",
+            "fecha_creacion": "2024-01-01",
+            "escultor_id": escultor.id,
+            "qr": None,
+        }
 
-#         expected_data = EscultorSerializer(escultor).data
-#         data = {
-#             "nombre": "Escultura de Prueba",
-#             "descripcion": "Descripción de la escultura de prueba",
-#             "fecha_creacion": "2024-01-01",
-#             "escultor_id": expected_data,
-#             "qr": None,
-#         }
+        response = self.client.put(
+            self.detail_url(self.escultura.pk), data, format="json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.escultura.refresh_from_db()
+        self.assertEqual(self.escultura.nombre, "Escultura Actualizada")
 
-#         response = self.client.put(
-#             self.detail_url(self.escultura.pk), data, format="json"
-#         )
-#         self.assertEqual(response.status_code, status.HTTP_200_OK)
-#         self.escultura.refresh_from_db()
-#         self.assertEqual(self.escultura.nombre, "Escultura Actualizada")
+    def test_delete_escultura_204_NO_CONTENT(self):
+        escultura = Escultura.objects.first()
 
-#     def test_delete_escultura_204_NO_CONTENT(self):
-#         escultura = Escultura.objects.first()
+        user = User.objects.create_user("username", "password")
+        self.client.force_authenticate(user)
 
-#         user = User.objects.create_user("username", "password")
-#         self.client.force_authenticate(user)
-
-#         response = self.client.delete(self.detail_url(escultura.pk))
-#         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-#         self.assertFalse(Escultura.objects.filter(pk=escultura.pk).exists())
+        response = self.client.delete(self.detail_url(escultura.pk))
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertFalse(Escultura.objects.filter(pk=escultura.pk).exists())
 
 
 class VotoEscultorAPITest(BaseAPITest):
