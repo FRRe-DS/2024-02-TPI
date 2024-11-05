@@ -1,9 +1,11 @@
+from io import BytesIO
 from django.test import SimpleTestCase
 import logging
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient, APITestCase
 from rest_framework.authtoken.models import Token
+from PIL import Image
 
 from app.models import Escultor, Pais, Votante, Tematica, Evento, Lugar, Escultura
 from django.contrib.auth.models import User
@@ -35,6 +37,7 @@ class HealthCheckAPITest(SimpleTestCase):
 class QRAPITest(BaseAPITest):
     def setUp(self):
         super().setUp()
+
         pais = Pais.objects.create(nombre="Argentina")
 
         self.escultor = Escultor.objects.create(
@@ -49,7 +52,28 @@ class QRAPITest(BaseAPITest):
             reverse("generar_qr"), {"escultor_id": self.escultor.id}
         )
         self.assertEqual(response.status_code, 200)
-        self.assertIn("qr", response.data)
+        self.assertEqual(response["Content-Type"], "image/png")
+        img = Image.open(BytesIO(response.content))
+        self.assertEqual(img.format, "PNG")
+
+    def test_qr_generation_uniqueness(self):
+        response = self.client.get(
+            reverse("generar_qr"), {"escultor_id": self.escultor.id}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/png")
+        img1 = Image.open(BytesIO(response.content))
+        self.assertEqual(img1.format, "PNG")
+
+        response = self.client.get(
+            reverse("generar_qr"), {"escultor_id": self.escultor.id}
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "image/png")
+        img2 = Image.open(BytesIO(response.content))
+        self.assertEqual(img2.format, "PNG")
+
+        self.assertNotEqual(img1, img2)
 
     def test_qr_generation_invalid_id_400_BAD_REQUEST(self):
         response = self.client.get(reverse("generar_qr"), {"escultor_id": -2})
