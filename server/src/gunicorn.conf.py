@@ -14,7 +14,7 @@ workers = 4
 timeout = 30
 daemon = False
 limit_request_line = 4094
-accesslog = "-"
 errorlog = "-"
+accesslog = "-"
 
 # workers = multiprocessing.cpu_count() * 2 + 1

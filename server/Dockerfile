@@ -17,6 +17,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 
 FROM python:3.12-slim-bookworm
 
+RUN useradd -m app
+
 WORKDIR /app
 
 COPY --from=builder --chown=app:app /app /app
@@ -25,5 +27,10 @@ ENV PATH="/app/.venv/bin:$PATH"
 
 ADD ./src /app
 
+RUN chown app:app /app/db.sqlite3
+
 EXPOSE 8000
+
+USER app
+
 CMD ["gunicorn", "-c", "./gunicorn.conf.py", "backend.wsgi:application"]

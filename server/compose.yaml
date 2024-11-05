@@ -1,5 +1,6 @@
 # https://docs.docker.com/compose/gettingstarted/
 # https://docs.docker.com/reference/compose-file/
+
 # Estaría bueno añadir herramientas para observabilidad como Grafana-Loki-Prometheus
 services:
   rest_api_django:
@@ -11,10 +12,8 @@ services:
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
       - DJANGO_ENV=${DJANGO_ENV}
     volumes:
-      # - ./src/:/app 
       - ./src/db.sqlite3:/app/db.sqlite3
     command: sh -c "if [ $DJANGO_ENV = 'dev' ]; then /app/.venv/bin/python manage.py runserver 0.0.0.0:8000; else /app/.venv/bin/gunicorn -c ./gunicorn.conf.py backend.wsgi:application; fi"
-
     healthcheck:
       test: ['CMD', 'curl', '-f', '/health_check/']
       interval: 60s
