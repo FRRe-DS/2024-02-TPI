@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet" />
+
+    <!-- font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- google icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+
+    <title>Bienal del Chaco</title>
+  </head>
+  <body>
+    <div id="header"></div>
+    <main>
+      <section class="container-title">
+        <h1>Cronograma de <span class="cursiva">actividades</span></h1>
+        <div id="left2"></div>
+        <div id="right2"></div>
+      </section>
+      <div class="wrapped2">
+        <section class="events-gallery">
+          <div
+            class="event-card hiddenImg"
+            style="background-image: url('./images/agitaLaBienal.jpeg')">
+            <div class="card-content">
+              <h2>Titulo del evento</h2>
+              <div>
+                <i class="material-icons-outlined">&#xebcc;</i>
+                <p>1 de Julio - 10 de Julio</p>
+              </div>
+            </div>
+
+            <button class="btn-secundarioV3">Ver detalles</button>
+          </div>
+          <div
+            class="event-card hiddenImg"
+            style="background-image: url('./images/bienal_aerea.jpeg')">
+            <div class="card-content">
+              <h2>Titulo del evento</h2>
+              <div>
+                <i class="material-icons-outlined">&#xebcc;</i>
+                <p>1 de Julio - 10 de Julio</p>
+              </div>
+            </div>
+
+            <button class="btn-secundarioV3">Ver detalles</button>
+          </div>
+          <div
+            class="event-card hiddenImg"
+            style="
+              background-image: url('./images/mujeresCantandoFolklore.jpeg');
+            ">
+            <div class="card-content">
+              <h2>Titulo del evento</h2>
+              <div>
+                <i class="material-icons-outlined">&#xebcc;</i>
+                <p>1 de Julio - 10 de Julio</p>
+              </div>
+            </div>
+
+            <button class="btn-secundarioV3">Ver detalles</button>
+          </div>
+          <div
+            class="event-card hiddenImg"
+            style="background-image: url('./images/AgitaLaBienal2.jpg')">
+            <div class="card-content">
+              <h2>Titulo del evento</h2>
+              <div>
+                <i class="material-icons-outlined">&#xebcc;</i>
+                <p>1 de Julio - 10 de Julio</p>
+              </div>
+            </div>
+
+            <button class="btn-secundarioV3">Ver detalles</button>
+          </div>
+        </section>
+      </div>
+    </main>
+    <div id="footer"></div>
+
+    <script type="module" src="./app.ts"></script>
+    <script type="module">
+      import { loadHeaderFooter } from "./app.ts";
+      loadHeaderFooter();
+    </script>
+    <script type="module" src="./utils.ts"></script>
+  </body>
+</html>
