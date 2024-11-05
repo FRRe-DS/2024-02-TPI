@@ -28,42 +28,66 @@ LOGGING = {
             "()": "pythonjsonlogger.jsonlogger.JsonFormatter",
             "format": "%(asctime)s %(levelname)s %(name)s %(message)s",
         },
+        "color": {
+            "()": "colorlog.ColoredFormatter",
+            "format": (
+                "%(asctime)s - %(log_color)s%(levelname)s%(reset)s - %(name)s - %(message)s"
+            ),
+            "log_colors": {
+                "DEBUG": "white",
+                "INFO": "bold_green",
+                "WARNING": "bold_yellow",
+                "ERROR": "bold_red",
+                "CRITICAL": "bold_purple",
+            },
+            "secondary_log_colors": {
+                "message": {
+                    "ERROR": "bold_red",
+                    "CRITICAL": "bold_purple",
+                }
+            },
+        },
     },
     "handlers": {
         "json": {
-            "class": "logging.StreamHandler",
+            "class": "logging.FileHandler",
+            "filename": "/tmp/app.log",  # Path for JSON logs
             "formatter": "json",
+        },
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "color",
         },
     },
     "loggers": {
         "celery": {
-            "handlers": ["json"],
+            "handlers": ["json", "console"],
             "level": "INFO",
             "propagate": True,
         },
         "django": {
-            "handlers": ["json"],
+            "handlers": ["json", "console"],
             "level": "INFO",
             "propagate": False,
         },
         "app": {
-            "handlers": ["json"],
+            "handlers": ["json", "console"],
             "level": "INFO",
             "propagate": False,
         },
         "gunicorn.error": {
-            "handlers": ["json"],
+            "handlers": ["json", "console"],
             "level": "INFO",
             "propagate": False,
         },
         "gunicorn.access": {
-            "handlers": ["json"],
+            "handlers": ["json", "console"],
             "level": "INFO",
             "propagate": False,
         },
     },
     "root": {
-        "handlers": ["json"],
+        "handlers": ["json", "console"],
         "level": "INFO",
     },
 }

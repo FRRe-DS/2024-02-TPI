@@ -1,8 +1,7 @@
-import random
-
+import logging
 import requests
+from app.utils import PositiveInt
 from django.contrib.auth.models import User
-from django.db.models import ObjectDoesNotExist
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from rest_framework import authentication, permissions, status, viewsets
@@ -10,6 +9,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action, api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
+import secrets
 
 from app.models import (
     Escultor,
@@ -71,35 +71,62 @@ def health_check(request: Request) -> Response:
     return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+# TODO: Medir si genera un cuello de botella al bloquear el hilo.
+# TODO: Revisar los permisos.
 @api_view(["GET"])
-def generarQR(request):
-    escultor_id = request.GET.get("escultor_id")
-    # aqui debemos poner la url de la pagina de votacion, a la cual deberemos pasarle la id de la escultura
-    url = "https://enzovallejos.github.io/VotoEscultorprueba/?id_escultura={id}".format(
-        id=escultor_id
-    )
+def generarQR(request: Request) -> Response:
+    logging.info("Generando QR...")
 
+    escultor_id = request.query_params.get("escultor_id")
     if escultor_id is None:
+        error = "Debe ingresar por query parameters el id del escultor"
+        logging.error(error)
         return Response(
-            {"error": "Debe ingresar por query parameters el id de la escultura"},
+            {"error": error},
             status=status.HTTP_400_BAD_REQUEST,
         )
 
-    # creo un hash random para el qr asi va a ser diferente cada vez
-    hash_id = random.getrandbits(128)
-    # acorto el link
-    url_short = ("https://ulvis.net/api.php?url={url}&custom= %032x" % hash_id).format(
-        url=url
+    try:
+        escultor_id = PositiveInt(int(escultor_id))
+    except (TypeError, ValueError):
+        error = "El id del escultor debe ser un número válido, entero y positivo"
+        logging.error(error)
+        return Response(
+            {"error": error},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    if not Escultor.objects.filter(id=escultor_id).exists():
+        error = "El id del escultor no existe en la base de datos"
+        logging.error(error)
+        return Response(
+            {"error": error},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    logging.info("Construyendo la URL...")
+
+    voto_url = (
+        f"https://enzovallejos.github.io/VotoEscultorprueba/?escultor_id={escultor_id}"
     )
+    hash = secrets.token_hex(16)
+    logging.info("Acortando la URL...")
+    short_url_api = f"https://ulvis.net/api.php?url={voto_url}&custom={hash}"
+    try:
+        response = requests.get(short_url_api)
+        response.raise_for_status()
+    except requests.RequestException as e:
+        error = "Error al acortar la URL."
+        logging.error(f"{error}: {e}")
+        return Response({"error": error}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    r = requests.get(url_short)
+    short_url = response.text
+    qr_url = f"http://api.qrserver.com/v1/create-qr-code/?data={short_url}&size=200x200"
 
+    logging.info("Generando QR... listo!")
     return Response(
-        {
-            "qr": "http://api.qrserver.com/v1/create-qr-code/?data={}&size=200x200".format(
-                r.text
-            )
-        }
+        {"qr": qr_url},
+        status=status.HTTP_200_OK,
     )
 
 
@@ -496,6 +523,36 @@ class LugarViewSet(viewsets.ModelViewSet):
 
 
 class VotoEscultorViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos VotoEscultor.
+
+    Provee operatciones CRUD para el control de VotoEscultor.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      -  list:   GET /api/voto_escultor/
+      -  create: POST /api/voto_escultor/
+      -  retrieve: GET /api/voto_escultor/{id}/
+      -  update: PUT /api/voto_escultor/{id}/
+      -  partial_update: PATCH /api/voto_escultor/{id}/
+      -  destroy: DELETE /api/voto_escultor/{id}/
+      -  archive: POST /api/voto_escultor/{id}/archive/
+      -  featured: GET /api/voto_escultor/featured/
+
+    Campos de busqueda:
+        - id
+        - nombre
+        - descripcion
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+        - Archive: Solamente el dueño o un admin.
+    """
+
     queryset = VotoEscultor.objects.all()
     serializer_class = VotoEscultorSerializer
 
@@ -510,39 +567,43 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         try:
             puntaje = int(request.data["puntaje"])
-        except (ValueError, TypeError):
-            return Response(
-                {"status": "El puntaje debe ser un número entre 1 y 5 inclusivo"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        if puntaje < 1 or puntaje > 5:
-            return Response(
-                {"status": "Ingrese un puntaje entre 1 y 5 inclusivo"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
-
-        try:
-            VotoEscultor.objects.get(
-                escultor_id=request.data["escultor_id"],
-                votante_id=request.data["votante_id"],
-            )
-            return Response(
-                {"status": "Usted ya ha votado a este escultor"},
-                status=status.HTTP_403_FORBIDDEN,
-            )
-        except ObjectDoesNotExist:
-            serialized_data = VotoEscultorSerializer(data=request.data)
-
-            if serialized_data.is_valid():
-                serialized_data.save()
+            if not (1 <= puntaje <= 5):
+                error = "Ingrese un puntaje entre 1 y 5 inclusivo"
+                logging.error(error)
                 return Response(
-                    {"status": "voto registrado"}, status=status.HTTP_201_CREATED
-                )
-            else:
-                return Response(
-                    {
-                        "status": f"Ocurrió un error al serializar los datos. err: {serialized_data.errors}"
-                    },
+                    {"error": error},
                     status=status.HTTP_400_BAD_REQUEST,
                 )
+        except (ValueError, TypeError):
+            error = "El puntaje debe ser un número entre 1 y 5 inclusivo"
+            logging.error(error)
+            return Response(
+                {"error": error},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serialized_data = VotoEscultorSerializer(data=request.data)
+        if serialized_data.is_valid():
+            serialized_data.save()
+            return Response(
+                {"status": "voto registrado"}, status=status.HTTP_201_CREATED
+            )
+        else:
+            errors = serialized_data.errors
+            if isinstance(errors, dict) and "non_field_errors" in errors:
+                error_message = errors["non_field_errors"][0]
+                error = f"Usted ya ha votado a este escultor. err: {error_message}"
+                logging.error(error)
+                return Response(
+                    {"error": error},
+                    status=status.HTTP_403_FORBIDDEN,
+                )
+
+            error = f"Ocurrió un error al serializar los datos. err: {errors}"
+            logging.error(error)
+            return Response(
+                {
+                    "error": error,
+                },
+                status=status.HTTP_400_BAD_REQUEST,
+            )
