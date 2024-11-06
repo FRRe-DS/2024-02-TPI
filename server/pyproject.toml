@@ -24,6 +24,7 @@ dependencies = [
     "django-ratelimit>=4.1.0",
     "colorlog>=6.9.0",
     "qrcode[pil]>=8.0",
+    "resend>=2.4.0",
 ]
 
 [build-system]

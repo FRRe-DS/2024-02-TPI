@@ -1,4 +1,7 @@
 from io import BytesIO
+from resend.exceptions import ValidationError
+import resend
+from django.conf import settings
 import uuid
 import qrcode
 import logging
@@ -71,6 +74,51 @@ def health_check(request: Request) -> Response:
     Endpoint para consultar el estado del servidor.
     """
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(["POST"])
+def mandar_email(request: Request) -> Response:
+    """
+    Endpoint para enviar un mail usando la API REST de Resend.
+    """
+    try:
+        destinatario = str(request.query_params.get("destinatario"))
+        if destinatario is None:
+            error = "Debe ingresar por query parameters el correo del destinatario"
+            logging.error(error)
+            return Response(
+                {"error": error},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+    except TypeError:
+        error = "Debe ingresar por query parameters el correo del destinatario"
+        logging.error(error)
+        return Response(
+            {"error": error},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    resend.api_key = settings.RESEND_API_KEY
+
+    params: resend.Emails.SendParams = {
+        "from": settings.DEFAULT_FROM_EMAIL,
+        "to": [destinatario],
+        "subject": "Confirmación de correo electrónico",
+        "html": "<strong> Funciona! </strong>",
+    }
+
+    try:
+        email = resend.Emails.send(params)
+    except ValidationError as e:
+        error = f"Los parametros son inválidos.err: {e}"
+        logging.error(error)
+        return Response(
+            {"error": error},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    print(email)
+    return Response(status=status.HTTP_200_OK)
 
 
 # TODO: Medir si genera un cuello de botella al bloquear el hilo.

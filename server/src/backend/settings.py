@@ -3,6 +3,8 @@ import os
 from dotenv import load_dotenv
 
 DJANGO_ENV = os.getenv("DJANGO_ENV", default="dev")
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", default="")
+DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 

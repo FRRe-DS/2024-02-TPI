@@ -235,6 +235,7 @@ dependencies = [
     { name = "qrcode", extra = ["pil"] },
     { name = "redis" },
     { name = "requests" },
+    { name = "resend" },
     { name = "whitenoise" },
 ]
 
@@ -258,6 +259,7 @@ requires-dist = [
     { name = "qrcode", extras = ["pil"], specifier = ">=8.0" },
     { name = "redis", specifier = ">=5.0.8" },
     { name = "requests", specifier = ">=2.32.3" },
+    { name = "resend", specifier = ">=2.4.0" },
     { name = "whitenoise", specifier = ">=6.8.2" },
 ]
 
@@ -513,6 +515,19 @@ wheels = [
 ]
 
 [[package]]
+name = "resend"
+version = "2.4.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "requests" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e6/50/6ed3bd29137c03f97e71cf0f35796a138ff22b9a2e7e2385c7883fbe0673/resend-2.4.0.tar.gz", hash = "sha256:0f2b06c9afdc5c71f2d2f828dcd6680077b0ef3a3d7420ec37d150857b67a095", size = 11706 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/26/d1/7d06d0aa061d2954843adcf06e119f7dc20aa7139237d6fdf03bd2c986a6/resend-2.4.0-py2.py3-none-any.whl", hash = "sha256:92b674e4877bca9b65c38bb06b5b29a509f2fa878f147b58872afe380738e448", size = 17201 },
+]
+
+[[package]]
 name = "six"
 version = "1.16.0"
 source = { registry = "https://pypi.org/simple" }
@@ -528,6 +543,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/73/82/dfa23ec2cbed08a801deab02fe7c904bfb00765256b155941d789a338c68/sqlparse-0.5.1.tar.gz", hash = "sha256:bb6b4df465655ef332548e24f08e205afc81b9ab86cb1c45657a7ff173a3a00e", size = 84502 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5d/a5/b2860373aa8de1e626b2bdfdd6df4355f0565b47e51f7d0c54fe70faf8fe/sqlparse-0.5.1-py3-none-any.whl", hash = "sha256:773dcbf9a5ab44a090f3441e2180efe2560220203dc2f8c0b0fa141e18b505e4", size = 44156 },
+]
+
+[[package]]
+name = "typing-extensions"
+version = "4.12.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/df/db/f35a00659bc03fec321ba8bce9420de607a1d37f8342eee1863174c69557/typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8", size = 85321 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d", size = 37438 },
 ]
 
 [[package]]

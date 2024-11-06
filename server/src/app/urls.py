@@ -45,6 +45,7 @@ urlpatterns = [
     path("generar_qr/", views.generarQR, name="generar_qr"),
     path("health_check/", views.health_check, name="health_check"),
     path("test_celery/", views.celery_task_ejemplo, name="celery_task_ejemplo"),
+    path("mandar_email/", views.mandar_email, name="mandar_email"),
     path(
         "check_id_celery/<str:task_id>/",
         views.check_task_status,
