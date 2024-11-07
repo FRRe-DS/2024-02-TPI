@@ -53,7 +53,7 @@
                 trabajando a cielo abierto y en público, esculpiendo piezas que
                 tienen por destino las veredas de Resistencia.
               </p>
-              <p><strong>Particiapntes: 9 escultores</strong></p>
+              <p><strong>Participantes: 9 escultores</strong></p>
               <p><strong>Material: Metal</strong></p>
             </div>
           </section>
@@ -64,25 +64,27 @@
               <div class="divider-sm"></div>
             </div>
             <div class="grid-escultores">
-              <article class="card-escultor hiddenImg">
-                <img
-                  src="./images/escultor-1.jpg"
-                  alt="escultor"
-                  class="escultor-img" />
+                <a href="#" id="votar-tag">
+                    <article class="card-escultor hiddenImg">
+                        <img
+                        src="./images/escultor-1.jpg"
+                        alt="escultor"
+                        class="escultor-img" />
 
-                <div class="nombre-origen">
-                  <div class="space">
-                    <h3>Nombre del escultor</h3>
-                  </div>
+                        <div class="nombre-origen">
+                        <div class="space">
+                            <h3 id="nombre-escultor">Ivan Drago</h3>
+                        </div>
 
-                  <p class="cursiva">País</p>
-                </div>
+                        <p class="cursiva">País</p>
+                        </div>
 
-                <button class="btn-votar">
-                  <i class="material-icons-outlined">&#xe838;</i>
-                  Votar
-                </button>
-              </article>
+                        <button class="btn-votar">
+                        <i class="material-icons-outlined">&#xe838;</i>
+                        Votar
+                        </button>
+                    </article>
+                </a>
               <article class="card-escultor hiddenImg">
                 <img
                   src="./images/escultor-1.jpg"
@@ -216,8 +218,9 @@
 
     <script type="module" src="./app.ts"></script>
     <script type="module">
-      import { loadHeaderFooter } from "./app.ts";
+      import { loadHeaderFooter, Votar } from "./app.ts";
       loadHeaderFooter();
+      Votar()
     </script>
     <script type = "module" src="./utils.ts"></script>
   </body>
