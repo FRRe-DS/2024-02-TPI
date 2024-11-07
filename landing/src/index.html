@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="./css/styles.css" />
 
     <title>Bienal del Chaco</title>
+
+    <script type="module" src="./app.ts"></script>
+    <script type="module" src="./utils.ts"></script>
   </head>
   <body>
     <div id="header"></div>
@@ -50,10 +53,10 @@
           </div>
           <div class="action-btns">
             <a href="/eventos.html">
-                <button class="btn-primario">Descubre la Bienal 2025</button>
+              <button class="btn-primario">Descubre la Bienal 2025</button>
             </a>
             <a href="/certamen.html">
-                <button class="btn-secundario">Certamen de Esculturas</button>
+              <button class="btn-secundario">Certamen de Esculturas</button>
             </a>
           </div>
         </div>
@@ -213,12 +216,5 @@
       </section>
     </main>
     <div id="footer"></div>
-
-    <script type="module" src="./app.ts"></script>
-    <script type="module">
-      import { loadHeaderFooter } from "./app.ts";
-      loadHeaderFooter();
-    </script>
-    <script type="module" src="./utils.ts"></script>
   </body>
 </html>

@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="./css/styles.css" />
 
     <title>Bienal del Chaco</title>
+
+    <script type="module" src="./app.ts"></script>
+    <script type="module" src="./utils.ts"></script>
   </head>
   <body>
     <div id="header"></div>
@@ -64,27 +67,27 @@
               <div class="divider-sm"></div>
             </div>
             <div class="grid-escultores">
-                <a href="#" id="votar-tag">
-                    <article class="card-escultor hiddenImg">
-                        <img
-                        src="./images/escultor-1.jpg"
-                        alt="escultor"
-                        class="escultor-img" />
+              <a href="#" id="votar-tag">
+                <article class="card-escultor hiddenImg">
+                  <img
+                    src="./images/escultor-1.jpg"
+                    alt="escultor"
+                    class="escultor-img" />
 
-                        <div class="nombre-origen">
-                        <div class="space">
-                            <h3 id="nombre-escultor">Ivan Drago</h3>
-                        </div>
+                  <div class="nombre-origen">
+                    <div class="space">
+                      <h3 id="nombre-escultor">Ivan Drago</h3>
+                    </div>
 
-                        <p class="cursiva">País</p>
-                        </div>
+                    <p class="cursiva">País</p>
+                  </div>
 
-                        <button class="btn-votar">
-                        <i class="material-icons-outlined">&#xe838;</i>
-                        Votar
-                        </button>
-                    </article>
-                </a>
+                  <button class="btn-votar">
+                    <i class="material-icons-outlined">&#xe838;</i>
+                    Votar
+                  </button>
+                </article>
+              </a>
               <article class="card-escultor hiddenImg">
                 <img
                   src="./images/escultor-1.jpg"
@@ -215,13 +218,5 @@
       </div>
     </main>
     <div id="footer"></div>
-
-    <script type="module" src="./app.ts"></script>
-    <script type="module">
-      import { loadHeaderFooter, Votar } from "./app.ts";
-      loadHeaderFooter();
-      Votar()
-    </script>
-    <script type = "module" src="./utils.ts"></script>
   </body>
 </html>
