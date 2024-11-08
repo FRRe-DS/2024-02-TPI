@@ -109,7 +109,7 @@ def generar_qr(request: Request) -> HttpResponse:
     logging.info(f"Generando QR para {escultor_id}...")
 
     id = ulid.from_timestamp(datetime.now())
-    voto_url = f"http://localhost:5173/validar.html/?escultor_id={escultor_id}&id={id}"
+    voto_url = f"http://localhost:5173/validar.html?escultor_id={escultor_id}&id={id}"
     logging.info(voto_url)
     # voto_url = f"https://2024-02-tpi-cloudflare.pages.dev/verificar_voto/?escultor_id={escultor_id}&id={id}"
 

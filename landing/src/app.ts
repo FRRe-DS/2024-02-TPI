@@ -106,10 +106,11 @@ export function validar() {
 
 	const timestamp = extractTimeStampFromULID(ulid_id);
 	const now = new Date();
-	const spanned = Math.min(timestamp.getTime() - now.getTime()) / (1000 * 60);
+	const spanned = Math.abs(timestamp.getTime() - now.getTime()) / (1000 * 60);
 
 	if (spanned < 2) {
 		console.log("Es válido!");
+		console.log(spanned);
 		alert("Es válido!");
 	} else {
 		console.error(`Es inválido!, el qr tiene un timestamp de ${timestamp}`);
