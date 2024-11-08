@@ -65,22 +65,55 @@ export function Voto() {
   });
 }
 
-export function Votar() {
-  const votar = document.getElementById("vote-tag") as HTMLElement;
+function Votar() {
+  const votar = document.querySelector(".btn-votar") as HTMLElement;
+  console.log(votar);
 
   if (votar) {
     votar.addEventListener("click", (event) => {
       event.preventDefault();
       const email = localStorage.getItem("userEmail");
-      const escultor = document.getElementById(
-        "nombre-escultor"
+      const escultor = document.querySelector(
+        "#nombre-escultor"
       ) as HTMLHeadingElement;
 
       if (!email) {
+      } else {
         window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
       }
     });
   } else {
     return;
   }
+}
+
+function cerrarPopUp(): void {
+  const overlay = document.querySelector(".overlay") as HTMLButtonElement;
+
+  overlay.style.display = "none";
+}
+
+const votar = document.querySelector(".btn-votar") as HTMLButtonElement;
+
+const cerrar_popup = document.querySelector(
+  ".cerrar-popup"
+) as HTMLButtonElement;
+
+if (votar) {
+  votar.addEventListener("click", (event) => {
+    event.preventDefault();
+    const email = localStorage.getItem("userEmail");
+    const escultor = document.querySelector(
+      "#nombre-escultor"
+    ) as HTMLHeadingElement;
+
+    if (!email) {
+    } else {
+      window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
+    }
+  });
+}
+
+if (cerrar_popup) {
+  cerrar_popup.addEventListener("click", cerrarPopUp);
 }

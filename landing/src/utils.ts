@@ -56,32 +56,3 @@ for (const element of hiddenElements) {
 for (const image of hiddenImgElements) {
 	observer.observe(image);
 }
-
-// Ventana modal para ver imagenes en pantalla grande
-// function openLightbox(image: HTMLImageElement) {
-//     const lightbox = document.getElementById("lightbox") as HTMLElement;
-//     const lightboxImage = document.getElementById("lightboxImage") as HTMLImageElement;
-//     const img = document.querySelector(".lightbox-content") as HTMLElement;
-
-//     if (lightbox && lightboxImage && img) {
-//         lightboxImage.src = image.src; // Establece la imagen seleccionada en el lightbox
-//         lightbox.style.display = "flex"; // Muestra el lightbox
-//     }
-
-//     setTimeout(() => {
-//         img.style.opacity = "1";
-//     }, 200);
-// }
-
-// function closeLightbox() {
-//     const lightbox = document.getElementById("lightbox") as HTMLElement;
-//     const img = document.querySelector(".lightbox-content") as HTMLElement;
-
-//     if (img && lightbox) {
-//         img.style.opacity = "0";
-//     }
-
-//     setTimeout(() => {
-//         lightbox.style.display = "none";
-//     }, 300);
-// }
