@@ -1,7 +1,8 @@
+from datetime import datetime
 from io import BytesIO
-import uuid
 import qrcode
 import logging
+import ulid
 from app.utils import PositiveInt
 from django.contrib.auth.models import User
 from django.http import HttpResponse, JsonResponse
@@ -77,7 +78,7 @@ def health_check(request: Request) -> Response:
 # TODO: Revisar los permisos.
 @permission_classes([IsAuthenticated])
 @api_view(["GET"])
-def generarQR(request: Request) -> HttpResponse:
+def generar_qr(request: Request) -> HttpResponse:
     escultor_id = request.query_params.get("escultor_id")
     if escultor_id is None:
         error = "Debe ingresar por query parameters el id del escultor"
@@ -107,8 +108,10 @@ def generarQR(request: Request) -> HttpResponse:
 
     logging.info(f"Generando QR para {escultor_id}...")
 
-    random_val = uuid.uuid4().hex[:8]
-    voto_url = f"https://enzovallejos.github.io/VotoEscultorprueba/?escultor_id={escultor_id}&randval={random_val}"
+    id = ulid.from_timestamp(datetime.now())
+    voto_url = f"http://localhost:5173/validar.html/?escultor_id={escultor_id}&id={id}"
+    logging.info(voto_url)
+    # voto_url = f"https://2024-02-tpi-cloudflare.pages.dev/verificar_voto/?escultor_id={escultor_id}&id={id}"
 
     qr = qrcode.QRCode(
         version=1,
