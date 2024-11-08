@@ -1082,7 +1082,7 @@ form {
 
 .overlay {
   display: none;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 800;
@@ -1092,7 +1092,7 @@ form {
 }
 
 .popUp-container {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   z-index: 900;
