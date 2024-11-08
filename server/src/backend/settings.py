@@ -49,45 +49,46 @@ LOGGING = {
         },
     },
     "handlers": {
-        "json": {
-            "class": "logging.FileHandler",
-            "filename": "/tmp/app.log",  # Path for JSON logs
-            "formatter": "json",
-        },
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "color",
-        },
-    },
+    #     "json": {
+    #         "class": "logging.FileHandler",
+    #         "formatter": "json",
+    #         "filename": "/tmp/app.log",  # Path for JSON logs
+            
+    #     },
+         "console": {
+             "class": "logging.StreamHandler",
+             "formatter": "color",
+         },
+     },
     "loggers": {
         "celery": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": True,
         },
         "django": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
         "app": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
         "gunicorn.error": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
         "gunicorn.access": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
     },
     "root": {
-        "handlers": ["json", "console"],
+        "handlers": ["console"],
         "level": "INFO",
     },
 }
