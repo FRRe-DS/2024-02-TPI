@@ -75,7 +75,7 @@ export function Votar() {
 			) as HTMLHeadingElement;
 
 			if (!email) {
-				window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
+				window.location.href = `./validar.html?nombre-escultor=${escultor.textContent}`;
 			}
 		});
 	} else {
