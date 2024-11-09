@@ -12,7 +12,7 @@ export default defineConfig({
 				main: path.resolve(__dirname, "src/index.html"),
 				certamen: path.resolve(__dirname, "src/certamen.html"),
 				eventos: path.resolve(__dirname, "src/eventos.html"),
-				votar: path.resolve(__dirname, "src/votar.html"),
+				validar: path.resolve(__dirname, "src/validar.html"),
 				__footer: path.resolve(__dirname, "src/footer.html"),
 				__header: path.resolve(__dirname, "src/header.html"),
 			},

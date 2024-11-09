@@ -20,10 +20,6 @@ export function loadHeaderFooter(): void {
 	loadHTML("footer.html", "footer");
 }
 
-export function redirectTo(url: string) {
-	location.href = url;
-}
-
 export function Voto() {
 	document.getElementById("votoForm")?.addEventListener("submit", async (e) => {
 		e?.preventDefault();
@@ -68,7 +64,7 @@ export function Voto() {
 }
 
 export function Votar() {
-	const votar = document.getElementById("vote-tag") as HTMLElement;
+	const votar = document.getElementById("votar-tag");
 
 	if (votar) {
 		votar.addEventListener("click", (event) => {
@@ -79,10 +75,56 @@ export function Votar() {
 			) as HTMLHeadingElement;
 
 			if (!email) {
-				window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
+				window.location.href = `./validar.html?nombre-escultor=${escultor.textContent}`;
 			}
 		});
 	} else {
 		return;
 	}
+}
+
+function extractTimeStampFromULID(input: string): Date {
+	const ulid_timestamp_str = input.slice(0, 10);
+	const base32Chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
+	let timestamp = 0;
+
+	for (let i = 0; i < ulid_timestamp_str.length; i++) {
+		timestamp = timestamp * 32 + base32Chars.indexOf(ulid_timestamp_str[i]);
+	}
+
+	return new Date(timestamp);
+}
+
+export function validar() {
+	const params = getUrlParams();
+	console.table(params);
+	const ulid_id = params.id;
+	if (!ulid_id) {
+		console.error("No se encuentra el ulid id");
+		return;
+	}
+
+	const timestamp = extractTimeStampFromULID(ulid_id);
+	const now = new Date();
+	const spanned = Math.abs(timestamp.getTime() - now.getTime()) / (1000 * 60);
+
+	if (spanned < 2) {
+		console.log("Es válido!");
+		console.log(spanned);
+		alert("Es válido!");
+	} else {
+		console.error(`Es inválido!, el qr tiene un timestamp de ${timestamp}`);
+		alert("Es inválido!");
+	}
+}
+
+function getUrlParams(): Record<string, string> {
+	const params = new URLSearchParams(window.location.search);
+	const searchConfig: Record<string, string> = {};
+
+	for (const [key, value] of params) {
+		searchConfig[key] = value;
+	}
+
+	return searchConfig;
 }

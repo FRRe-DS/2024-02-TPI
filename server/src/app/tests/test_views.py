@@ -7,7 +7,16 @@ from rest_framework.test import APIClient, APITestCase
 from rest_framework.authtoken.models import Token
 from PIL import Image
 
-from app.models import Escultor, Pais, Votante, Tematica, Evento, Lugar, Escultura
+from app.models import (
+    Escultor,
+    Pais,
+    Votante,
+    Tematica,
+    Evento,
+    Lugar,
+    Escultura,
+    VotoEscultor,
+)
 from django.contrib.auth.models import User
 from app.serializers import (
     EscultorSerializer,
@@ -32,6 +41,73 @@ class HealthCheckAPITest(SimpleTestCase):
     def test_health_check(self):
         response = self.client.get(reverse("health_check"))
         self.assertEqual(response.status_code, 204)
+
+
+class VotacionAPITest(BaseAPITest):
+    def setUp(self):
+        super().setUp()
+
+        logging.disable(logging.NOTSET)
+        # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `viewsets.ModelViewSet`)
+        # De manera automática tendríamos implementadas funcionalidades básicas como listar (GET), crear (POST), destruir (DELETE), etcétera.
+        # Como estas funciones solo difieren en la cabecera HTTP que es enviada a la url y no en la url en sí, decidí darle un nombre descriptivo.
+        self.base_url = reverse("voto_escultor-list")
+
+        # INFO: (Lautaro) Esta funcion lambda tiene el proposito de generar dinamicamente endpoints como:
+        # - <GET/PUT/DELETE> /votantes/<id>/
+        self.detail_url = lambda pk: reverse("voto_escultor-detail", kwargs={"pk": pk})
+
+        pais = Pais.objects.create(nombre="Argentina")
+
+        self.escultor = Escultor.objects.create(
+            nombre="Lautaro Acosta Quintana",
+            pais_id=pais,
+            correo="acostalautaro@ejemplo.com",
+            bibliografia="...",
+        )
+
+        self.votante = Votante.objects.create(correo="ramon@ejemplo.com")
+
+    def test_votar_escultor_201_CREATED(self):
+        valid_input = {"escultor_id": 1, "puntaje": 5}
+        response = self.client.post(
+            f"{self.base_url}?correo_votante={self.votante.correo}",
+            valid_input,
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data["status"], "voto registrado")
+        self.assertTrue(
+            VotoEscultor.objects.filter(escultor_id=self.escultor.id).exists()
+        )
+
+    def test_votar_escultor_403_FORBIDDEN(self):
+        self.test_votar_escultor_201_CREATED()
+        valid_input = {"escultor_id": 1, "puntaje": 5}
+        response = self.client.post(
+            f"{self.base_url}?correo_votante={self.votante.correo}",
+            valid_input,
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_votar_escultor_400_BAD_REQUEST(self):
+        self.test_votar_escultor_201_CREATED()
+        valid_input = {"escultor_id": 1, "puntaje": 10}
+        response = self.client.post(
+            f"{self.base_url}?correo_votante={self.votante.correo}",
+            valid_input,
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        valid_input = {"escultor_id": 1, "puntaje": -10}
+        response = self.client.post(
+            f"{self.base_url}?correo_votante={self.votante.correo}",
+            valid_input,
+            format="json",
+        )
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
 
 class QRAPITest(BaseAPITest):
@@ -590,67 +666,3 @@ class EsculturaAPITest(BaseAPITest):
         response = self.client.delete(self.detail_url(escultura.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Escultura.objects.filter(pk=escultura.pk).exists())
-
-
-class VotoEscultorAPITest(BaseAPITest):
-    def setUp(self):
-        super().setUp()
-
-        self.base_url = reverse("voto_escultor-list")
-        self.detail_url = lambda pk: reverse("voto_escultor-detail", kwargs={"pk": pk})
-
-        pais = Pais.objects.create(
-            nombre="Argentina",
-        )
-
-        Escultor.objects.create(
-            nombre="Gonza",
-            apellido="Saucedo",
-            pais_id=pais,
-            correo="gonzubi@saucedo.gmail",
-            fecha_nacimiento="2024-11-01",
-            bibliografia="...",
-        )
-
-        Votante.objects.create(correo="acostalautaro@ejemplo.com")
-
-    def test_post_voto_201_CREATED(self):
-        escultor = Escultor.objects.first()
-        votante = Votante.objects.first()
-
-        valid_data = {
-            "puntaje": 1,
-            "escultor_id": escultor.id,
-            "votante_id": votante.id,
-        }
-
-        response = self.client.post(self.base_url, valid_data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-
-    def test_post_voto_400_BAD_REQUEST(self):
-        escultor = Escultor.objects.first()
-        votante = Votante.objects.first()
-
-        valid_data = {
-            "puntaje": 10,
-            "escultor_id": escultor.id,
-            "votante_id": votante.id,
-        }
-
-        response = self.client.post(self.base_url, valid_data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-
-    def test_post_voto_403_FORBIDDEN(self):
-        self.test_post_voto_201_CREATED()
-
-        escultor = Escultor.objects.first()
-        votante = Votante.objects.first()
-
-        valid_data = {
-            "puntaje": 1,
-            "escultor_id": escultor.id,
-            "votante_id": votante.id,
-        }
-
-        response = self.client.post(self.base_url, valid_data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)

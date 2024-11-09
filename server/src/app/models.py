@@ -3,6 +3,8 @@ from django.core.files.base import ContentFile
 from PIL import Image
 import io
 
+from rest_framework.fields import MaxValueValidator, MinValueValidator
+
 
 class Votante(models.Model):
     """
@@ -243,7 +245,9 @@ class VotoEscultor(models.Model):
     votante_id = models.ForeignKey(
         Votante, on_delete=models.CASCADE, db_column="votante_id"
     )
-    puntaje = models.PositiveIntegerField()
+    puntaje = models.PositiveIntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(5)]
+    )
 
     class Meta:
         unique_together = ("escultor_id", "votante_id")
