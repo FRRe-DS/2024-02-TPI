@@ -16,8 +16,6 @@ async function loadEventos(url: string) {
   try {
     const res = await fetch(url);
     const evento = await res.json();
-    console.log(evento)
-    
    
     for (let index = 0; index < 7; index++) {
       const card = document.getElementById(`card-${index}`);
@@ -40,8 +38,6 @@ async function loadEventos(url: string) {
     console.log(`Error al carga los eventos: ${error}`);
   }
 }
-
-
 
 loadEventos(URL_EVENTOS);
 
