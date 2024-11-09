@@ -1,18 +1,19 @@
-from .views import (
-    EventoViewSet,
+from rest_framework import routers
+from django.urls import include, path
+from app.views.sets import (
     VotanteViewSet,
+    LugarViewSet,
+    EventoViewSet,
     EscultorViewSet,
     EsculturaViewSet,
     ImagenViewSet,
-    TematicaViewSet,
     PaisViewSet,
-    VotoEscultorViewSet,
     AdminSisViewSet,
-    LugarViewSet,
+    TematicaViewSet,
 )
-from rest_framework import routers
-from django.urls import include, path
-from app import views
+from app.views.health_check import health_check
+from app.views.votacion import estado_votacion, generar_qr, VotoEscultorViewSet
+from app.views.sets import celery_task_ejemplo, check_task_status
 
 router = routers.DefaultRouter()
 
@@ -42,12 +43,13 @@ router.register("api/voto_escultor", VotoEscultorViewSet, "voto_escultor")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("generar_qr/", views.generar_qr, name="generar_qr"),
-    path("health_check/", views.health_check, name="health_check"),
-    path("test_celery/", views.celery_task_ejemplo, name="celery_task_ejemplo"),
+    path("generar_qr/", generar_qr, name="generar_qr"),
+    path("health_check/", health_check, name="health_check"),
+    path("estado_votacion/", estado_votacion, name="estado_votacion"),
+    path("test_celery/", celery_task_ejemplo, name="celery_task_ejemplo"),
     path(
         "check_id_celery/<str:task_id>/",
-        views.check_task_status,
+        check_task_status,
         name="check_task_status",
     ),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
