@@ -65,28 +65,6 @@ export function Voto() {
   });
 }
 
-function Votar() {
-  const votar = document.querySelector(".btn-votar") as HTMLElement;
-  console.log(votar);
-
-  if (votar) {
-    votar.addEventListener("click", (event) => {
-      event.preventDefault();
-      const email = localStorage.getItem("userEmail");
-      const escultor = document.querySelector(
-        "#nombre-escultor"
-      ) as HTMLHeadingElement;
-
-      if (!email) {
-      } else {
-        window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
-      }
-    });
-  } else {
-    return;
-  }
-}
-
 // ------ Votar ------
 // Al hacer click en el btn votar en un esculotor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se vito antes y quedo validado el mail, entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de validadr.html para validad su mail
 
