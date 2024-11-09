@@ -517,9 +517,18 @@ footer {
 
 .descripcion-evento div {
   display: inline-flex;
-
   align-items: center;
+
   gap: 10px;
+}
+
+.descripcion-evento div p{
+  margin: 0;
+  text-align: left;
+  text-transform:capitalize;
+}
+.descripcion-evento div p span{
+  text-wrap: nowrap;
 }
 
 .hiddenImg {

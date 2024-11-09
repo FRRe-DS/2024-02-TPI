@@ -1,43 +1,48 @@
-// ------ Get eventos ------
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
+
+function formatearFecha(fechaString:string) {
+  const [year, month, day] = fechaString.split("-").map(Number);;
+
+  const fecha = new Date(year, month - 1, day); 
+  
+  const opciones: Intl.DateTimeFormatOptions = { day: "2-digit", month: "short" };
+  return fecha.toLocaleDateString("es-ES", opciones);
+}
+
+
+// ------ Get eventos ------
 
 async function loadEventos(url: string) {
   try {
     const res = await fetch(url);
-    const data = res.json();
-    console.log(data);
+    const evento = await res.json();
+    console.log(evento)
+    
+   
+    for (let index = 0; index < 7; index++) {
+      const card = document.getElementById(`card-${index}`);
+
+      if (card) {
+        card.innerHTML = `
+          <div class="descripcion-evento">
+            <h3>${evento[index].nombre}</h3>
+            <div>
+              <i class="material-icons-outlined">&#xebcc;</i>
+              <p>${formatearFecha(evento[index].fecha_inicio)} - \u200B<span>${formatearFecha(evento[index].fecha_fin)}</ span></p>
+            </div>
+          </div>
+        `;
+      }
+    }
+  
+
   } catch (error) {
     console.log(`Error al carga los eventos: ${error}`);
   }
 }
 
+
+
 loadEventos(URL_EVENTOS);
 
-// function loadEventos(file: string) {
-//   fetch(file)
-//     .then((response) => {
-//       if (!response.ok) throw Error("Error al cargar el archivo");
-//       return response.text();
-//     })
-//     .then((data) => {
-//       const element = document.getElementById(elementId);
-//       if (element) {
-//         element.innerHTML = data;
-//       } else {
-//         console.error(`Elemento con ID "${elementId}" no fue encontrado.`);
-//       }
-//     })
-//     .catch((error) => console.error(error));
-// }
 
-// <div
-// class="mosaico-card-evento hiddenImg"
-// style="background-image: url(./images/escultor.jpeg)">
-// <div class="descripcion-evento">
-//   <h3>Artes escenicas</h3>
-//   <div>
-//     <i class="material-icons-outlined">&#xebcc;</i>
-//     <p>1 de Julio - 10 de Julio</p>
-//   </div>
-// </div>
-// </div>
