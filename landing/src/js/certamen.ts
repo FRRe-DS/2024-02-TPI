@@ -62,7 +62,7 @@ async function loadEscultores(url: string) {
         article.innerHTML = `
           <img
             src="${foto}"
-           
+            loading="lazy"
             alt="${NyA}"
             class="escultor-img" />
 

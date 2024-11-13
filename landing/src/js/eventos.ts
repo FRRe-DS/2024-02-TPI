@@ -9,23 +9,23 @@ function formatearFecha(fechaString:string) {
   return fecha.toLocaleDateString("es-ES", opciones);
 }
 
-// ------ Elegir imagen, esto es solamente provisorio ahsta que gonza agregue las imagenes en la BD ------
+// ------ TODO: Elegir imagen, esto es solamente provisorio ahsta que gonza agregue las imagenes en la BD ------
 const imagenes = [
-  "../images/Eventos/ConcursoInternacionalDeEsculturas.webp",
-  "../images/Eventos/ConferenciasYcharlas.webp",
-  "../images/Eventos/EspectáculosMusicaEnVivo.webp",
-  "../images/Eventos/ExposicionesDeArte.webp",
-  "../images/Eventos/IntervencionesUrbanas.webp",
-  "../images/Eventos/RecorridosGuiado.webp",
-  "../images/Eventos/TalleresYCapacitacion.webp",
-  "../images/Eventos/ExhibicionesDeRealidadVirtual.webp",
-  "../images/Eventos/PerformanceEnVivo.webp",
-  "../images/Eventos/FestivalGastronomico.webp",
-  "../images/Eventos/ProyeccionesDeCine.webp",
-  "../images/Eventos/PremiaciónyClausura.webp",
-  "../images/Eventos/ActividadesParaNiños.webp",
-  "../images/Eventos/ArtistasInvitadosInternacionales.webp",
-  "../images/Eventos/FeriaDeArtesania.webp"
+  "../images/Eventos/ConcursoInternacionalDeEsculturas.jpg",
+  "../images/Eventos/ConferenciasYcharlas.jpg",
+  "../images/Eventos/EspectáculosMusicaEnVivo.jpg",
+  "../images/Eventos/ExposicionesDeArte.jpg",
+  "../images/Eventos/IntervencionesUrbanas.jpg",
+  "../images/Eventos/RecorridosGuiado.jpg",
+  "../images/Eventos/TalleresYCapacitacion.jpg",
+  "../images/Eventos/ExhibicionesDeRealidadVirtual.jpg",
+  "../images/Eventos/PerformanceEnVivo.jpg",
+  "../images/Eventos/FestivalGastronomico.jpg",
+  "../images/Eventos/ProyeccionesDeCine.jpg",
+  "../images/Eventos/PremiaciónyClausura.jpg",
+  "../images/Eventos/ActividadesParaNiños.jpg",
+  "../images/Eventos/ArtistasInvitadosInternacionales.jpg",
+  "../images/Eventos/FeriaDeArtesania.jpg"
 
 ]
 
@@ -51,9 +51,10 @@ async function loadEventos(url: string) {
         card.classList.add('event-card');
         
         
-        card.style.backgroundImage = `url('${elegirImagen(evento.nombre)}')`
+        // card.style.backgroundImage = `url('${elegirImagen(evento.nombre)}')`
 
         card.innerHTML = `
+            <img class="card-img-evento" loading="lazy" src="${elegirImagen(evento.nombre)}" alt="${evento.nombre}">
             <div class="card-content">
               <h2>${evento.nombre}</h2>
               <div>
