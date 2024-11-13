@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-           <meta charset="UTF-8" />
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- Google fonts -->
@@ -28,8 +28,12 @@
     <link rel="stylesheet" href="./css/styles.css" />
 
     <title>Bienal del Chaco</title>
+
+    <script type="module" src="./app.ts"></script>
+    <script type="module" src="./utils.ts"></script>
   </head>
   <body>
+    
     <div id="header"></div>
     <main>
       <section class="hero-section">
@@ -40,10 +44,8 @@
         <div class="pantalla-completa">
           <article class="container-votar">
             <div class="formulario-voto">
-              <h1 id = "nombre-escultor" ></h1>
-              <p>
-                Para confirmar su voto, ingrese su dirección de correo.
-              </p>
+              <h1 id="nombre-escultor"></h1>
+              <p>Para confirmar su voto, ingrese su dirección de correo.</p>
               <form id="votoForm">
                 <input
                   id="email"
@@ -52,7 +54,7 @@
                   placeholder="ejemplo@gmail.com" />
                 <!-- TODO: Arreglar el CSS para que el botón esté debajo del input -->
                 <button type="submit" class="btn-enviar-email">
-                    Enviar <i class="material-icons-outlined">&#xe5c8;</i>
+                  Enviar <i class="material-icons-outlined">&#xe5c8;</i>
                 </button>
               </form>
             </div>
@@ -62,16 +64,5 @@
       </section>
     </main>
     <div id="footer"></div>
-
-    <script type="module" src="./app.ts"></script>
-    <script type="module">
-      import { loadHeaderFooter, Voto, validar } from "./app.ts";
-      import { loadNombre } from "./utils.ts";
-      loadHeaderFooter();
-      loadNombre();
-      Voto()
-      validar();
-    </script>
-    <script type = "module" src="./utils.ts"></script>
   </body>
 </html>

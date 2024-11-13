@@ -28,8 +28,48 @@
     <link rel="stylesheet" href="./css/styles.css" />
 
     <title>Bienal del Chaco</title>
+
+    <script type="module" src="./app.ts"></script>
+    <script type="module" src="./utils.ts"></script>
+    <script type="module" src="./js/certamen.ts"></script>
+    
+   
   </head>
   <body>
+    <div class="overlay"></div>
+    <div class="popUp-container">
+      <article class="popup">
+        <div class="cerrar-popup-container">
+          <button class="cerrar-popup">x</button>
+        </div>
+
+        <div>
+          <h4>Nombre del escultor</h4>
+          <p>
+            Los votos de todos los escultores se contabilizarán para obtener al
+            ganador del certamen
+          </p>
+        </div>
+
+        <form action="">
+          <div class="rating">
+            <input value="5" name="rating" id="star5" type="radio" />
+            <label for="star5"></label>
+            <input value="4" name="rating" id="star4" type="radio" />
+            <label for="star4"></label>
+            <input value="3" name="rating" id="star3" type="radio" />
+            <label for="star3"></label>
+            <input value="2" name="rating" id="star2" type="radio" />
+            <label for="star2"></label>
+            <input value="1" name="rating" id="star1" type="radio" />
+            <label for="star1"></label>
+          </div>
+
+          <button type="submit" class="btn-votarV2">Votar</button>
+        </form>
+      </article>
+    </div>
+
     <div id="header"></div>
     <main>
       <section class="container-title">
@@ -64,164 +104,14 @@
               <div class="divider-sm"></div>
             </div>
             <div class="grid-escultores">
-                <a href="#" id="votar-tag">
-                    <article class="card-escultor hiddenImg">
-                        <img
-                        src="./images/escultor-1.jpg"
-                        alt="escultor"
-                        class="escultor-img" />
-
-                        <div class="nombre-origen">
-                        <div class="space">
-                            <h3 id="nombre-escultor">Ivan Drago</h3>
-                        </div>
-
-                        <p class="cursiva">País</p>
-                        </div>
-
-                        <button class="btn-votar">
-                        <i class="material-icons-outlined">&#xe838;</i>
-                        Votar
-                        </button>
-                    </article>
-                </a>
-              <article class="card-escultor hiddenImg">
-                <img
-                  src="./images/escultor-1.jpg"
-                  alt="escultor"
-                  class="escultor-img" />
-
-                <div class="nombre-origen">
-                  <div class="space">
-                    <h3>Nombre del escultor</h3>
-                  </div>
-
-                  <p class="cursiva">País</p>
-                </div>
-
-                <button class="btn-votar">
-                  <i class="material-icons-outlined">&#xe838;</i>
-                  Votar
-                </button>
-              </article>
-              <article class="card-escultor hiddenImg">
-                <img
-                  src="./images/escultor-1.jpg"
-                  alt="escultor"
-                  class="escultor-img" />
-
-                <div class="nombre-origen">
-                  <div class="space">
-                    <h3>Nombre del escultor</h3>
-                  </div>
-
-                  <p class="cursiva">País</p>
-                </div>
-
-                <button class="btn-votar">
-                  <i class="material-icons-outlined">&#xe838;</i>
-                  Votar
-                </button>
-              </article>
-              <article class="card-escultor hiddenImg">
-                <img
-                  src="./images/escultor-1.jpg"
-                  alt="escultor"
-                  class="escultor-img" />
-
-                <div class="nombre-origen">
-                  <div class="space">
-                    <h3>Nombre del escultor</h3>
-                  </div>
-
-                  <p class="cursiva">País</p>
-                </div>
-
-                <button class="btn-votar">
-                  <i class="material-icons-outlined">&#xe838;</i>
-                  Votar
-                </button>
-              </article>
+              
             </div>
           </section>
         </div>
 
-        <!-- <img
-          src="./images/boceto-1.jpg"
-          alt="Boceto de escultura"
-          class="boceto"
-          onclick="openLightbox(this)" />
-
-        <div id="lightbox" class="lightbox">
-          <span class="close" onclick="closeLightbox()">&times;</span>
-          <img class="lightbox-content" id="lightboxImage" />
-        </div> -->
-      </div>
-      <div class="wrapped2 white">
-        <div class="section-certamen">
-          <section class="h2-mas-p">
-            <div>
-              <h2>Honorable jurado</h2>
-              <div
-                class="divider-sm"
-                style="background-color: black !important"></div>
-            </div>
-            <div class="grid-escultores">
-              <article class="card-escultor hiddenImg">
-                <img
-                  src="./images/escultor-1.jpg"
-                  alt="escultor"
-                  class="escultor-img" />
-
-                <div class="nombre-origen black">
-                  <div class="space">
-                    <h3 class="white-text">Nombre del jurado</h3>
-                  </div>
-
-                  <p class="cursiva white-text">País</p>
-                </div>
-              </article>
-              <article class="card-escultor hiddenImg">
-                <img
-                  src="./images/escultor-1.jpg"
-                  alt="escultor"
-                  class="escultor-img" />
-
-                <div class="nombre-origen black">
-                  <div class="space">
-                    <h3 class="white-text">Nombre del jurado</h3>
-                  </div>
-
-                  <p class="cursiva white-text">País</p>
-                </div>
-              </article>
-              <article class="card-escultor hiddenImg">
-                <img
-                  src="https://drive.google.com/thumbnail?id=1tNmPVjYcqI539a3BMV4JlCQHEYVmnMvi"
-                  alt="Tobias"
-                  class="escultor-img" />
-
-                <div class="nombre-origen black">
-                  <div class="space">
-                    <h3 class="white-text">Nombre del jurado</h3>
-                  </div>
-
-                  <p class="cursiva white-text">País</p>
-                </div>
-              </article>
-            </div>
-          </section>
-        </div>
+    
       </div>
     </main>
     <div id="footer"></div>
-
-    <script type="module" src="./app.ts"></script>
-    <script type="module">
-      import { loadHeaderFooter, Votar } from "./app.ts";
-      loadHeaderFooter();
-      Votar()
-    </script>
-    <script type = "module" src="./utils.ts"></script>
   </body>
 </html>

@@ -15,9 +15,11 @@ function loadHTML(file: string, elementId: string): void {
 		.catch((error) => console.error(error));
 }
 
-export function loadHeaderFooter(): void {
-	loadHTML("header.html", "header");
-	loadHTML("footer.html", "footer");
+loadHTML("header.html", "header");
+loadHTML("footer.html", "footer");
+
+export function redirectTo(url: string) {
+	location.href = url;
 }
 
 export function Voto() {
@@ -63,68 +65,47 @@ export function Voto() {
 	});
 }
 
-export function Votar() {
-	const votar = document.getElementById("votar-tag");
+// ------ Votar ------
+// Al hacer click en el btn votar en un esculotor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se vito antes y quedo validado el mail, entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de validadr.html para validad su mail
 
+const botonesVotar = document.querySelectorAll(
+	".btn-votar",
+) as NodeListOf<HTMLButtonElement>;
+
+const overlay = document.querySelector(".overlay") as HTMLButtonElement;
+const popup = document.querySelector(".popUp-container") as HTMLDivElement;
+const cerrar_popup = document.querySelector(
+	".cerrar-popup",
+) as HTMLButtonElement;
+
+function abrirPopUp(): void {
+	overlay.style.display = "block";
+	popup.style.display = "flex";
+}
+
+function cerrarPopUp(): void {
+	overlay.style.display = "none";
+	popup.style.display = "none";
+}
+
+for (const votar of botonesVotar) {
 	if (votar) {
 		votar.addEventListener("click", (event) => {
 			event.preventDefault();
 			const email = localStorage.getItem("userEmail");
-			const escultor = document.getElementById(
-				"nombre-escultor",
+			const escultor = document.querySelector(
+				"#nombre-escultor",
 			) as HTMLHeadingElement;
 
 			if (!email) {
-				window.location.href = `./validar.html?nombre-escultor=${escultor.textContent}`;
+				abrirPopUp();
+			} else {
+				window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
 			}
 		});
-	} else {
-		return;
 	}
 }
 
-function extractTimeStampFromULID(input: string): Date {
-	const ulid_timestamp_str = input.slice(0, 10);
-	const base32Chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
-	let timestamp = 0;
-
-	for (let i = 0; i < ulid_timestamp_str.length; i++) {
-		timestamp = timestamp * 32 + base32Chars.indexOf(ulid_timestamp_str[i]);
-	}
-
-	return new Date(timestamp);
-}
-
-export function validar() {
-	const params = getUrlParams();
-	console.table(params);
-	const ulid_id = params.id;
-	if (!ulid_id) {
-		console.error("No se encuentra el ulid id");
-		return;
-	}
-
-	const timestamp = extractTimeStampFromULID(ulid_id);
-	const now = new Date();
-	const spanned = Math.abs(timestamp.getTime() - now.getTime()) / (1000 * 60);
-
-	if (spanned < 2) {
-		console.log("Es válido!");
-		console.log(spanned);
-		alert("Es válido!");
-	} else {
-		console.error(`Es inválido!, el qr tiene un timestamp de ${timestamp}`);
-		alert("Es inválido!");
-	}
-}
-
-function getUrlParams(): Record<string, string> {
-	const params = new URLSearchParams(window.location.search);
-	const searchConfig: Record<string, string> = {};
-
-	for (const [key, value] of params) {
-		searchConfig[key] = value;
-	}
-
-	return searchConfig;
+if (cerrar_popup) {
+	cerrar_popup.addEventListener("click", cerrarPopUp);
 }

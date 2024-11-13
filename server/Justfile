@@ -59,4 +59,3 @@ check:
 
 fmt:
     ruff format ./
-
