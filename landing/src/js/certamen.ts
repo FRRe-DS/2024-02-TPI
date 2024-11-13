@@ -29,7 +29,7 @@ function urlFotoEscultor(url:string){
 }
 
 // ------ Formatear correctamente el nombre ------
-function capitalize(nombre: string, apellido: string){
+function formatearNombre(nombre: string, apellido: string){
   const nom = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
   const ape = apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase();
 
@@ -56,7 +56,7 @@ async function loadEscultores(url: string) {
         article.classList.add('card-escultor')
         const foto = urlFotoEscultor(escultor.foto)
         const pais = await loadPais(URL_PAIS, escultor.pais_id)
-        const NyA = capitalize(escultor.nombre, escultor.apellido)
+        const NyA = formatearNombre(escultor.nombre, escultor.apellido)
         
 
         article.innerHTML = `
