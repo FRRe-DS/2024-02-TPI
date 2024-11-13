@@ -1,3 +1,5 @@
+from background_task.models import CompletedTask
+from background_task.tasks import Task
 from django.http import JsonResponse
 from rest_framework import authentication, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
@@ -31,30 +33,38 @@ from app.serializers import (
 
 
 @api_view(["GET"])
-def celery_task_ejemplo(request: Request) -> JsonResponse:
+def background_task_ejemplo(request: Request) -> JsonResponse:
     """
     Ejemplo temporal para chequear que la integración entre celery y Django funcione correctamente.
     """
 
-    from .tasks import count_votantes
+    from ..tasks import count_votantes
 
-    result = count_votantes.delay()
+    count_votantes(verbose_name="Notify user")
 
-    return JsonResponse({"task_id": result.id, "status": "Task started!"})
+    return JsonResponse({"status": "Task started!"})
 
 
 @api_view(["GET"])
-def check_task_status(request, task_id) -> JsonResponse:
+def check_django_task_status(request):
     """
-    Ejemplo temporal para chequear que la integración entre celery y Django funcione correctamente.
+    Example view to check the status of tasks.
     """
-    from celery.result import AsyncResult
+    # Query pending tasks
+    pending_tasks = Task.objects.all()
 
-    task_result = AsyncResult(task_id)
+    # Query completed tasks (if necessary)
+    completed_tasks = CompletedTask.objects.all()
 
-    return JsonResponse(
-        {"task_id": task_id, "status": task_result.status, "result": task_result.result}
-    )
+    pending = [
+        {"task_name": task.task_name, "run_at": task.run_at} for task in pending_tasks
+    ]
+    completed = [
+        {"task_name": task.task_name, "completed_at": task.run_at}
+        for task in completed_tasks
+    ]
+
+    return JsonResponse({"pending_tasks": pending, "completed_tasks": completed})
 
 
 class VotanteViewSet(viewsets.ModelViewSet):

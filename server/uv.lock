@@ -235,6 +235,7 @@ dependencies = [
     { name = "coverage" },
     { name = "datetime" },
     { name = "django" },
+    { name = "django-background-tasks" },
     { name = "django-cors-headers" },
     { name = "django-filter" },
     { name = "django-ratelimit" },
@@ -243,6 +244,7 @@ dependencies = [
     { name = "gunicorn" },
     { name = "markdown" },
     { name = "pillow" },
+    { name = "psycopg", extra = ["pool"] },
     { name = "pygments" },
     { name = "python-dotenv" },
     { name = "python-json-logger" },
@@ -260,6 +262,7 @@ requires-dist = [
     { name = "coverage", specifier = ">=7.6.1" },
     { name = "datetime", specifier = ">=5.5" },
     { name = "django", specifier = ">=5.1" },
+    { name = "django-background-tasks", specifier = ">=1.2.8" },
     { name = "django-cors-headers", specifier = ">=4.5.0" },
     { name = "django-filter", specifier = ">=24.3" },
     { name = "django-ratelimit", specifier = ">=4.1.0" },
@@ -268,6 +271,7 @@ requires-dist = [
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "markdown", specifier = ">=3.7" },
     { name = "pillow", specifier = ">=11.0.0" },
+    { name = "psycopg", extras = ["pool"], specifier = ">=3.2.3" },
     { name = "pygments", specifier = ">=2.18.0" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "python-json-logger", specifier = ">=2.0.7" },
@@ -290,6 +294,19 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/1e/0c/d854d25bb74a8a3b41e642bbd27fe6af12fadd0edfd07d487809cf0ef719/Django-5.1.tar.gz", hash = "sha256:848a5980e8efb76eea70872fb0e4bc5e371619c70fffbe48e3e1b50b2c09455d", size = 10681050 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/28/b4/110532cebfea2244d76119904da98c6fa045ebb202aee9ec7cbf36ea3cad/Django-5.1-py3-none-any.whl", hash = "sha256:d3b811bf5371a26def053d7ee42a9df1267ef7622323fe70a601936725aa4557", size = 8246099 },
+]
+
+[[package]]
+name = "django-background-tasks"
+version = "1.2.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "six" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/dd/e3/d2c442305e922912f68fa157f92bec6661c150110bdce62c3bac58c62931/django_background_tasks-1.2.8.tar.gz", hash = "sha256:1ed5816f8d60f0ed436cd0435405e55e7b91e825fd69bcdada2d605ee1a97056", size = 21287 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/ba/e8d45c180bbc2eb98d461db1931d53ed6786a294f0cc3847b22b6de22ff5/django_background_tasks-1.2.8-py3-none-any.whl", hash = "sha256:266b64316e364771afc3af73ae4c3e75f16782aa69e36c9e71d289cfd241347f", size = 25154 },
 ]
 
 [[package]]
@@ -450,6 +467,36 @@ wheels = [
 ]
 
 [[package]]
+name = "psycopg"
+version = "3.2.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions", marker = "python_full_version < '3.13'" },
+    { name = "tzdata", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d1/ad/7ce016ae63e231575df0498d2395d15f005f05e32d3a2d439038e1bd0851/psycopg-3.2.3.tar.gz", hash = "sha256:a5764f67c27bec8bfac85764d23c534af2c27b893550377e37ce59c12aac47a2", size = 155550 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ce/21/534b8f5bd9734b7a2fcd3a16b1ee82ef6cad81a4796e95ebf4e0c6a24119/psycopg-3.2.3-py3-none-any.whl", hash = "sha256:644d3973fe26908c73d4be746074f6e5224b03c1101d302d9a53bf565ad64907", size = 197934 },
+]
+
+[package.optional-dependencies]
+pool = [
+    { name = "psycopg-pool" },
+]
+
+[[package]]
+name = "psycopg-pool"
+version = "3.2.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ad/a6/efa7fa8204d2dedf5f1b53b24154c8da0291788e99b7fb544fcaf4a3a29c/psycopg_pool-3.2.3.tar.gz", hash = "sha256:bb942f123bef4b7fbe4d55421bd3fb01829903c95c0f33fd42b7e94e5ac9b52a", size = 29661 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/3b/30/7bc6c070ef1135a44005fe39dd749a6bde41c5770fed7349b544f277fa78/psycopg_pool-3.2.3-py3-none-any.whl", hash = "sha256:53bd8e640625e01b2927b2ad96df8ed8e8f91caea4597d45e7673fc7bbb85eb1", size = 38141 },
+]
+
+[[package]]
 name = "pygments"
 version = "2.18.0"
 source = { registry = "https://pypi.org/simple" }
@@ -563,6 +610,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/73/82/dfa23ec2cbed08a801deab02fe7c904bfb00765256b155941d789a338c68/sqlparse-0.5.1.tar.gz", hash = "sha256:bb6b4df465655ef332548e24f08e205afc81b9ab86cb1c45657a7ff173a3a00e", size = 84502 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5d/a5/b2860373aa8de1e626b2bdfdd6df4355f0565b47e51f7d0c54fe70faf8fe/sqlparse-0.5.1-py3-none-any.whl", hash = "sha256:773dcbf9a5ab44a090f3441e2180efe2560220203dc2f8c0b0fa141e18b505e4", size = 44156 },
+]
+
+[[package]]
+name = "typing-extensions"
+version = "4.12.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/df/db/f35a00659bc03fec321ba8bce9420de607a1d37f8342eee1863174c69557/typing_extensions-4.12.2.tar.gz", hash = "sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8", size = 85321 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/26/9f/ad63fc0248c5379346306f8668cda6e2e2e9c95e01216d2b8ffd9ff037d0/typing_extensions-4.12.2-py3-none-any.whl", hash = "sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d", size = 37438 },
 ]
 
 [[package]]

@@ -47,7 +47,6 @@ class VotacionAPITest(BaseAPITest):
     def setUp(self):
         super().setUp()
 
-        logging.disable(logging.NOTSET)
         # INFO: (Lautaro) Este endpoint tiene un nombre "generico" debido a que trabajando con CBV's (más inclusive aún si heredan `viewsets.ModelViewSet`)
         # De manera automática tendríamos implementadas funcionalidades básicas como listar (GET), crear (POST), destruir (DELETE), etcétera.
         # Como estas funciones solo difieren en la cabecera HTTP que es enviada a la url y no en la url en sí, decidí darle un nombre descriptivo.
@@ -69,7 +68,7 @@ class VotacionAPITest(BaseAPITest):
         self.votante = Votante.objects.create(correo="ramon@ejemplo.com")
 
     def test_votar_escultor_201_CREATED(self):
-        valid_input = {"escultor_id": 1, "puntaje": 5}
+        valid_input = {"escultor_id": self.escultor.id, "puntaje": 5}
         response = self.client.post(
             f"{self.base_url}?correo_votante={self.votante.correo}",
             valid_input,
@@ -83,7 +82,7 @@ class VotacionAPITest(BaseAPITest):
 
     def test_votar_escultor_403_FORBIDDEN(self):
         self.test_votar_escultor_201_CREATED()
-        valid_input = {"escultor_id": 1, "puntaje": 5}
+        valid_input = {"escultor_id": self.escultor.id, "puntaje": 5}
         response = self.client.post(
             f"{self.base_url}?correo_votante={self.votante.correo}",
             valid_input,
@@ -93,7 +92,7 @@ class VotacionAPITest(BaseAPITest):
 
     def test_votar_escultor_400_BAD_REQUEST(self):
         self.test_votar_escultor_201_CREATED()
-        valid_input = {"escultor_id": 1, "puntaje": 10}
+        valid_input = {"escultor_id": self.escultor.id, "puntaje": 10}
         response = self.client.post(
             f"{self.base_url}?correo_votante={self.votante.correo}",
             valid_input,
@@ -101,7 +100,7 @@ class VotacionAPITest(BaseAPITest):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        valid_input = {"escultor_id": 1, "puntaje": -10}
+        valid_input = {"escultor_id": self.escultor.id, "puntaje": -10}
         response = self.client.post(
             f"{self.base_url}?correo_votante={self.votante.correo}",
             valid_input,

@@ -1,8 +1,11 @@
+from background_task.tasks import logging
 from .models import Votante
-from celery import shared_task
+from background_task import background
 
 
-@shared_task
+@background
 def count_votantes():
-    # time.sleep(20)
-    return Votante.objects.count()
+    result = Votante.objects.count()
+    logging.info(f"La cantidad de votantes es {result}")
+
+    return result
