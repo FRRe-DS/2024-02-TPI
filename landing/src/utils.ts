@@ -1,15 +1,8 @@
-export function loadNombre() {
-	document.addEventListener("DOMContentLoaded", () => {
-		const queryParams = new URLSearchParams(window.location.search);
-
-		const nombre_escultor = queryParams.get("nombre-escultor");
-		console.log(nombre_escultor);
-
-		const titulo = document.getElementById(
-			"nombre-escultor",
-		) as HTMLHeadElement;
-		titulo.textContent = nombre_escultor;
-	});
+function loadNombre() {
+	const queryParams = new URLSearchParams(window.location.search);
+	const nombre_escultor = queryParams.get("nombre-escultor");
+	const titulo = document.getElementById("nombre-escultor") as HTMLHeadElement;
+	titulo.textContent = nombre_escultor;
 }
 
 let lastScrollTop = 0;
@@ -56,3 +49,5 @@ for (const element of hiddenElements) {
 for (const image of hiddenImgElements) {
 	observer.observe(image);
 }
+
+loadNombre();

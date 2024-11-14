@@ -105,7 +105,7 @@ async function loadEscultores(url: string) {
 						overlay.style.display = "block";
 						popup.style.display = "flex";
 					} else {
-						window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
+						window.location.href = `./validar.html?nombre-escultor=${escultor.textContent}`;
 					}
 				}
 			});

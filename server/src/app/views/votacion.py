@@ -11,8 +11,7 @@ import ulid
 from app.serializers import VotoEscultorSerializer
 from app.utils import PositiveInt
 from django.http.response import HttpResponse
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
@@ -20,8 +19,10 @@ from app.models import Escultor, Votante, VotoEscultor
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def generar_qr(request: Request) -> HttpResponse:
+    from django.conf import settings
+
     escultor_id = request.query_params.get("escultor_id")
     if escultor_id is None:
         error = "Debe ingresar por query parameters el id del escultor"
@@ -52,7 +53,14 @@ def generar_qr(request: Request) -> HttpResponse:
     logging.info(f"Generando QR para {escultor_id}...")
 
     id = ulid.from_timestamp(datetime.datetime.now())
-    voto_url = f"https://2024-02-tpi-cloudflare.pages.dev/verificar_voto?escultor_id={escultor_id}&id={id}"
+    print(settings.DJANGO_ENV)
+    if settings.DJANGO_ENV == "prod":
+        voto_url = f"https://2024-02-tpi-cloudflare.pages.dev/verificar_voto?escultor_id={escultor_id}&id={id}"
+    else:
+        voto_url = (
+            f"http://localhost:5173/validar.html?escultor_id={escultor_id}&id={id}"
+        )
+
     logging.info(voto_url)
 
     qr = qrcode.QRCode(
@@ -70,7 +78,8 @@ def generar_qr(request: Request) -> HttpResponse:
     img.save(buffer, format="PNG", optimize=True)
     _ = buffer.seek(0)
 
-    logging.info(f"Generando QR para escultor_id: {escultor_id}... listo!")
+    logging.info(f"Generando QR para escultor_id: {escultor_id}... listo! ")
+    logging.info(f"{voto_url} !")
     return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
 
 
