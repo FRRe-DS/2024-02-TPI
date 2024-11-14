@@ -47,7 +47,7 @@ urlpatterns = [
     path("generar_qr/", generar_qr, name="generar_qr"),
     path("health_check/", health_check, name="health_check"),
     path("estado_votacion/", estado_votacion, name="estado_votacion"),
-    path("test_celery/", background_task_ejemplo, name="background_task_ejemplo"),
+    path("test_background/", background_task_ejemplo, name="background_task_ejemplo"),
     path(
         "tasks_status/",
         check_django_task_status,

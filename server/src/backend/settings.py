@@ -60,11 +60,6 @@ LOGGING = {
         },
     },
     "loggers": {
-        "celery": {
-            "handlers": ["console"],
-            "level": "INFO",
-            "propagate": True,
-        },
         "django": {
             "handlers": ["console"],
             "level": "INFO",
