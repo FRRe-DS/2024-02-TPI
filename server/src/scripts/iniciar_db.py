@@ -5,8 +5,6 @@ import os
 logging.basicConfig(
     level=logging.DEBUG,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    filename="app.log",
-    filemode="w",
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
