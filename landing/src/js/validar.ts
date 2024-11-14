@@ -44,4 +44,58 @@ function validar_qr() {
 	}
 }
 
+function Voto() {
+	document.getElementById("votoForm")?.addEventListener("submit", async (e) => {
+		e?.preventDefault();
+
+		const params = getUrlParams();
+		const escultor_id = params.escultor_id;
+
+		if (!escultor_id) {
+			alert("Error inesperado, el escultor_id es nulo");
+			window.location.href = "./certamen.html";
+		}
+
+		const email = (document.getElementById("email") as HTMLInputElement)?.value;
+		console.log(email);
+
+		if (!email) {
+			alert("Error inesperado, el email es nulo");
+			window.location.href = "./certamen.html";
+		}
+
+		type Response = {
+			status: number;
+			error: string;
+		};
+
+		const data = { escultor_id: escultor_id, puntaje: 5 };
+
+		try {
+			const response = await fetch(
+				`http://localhost:8000/api/voto_escultor/?correo_votante=${email}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				},
+			);
+
+			if (response.status === 201) {
+				const data: Response = await response.json();
+				localStorage.setItem("userEmail", email);
+				alert(`El voto se ha registrado de manera exitosa: ${data.status}`);
+			} else {
+				const data: Response = await response.json();
+				alert(`Ha ocurrido un fallo al registrar su voto:${data.error}`);
+			}
+		} catch (error) {
+			console.error("Server error:", error);
+		}
+	});
+}
+
 validar_qr();
+Voto();

@@ -56,14 +56,14 @@ def generar_qr(request: Request) -> HttpResponse:
 
     id = ulid.from_timestamp(datetime.datetime.now())
 
-    query_params= f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
+    query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
 
     if settings.DJANGO_ENV == "prod":
-        voto_url = f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
-    else:
         voto_url = (
-            f"http://localhost:5173/validar.html?{query_params}"
+            f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
         )
+    else:
+        voto_url = f"http://localhost:5173/validar.html?{query_params}"
 
     logging.info(voto_url)
 

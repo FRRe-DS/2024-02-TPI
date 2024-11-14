@@ -1,5 +1,13 @@
+import logging
 import psycopg
 import os
+
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    filename="app.log",
+    filemode="w",
+)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 INSERT_SQL_FILE = os.path.join(BASE_DIR, "insert_data.sql")
@@ -45,14 +53,16 @@ def populate_database(sql_file: str):
     # Ejecutar el script de inserción
     cursor.execute(sql_script)
     conn.commit()
-    print("Datos insertados en la base de datos.")
+    logging.info("Datos insertados en la base de datos.")
 
 
 if __name__ == "__main__":
     if is_database_empty():
-        print("La base de datos está vacía. Insertando datos...")
+        logging.info("La base de datos está vacía. Insertando datos...")
         populate_database(INSERT_SQL_FILE)
         cursor.close()
         conn.close()
+
+        logging.info("La base de datos está vacía. Insertando datos... listo!")
     else:
-        print("La base de datos ya contiene datos.")
+        logging.info("La base de datos ya contiene datos!")
