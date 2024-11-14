@@ -140,6 +140,7 @@ function Voto(correo: string, escultor_id: string) {
 
 		try {
 			const data = { escultor_id: escultor_id, puntaje: puntaje };
+			console.table(data);
 
 			const response = await fetch(
 				`http://localhost:8000/api/voto_escultor/?correo_votante=${correo}`,

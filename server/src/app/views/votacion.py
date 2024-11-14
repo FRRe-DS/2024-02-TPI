@@ -85,7 +85,6 @@ def generar_qr(request: Request) -> HttpResponse:
     _ = buffer.seek(0)
 
     logging.info(f"Generando QR para escultor_id: {escultor_id}... listo! ")
-    logging.info(f"{voto_url} !")
     return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
 
 
@@ -119,7 +118,7 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
             )
             mandar_email(correo_votante)
             return Response(
-                {"status": "email de verificación enviado"},
+                {"status": "Se ha enviado un email de verificación a la dirección indicada"},
                 status=status.HTTP_202_ACCEPTED,
             )
 

@@ -94,6 +94,9 @@ function Voto() {
 					localStorage.setItem("userEmail", email);
 					alert(`El voto se ha registrado de manera exitosa: ${data.status}`);
 					window.location.href = "./certamen.html";
+				} else if (response.status === 202) {
+					const data: Response = await response.json();
+					alert(`${data.status}`);
 				} else {
 					const data: Response = await response.json();
 					alert(`Ha ocurrido un fallo al registrar su voto:${data.error}`);
