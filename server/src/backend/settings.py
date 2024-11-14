@@ -49,17 +49,16 @@ LOGGING = {
         },
     },
     "handlers": {
-    #     "json": {
-    #         "class": "logging.FileHandler",
-    #         "formatter": "json",
-    #         "filename": "/tmp/app.log",  # Path for JSON logs
-            
-    #     },
-         "console": {
-             "class": "logging.StreamHandler",
-             "formatter": "color",
-         },
-     },
+        #     "json": {
+        #         "class": "logging.FileHandler",
+        #         "formatter": "json",
+        #         "filename": "/tmp/app.log",  # Path for JSON logs
+        #     },
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "color",
+        },
+    },
     "loggers": {
         "celery": {
             "handlers": ["console"],

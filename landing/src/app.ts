@@ -66,49 +66,50 @@ export function Voto() {
 }
 
 // ------ Votar ------
-// Al hacer click en el btn votar en un esculotor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se vito antes y quedo validado el mail, entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de validadr.html para validad su mail
+// Al hacer click en el btn votar en un esculotor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se vito antes y quedo validado el mail,
+// entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de validadr.html para validad su mail.
 
-const botonesVotar = document.querySelectorAll(
-	".btn-votar",
-) as NodeListOf<HTMLButtonElement>;
+// const botonesVotar = document.querySelectorAll(
+// 	".btn-votar",
+// ) as NodeListOf<HTMLButtonElement>;
 
-const overlay = document.querySelector(".overlay") as HTMLButtonElement;
-const popup = document.querySelector(".popUp-container") as HTMLDivElement;
-const cerrar_popup = document.querySelector(
-	".cerrar-popup",
-) as HTMLButtonElement;
+// const overlay = document.querySelector(".overlay") as HTMLButtonElement;
+// const popup = document.querySelector(".popUp-container") as HTMLDivElement;
+// const cerrar_popup = document.querySelector(
+// 	".cerrar-popup",
+// ) as HTMLButtonElement;
 
-function abrirPopUp(): void {
-	overlay.style.display = "block";
-	popup.style.display = "flex";
-}
+// function abrirPopUp(): void {
+// 	overlay.style.display = "block";
+// 	popup.style.display = "flex";
+// }
 
-function cerrarPopUp(): void {
-	overlay.style.display = "none";
-	popup.style.display = "none";
-}
+// function cerrarPopUp(): void {
+// 	overlay.style.display = "none";
+// 	popup.style.display = "none";
+// }
 
-for (const votar of botonesVotar) {
-	if (votar) {
-		votar.addEventListener("click", (event) => {
-			event.preventDefault();
-			const email = localStorage.getItem("userEmail");
-			const escultor = document.querySelector(
-				"#nombre-escultor",
-			) as HTMLHeadingElement;
+// for (const votar of botonesVotar) {
+// 	if (votar) {
+// 		votar.addEventListener("click", (event) => {
+// 			event.preventDefault();
+// 			const email = localStorage.getItem("userEmail");
+// 			const escultor = document.querySelector(
+// 				"#nombre-escultor",
+// 			) as HTMLHeadingElement;
 
-			if (!email) {
-				abrirPopUp();
-			} else {
-				window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
-			}
-		});
-	}
-}
+// 			if (!email) {
+// 				abrirPopUp();
+// 			} else {
+// 				window.location.href = `./votar.html?nombre-escultor=${escultor.textContent}`;
+// 			}
+// 		});
+// 	}
+// }
 
-if (cerrar_popup) {
-	cerrar_popup.addEventListener("click", cerrarPopUp);
-}
+// if (cerrar_popup) {
+// 	cerrar_popup.addEventListener("click", cerrarPopUp);
+// }
 
 function extractTimeStampFromULID(input: string): Date {
 	const ulid_timestamp_str = input.slice(0, 10);
