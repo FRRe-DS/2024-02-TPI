@@ -1,24 +1,23 @@
 import datetime
-from io import BytesIO
 import logging
-import resend
-from resend.exceptions import ValidationError
+import smtplib
+from email.message import EmailMessage
+from io import BytesIO
 
-from django.conf import settings
-from django.db.models import Sum
-from django.db.models.base import Coalesce
 import qrcode
-from rest_framework import authentication, permissions, status, viewsets
 import ulid
-
-from app.serializers import VotoEscultorSerializer
-from app.utils import PositiveInt
+from django.conf import settings
+from django.db.models import ObjectDoesNotExist, Sum
+from django.db.models.base import Coalesce
 from django.http.response import HttpResponse
+from rest_framework import authentication, permissions, status, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from app.models import Escultor, Votante, VotoEscultor
+from app.serializers import VotoEscultorSerializer
+from app.utils import PositiveInt
 
 
 @api_view(["GET"])
@@ -103,17 +102,26 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
     def create(self, request: Request):
-        correo_votante = request.query_params.get("correo_votante")
+        correo_votante = str(request.query_params.get("correo_votante"))
+
         if not correo_votante:
             return Response(
                 {"error": "El correo del votante es obligatorio."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        votante, created = Votante.objects.get_or_create(correo=correo_votante)
-
-        if created:
-            logging.info(f"Se ha registrado un nuevo votante: {correo_votante}!")
+        votante: Votante
+        try:
+            votante = Votante.objects.get(correo=correo_votante)
+        except ObjectDoesNotExist:
+            logging.info(
+                "Este votante no se encuentra registrado hasta la fecha. Enviando correo electrónico para verificar su registro."
+            )
+            mandar_email(correo_votante)
+            return Response(
+                {"status": "email de verificación enviado"},
+                status=status.HTTP_202_ACCEPTED,
+            )
 
         request.data["votante_id"] = votante.id
         serialized_data = VotoEscultorSerializer(data=request.data)
@@ -148,25 +156,22 @@ def mandar_email(destinatario: str) -> Response:
     """
     Endpoint para enviar un mail usando la API REST de Resend.
     """
-    resend.api_key = settings.RESEND_API_KEY
-    params: resend.Emails.SendParams = {
-        "from": settings.DEFAULT_FROM_EMAIL,
-        "to": [destinatario],
-        "subject": "Confirmación de correo electrónico",
-        "html": "<strong> Funciona! </strong>",
-    }
 
-    try:
-        email = resend.Emails.send(params)
-    except ValidationError as e:
-        error = f"Los parametros son inválidos.err: {e}"
-        logging.error(error)
-        return Response(
-            {"error": error},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+    remitente = settings.DEFAULT_FROM_EMAIL
+    print(remitente)
 
-    print(email)
+    email = EmailMessage()
+    email["From"] = remitente
+    email["To"] = destinatario
+    email["Subject"] = "Confirmación de correo electrónico"
+    email.set_content("<strong> Funciona! </strong>")
+
+    smtp = smtplib.SMTP_SSL("smtp.gmail.com")
+    smtp.login(remitente, settings.EMAIL_APP_KEY)
+    smtp.sendmail(remitente, destinatario, email.as_string())
+    smtp.quit()
+
+    print(email.as_string())
     return Response(status=status.HTTP_200_OK)
 
 

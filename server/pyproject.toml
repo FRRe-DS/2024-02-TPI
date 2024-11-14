@@ -26,7 +26,6 @@ dependencies = [
     "datetime>=5.5",
     "psycopg[pool]>=3.2.3",
     "django-background-tasks>=1.2.8",
-    "resend>=2.4.0",
 ]
 
 [build-system]

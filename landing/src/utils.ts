@@ -7,7 +7,7 @@ function loadNombre() {
 		nombre_escultor = decodeURIComponent(nombre_escultor);
 		titulo.textContent = nombre_escultor;
 	} else {
-		titulo.textContent = "";
+		titulo.textContent = " ";
 	}
 }
 

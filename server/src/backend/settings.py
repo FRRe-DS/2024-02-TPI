@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 DJANGO_ENV = os.getenv("DJANGO_ENV", default="dev")
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 if DJANGO_ENV == "dev":
@@ -11,6 +12,12 @@ if DJANGO_ENV == "dev":
 
 if DJANGO_ENV == "prod":
     load_dotenv(BASE_DIR / ".env.production")
+
+
+load_dotenv(BASE_DIR / ".env")
+
+DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
+EMAIL_APP_KEY = os.getenv("EMAIL_APP_KEY", default="")
 
 SECRET_KEY = os.getenv(
     "SECRET_KEY", "django-insecure-j+&k(*o_vgi3d01+n^#r14+dagby)7-&-iq!@_2$2t(hd6hw7)"
@@ -49,11 +56,6 @@ LOGGING = {
         },
     },
     "handlers": {
-        #     "json": {
-        #         "class": "logging.FileHandler",
-        #         "formatter": "json",
-        #         "filename": "/tmp/app.log",  # Path for JSON logs
-        #     },
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "color",

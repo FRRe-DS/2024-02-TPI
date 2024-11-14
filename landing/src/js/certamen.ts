@@ -44,7 +44,6 @@ async function loadEscultores(url: string) {
 	try {
 		const res = await fetch(url);
 		const escultores = await res.json();
-		console.log(escultores);
 
 		const contenedor_escultores = document.querySelector(".grid-escultores");
 
@@ -67,7 +66,7 @@ async function loadEscultores(url: string) {
 
                     <div class="nombre-origen">
                         <div class="space">
-                        <h3 id="nombre-escultor">${NyA}</h3>
+                        <h3 id="nombre-escultor" data-id="${escultor.id}">${NyA}</h3>
                         </div>
 
                         <p class="cursiva">${pais.nombre} </p>
@@ -104,11 +103,14 @@ async function loadEscultores(url: string) {
 					if (email) {
 						overlay.style.display = "block";
 						popup.style.display = "flex";
+						const id = escultor.getAttribute("data-id") ?? " ";
+						Voto(email, id);
 					} else {
 						window.location.href = `./validar.html?nombre-escultor=${escultor.textContent}`;
 					}
 				}
 			});
+
 			if (cerrar_popup) {
 				cerrar_popup.addEventListener("click", () => {
 					overlay.style.display = "none";
@@ -119,6 +121,49 @@ async function loadEscultores(url: string) {
 	} catch (error) {
 		console.log(`Error al carga los escultores: ${error}`);
 	}
+}
+
+function Voto(correo: string, escultor_id: string) {
+	document.getElementById("votoForm")?.addEventListener("submit", async (e) => {
+		e?.preventDefault();
+
+		const form = e.target as HTMLFormElement;
+		const puntajeInput = form.elements.namedItem(
+			"rating",
+		) as HTMLInputElement | null;
+		const puntaje = puntajeInput ? puntajeInput.value : "";
+
+		type Response = {
+			status: string;
+			error: string;
+		};
+
+		try {
+			const data = { escultor_id: escultor_id, puntaje: puntaje };
+
+			const response = await fetch(
+				`http://localhost:8000/api/voto_escultor/?correo_votante=${correo}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(data),
+				},
+			);
+
+			if (response.status === 201) {
+				const data: Response = await response.json();
+				localStorage.setItem("userEmail", correo);
+				alert(`El voto se ha registrado de manera exitosa: ${data.status}`);
+			} else {
+				const data: Response = await response.json();
+				alert(`Ha ocurrido un fallo al registrar su voto:${data.error}`);
+			}
+		} catch (error) {
+			console.error("Server error:", error);
+		}
+	});
 }
 
 loadEscultores(URL_EVENTOS);

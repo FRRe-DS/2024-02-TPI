@@ -48,7 +48,7 @@ function Voto() {
 	document.getElementById("votoForm")?.addEventListener("submit", async (e) => {
 		e?.preventDefault();
 
-		const stored_email = localStorage.get("userEmail");
+		const stored_email = localStorage.getItem("userEmail");
 
 		if (stored_email) {
 			// Mostrar el popup para que puntúe, obtener el valor y hacer el POST?
@@ -93,9 +93,11 @@ function Voto() {
 					const data: Response = await response.json();
 					localStorage.setItem("userEmail", email);
 					alert(`El voto se ha registrado de manera exitosa: ${data.status}`);
+					window.location.href = "./certamen.html";
 				} else {
 					const data: Response = await response.json();
 					alert(`Ha ocurrido un fallo al registrar su voto:${data.error}`);
+					window.location.href = "./certamen.html";
 				}
 			} catch (error) {
 				console.error("Server error:", error);

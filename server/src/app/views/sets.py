@@ -223,6 +223,7 @@ class EscultorViewSet(viewsets.ModelViewSet):
     Campos de busqueda:
         - id
         - nombre
+        - apellido
         - correo
         - pais_id
         - foto
@@ -238,6 +239,7 @@ class EscultorViewSet(viewsets.ModelViewSet):
 
     queryset = Escultor.objects.all()
     serializer_class = EscultorSerializer
+    filterset_fields = ["nombre"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
