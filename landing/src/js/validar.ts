@@ -48,51 +48,58 @@ function Voto() {
 	document.getElementById("votoForm")?.addEventListener("submit", async (e) => {
 		e?.preventDefault();
 
-		const params = getUrlParams();
-		const escultor_id = params.escultor_id;
+		const stored_email = localStorage.get("userEmail");
 
-		if (!escultor_id) {
-			alert("Error inesperado, el escultor_id es nulo");
-			window.location.href = "./certamen.html";
-		}
+		if (stored_email) {
+			// Mostrar el popup para que puntúe, obtener el valor y hacer el POST?
+		} else {
+			const params = getUrlParams();
+			const escultor_id = params.escultor_id;
 
-		const email = (document.getElementById("email") as HTMLInputElement)?.value;
-		console.log(email);
-
-		if (!email) {
-			alert("Error inesperado, el email es nulo");
-			window.location.href = "./certamen.html";
-		}
-
-		type Response = {
-			status: number;
-			error: string;
-		};
-
-		const data = { escultor_id: escultor_id, puntaje: 5 };
-
-		try {
-			const response = await fetch(
-				`http://localhost:8000/api/voto_escultor/?correo_votante=${email}`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(data),
-				},
-			);
-
-			if (response.status === 201) {
-				const data: Response = await response.json();
-				localStorage.setItem("userEmail", email);
-				alert(`El voto se ha registrado de manera exitosa: ${data.status}`);
-			} else {
-				const data: Response = await response.json();
-				alert(`Ha ocurrido un fallo al registrar su voto:${data.error}`);
+			if (!escultor_id) {
+				alert("Error inesperado, el escultor_id es nulo");
+				window.location.href = "./certamen.html";
 			}
-		} catch (error) {
-			console.error("Server error:", error);
+
+			const email = (document.getElementById("email") as HTMLInputElement)
+				?.value;
+			console.log(email);
+
+			if (!email) {
+				alert("Error inesperado, el email es nulo");
+				window.location.href = "./certamen.html";
+			}
+
+			type Response = {
+				status: number;
+				error: string;
+			};
+
+			const data = { escultor_id: escultor_id, puntaje: 5 };
+
+			try {
+				const response = await fetch(
+					`http://localhost:8000/api/voto_escultor/?correo_votante=${email}`,
+					{
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
+						},
+						body: JSON.stringify(data),
+					},
+				);
+
+				if (response.status === 201) {
+					const data: Response = await response.json();
+					localStorage.setItem("userEmail", email);
+					alert(`El voto se ha registrado de manera exitosa: ${data.status}`);
+				} else {
+					const data: Response = await response.json();
+					alert(`Ha ocurrido un fallo al registrar su voto:${data.error}`);
+				}
+			} catch (error) {
+				console.error("Server error:", error);
+			}
 		}
 	});
 }
