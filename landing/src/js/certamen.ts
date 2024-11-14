@@ -81,10 +81,6 @@ async function loadEscultores(url: string) {
 				contenedor_escultores.appendChild(article);
 			}
 
-			// const botonesVotar = document.querySelectorAll(
-			// 	".btn-votar",
-			// ) as NodeListOf<HTMLButtonElement>;
-
 			const overlay = document.querySelector(".overlay") as HTMLButtonElement;
 			const popup = document.querySelector(
 				".popUp-container",
@@ -94,6 +90,10 @@ async function loadEscultores(url: string) {
 			) as HTMLButtonElement;
 
 			document.addEventListener("click", (event) => {
+				// Al hacer click en el btn votar en un escultor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se
+				// voto antes y quedo validado el mail, entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de
+				// validadr.html para validad su mail.
+
 				if ((event.target as HTMLElement).classList.contains("btn-votar")) {
 					event.preventDefault();
 					const email = localStorage.getItem("userEmail");
@@ -101,7 +101,7 @@ async function loadEscultores(url: string) {
 						"#nombre-escultor",
 					) as HTMLHeadingElement;
 
-					if (!email) {
+					if (email) {
 						overlay.style.display = "block";
 						popup.style.display = "flex";
 					} else {

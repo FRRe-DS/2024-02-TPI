@@ -1,27 +1,29 @@
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
 
-function formatearFecha(fechaString:string) {
-  const [year, month, day] = fechaString.split("-").map(Number);;
+function formatearFecha(fechaString: string) {
+	const [year, month, day] = fechaString.split("-").map(Number);
 
-  const fecha = new Date(year, month - 1, day); 
-  
-  const opciones: Intl.DateTimeFormatOptions = { day: "2-digit", month: "short" };
-  return fecha.toLocaleDateString("es-ES", opciones);
+	const fecha = new Date(year, month - 1, day);
+
+	const opciones: Intl.DateTimeFormatOptions = {
+		day: "2-digit",
+		month: "short",
+	};
+	return fecha.toLocaleDateString("es-ES", opciones);
 }
-
 
 // ------ Get eventos ------
 
 async function loadEventos(url: string) {
-  try {
-    const res = await fetch(url);
-    const evento = await res.json();
-   
-    for (let index = 0; index < 7; index++) {
-      const card = document.getElementById(`card-${index}`);
+	try {
+		const res = await fetch(url);
+		const evento = await res.json();
 
-      if (card) {
-        card.innerHTML = `
+		for (let index = 0; index < 7; index++) {
+			const card = document.getElementById(`card-${index}`);
+
+			if (card) {
+				card.innerHTML = `
           <div class="descripcion-evento">
             <h3>${evento[index].nombre}</h3>
             <div>
@@ -30,15 +32,11 @@ async function loadEventos(url: string) {
             </div>
           </div>
         `;
-      }
-    }
-  
-
-  } catch (error) {
-    console.log(`Error al carga los eventos: ${error}`);
-  }
+			}
+		}
+	} catch (error) {
+		console.log(`Error al carga los eventos: ${error}`);
+	}
 }
 
 loadEventos(URL_EVENTOS);
-
-
