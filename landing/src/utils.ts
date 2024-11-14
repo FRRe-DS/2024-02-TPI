@@ -1,8 +1,14 @@
 function loadNombre() {
 	const queryParams = new URLSearchParams(window.location.search);
-	const nombre_escultor = queryParams.get("nombre-escultor");
+	let nombre_escultor = queryParams.get("nombre-escultor");
 	const titulo = document.getElementById("nombre-escultor") as HTMLHeadElement;
-	titulo.textContent = nombre_escultor;
+
+	if (nombre_escultor) {
+		nombre_escultor = decodeURIComponent(nombre_escultor);
+		titulo.textContent = nombre_escultor;
+	} else {
+		titulo.textContent = "";
+	}
 }
 
 let lastScrollTop = 0;

@@ -50,15 +50,19 @@ def generar_qr(request: Request) -> HttpResponse:
             status=status.HTTP_404_NOT_FOUND,
         )
 
+    escultor = Escultor.objects.get(id=escultor_id)
+
     logging.info(f"Generando QR para {escultor_id}...")
 
     id = ulid.from_timestamp(datetime.datetime.now())
-    print(settings.DJANGO_ENV)
+
+    query_params= f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
+
     if settings.DJANGO_ENV == "prod":
-        voto_url = f"https://2024-02-tpi-cloudflare.pages.dev/verificar_voto?escultor_id={escultor_id}&id={id}"
+        voto_url = f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
     else:
         voto_url = (
-            f"http://localhost:5173/validar.html?escultor_id={escultor_id}&id={id}"
+            f"http://localhost:5173/validar.html?{query_params}"
         )
 
     logging.info(voto_url)
