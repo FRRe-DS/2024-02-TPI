@@ -1,7 +1,10 @@
 import datetime
 from io import BytesIO
 import logging
+import resend
+from resend.exceptions import ValidationError
 
+from django.conf import settings
 from django.db.models import Sum
 from django.db.models.base import Coalesce
 import qrcode
@@ -139,6 +142,32 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+def mandar_email(destinatario: str) -> Response:
+    """
+    Endpoint para enviar un mail usando la API REST de Resend.
+    """
+    resend.api_key = settings.RESEND_API_KEY
+    params: resend.Emails.SendParams = {
+        "from": settings.DEFAULT_FROM_EMAIL,
+        "to": [destinatario],
+        "subject": "Confirmación de correo electrónico",
+        "html": "<strong> Funciona! </strong>",
+    }
+
+    try:
+        email = resend.Emails.send(params)
+    except ValidationError as e:
+        error = f"Los parametros son inválidos.err: {e}"
+        logging.error(error)
+        return Response(
+            {"error": error},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    print(email)
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(["GET"])
