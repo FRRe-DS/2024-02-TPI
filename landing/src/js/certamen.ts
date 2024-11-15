@@ -58,25 +58,27 @@ async function loadEscultores(url: string) {
 				const NyA = formatearNombre(escultor.nombre, escultor.apellido);
 
 				article.innerHTML = `
-                    <img
-                        src="${foto}"
-                        loading="lazy"
-                        alt="${NyA}"
-                        class="escultor-img" />
-
-                    <div class="nombre-origen">
-                        <div class="space">
-                        <h3 id="nombre-escultor" data-id="${escultor.id}">${NyA}</h3>
-                        </div>
-
-                        <p class="cursiva">${pais.nombre} </p>
-                    </div>
-
-                    <button class="btn-votar">
-                        <i class="material-icons-outlined">&#xe838;</i>
-                        Votar
-                    </button>
-                    `;
+						
+						<img
+								src="${foto}"
+								loading="lazy"
+								alt="${NyA}"
+								class="escultor-img" />
+						<div class="wrap-card">
+							<a href="">Ver más</a>
+							<div class="nombre-origen">
+									<div class="space">
+									<h3 id="nombre-escultor" data-id="${escultor.id}">${NyA}</h3>
+									</div>
+									<p class="cursiva">${pais.nombre} </p>
+									<button class="btn-votar">
+									
+									Votar
+							</button>
+							</div>
+							
+						</div>
+						`;
 				contenedor_escultores.appendChild(article);
 			}
 
