@@ -118,7 +118,9 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
             )
             mandar_email(correo_votante)
             return Response(
-                {"status": "Se ha enviado un email de verificación a la dirección indicada"},
+                {
+                    "status": "Se ha enviado un email de verificación a la dirección indicada"
+                },
                 status=status.HTTP_202_ACCEPTED,
             )
 
