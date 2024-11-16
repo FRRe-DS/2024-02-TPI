@@ -36,7 +36,7 @@ jobs:
             uv-${{ runner.os }}-${{ hashFiles('uv.lock') }}
             uv-${{ runner.os }}
       - name: Install dependencies
-        run: uv sync --all-extras --dev && uv add ruff
+        run: uv sync --all-extras --dev 
 
   format:
     needs: setup-and-cache
