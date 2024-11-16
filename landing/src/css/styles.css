@@ -78,6 +78,21 @@ header {
 	padding-inline: clamp(10px, 5vw, 4rem);
 }
 
+.paginaActual{
+	position: relative;
+	
+}
+
+.paginaActual::before{
+	content: "";
+	position: absolute;
+	bottom: -5px;
+	left: 0;
+	width: 100%;
+	background-color: var(--bg-2);
+	height: 1px;
+}
+
 #header {
 	position: sticky;
 	top: 0px;

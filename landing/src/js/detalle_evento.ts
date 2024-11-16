@@ -1,5 +1,6 @@
 
-import { formatearFecha } from "../app";
+import { formatearFecha, loadHTML } from "../app";
+
 
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
 const URL_LUGAR= "http://localhost:8000/api/lugar/";
@@ -67,6 +68,7 @@ async function loadEvento(URL:string, id:string) {
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id") as string;
 
+loadHTML("header.html", "header", "eventos");
 loadEvento(URL_EVENTOS, id)
 
 

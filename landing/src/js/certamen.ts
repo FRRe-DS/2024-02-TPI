@@ -1,3 +1,6 @@
+import { loadHTML } from "../app";
+
+
 const URL_EVENTOS = "http://localhost:8000/api/escultores/";
 const URL_PAIS = "http://localhost:8000/api/paises/";
 
@@ -206,7 +209,10 @@ function Voto(correo: string, escultor_id: string) {
 	});
 }
 
+loadHTML("header.html", "header", "certamen");
+
 loadEscultores(URL_EVENTOS);
+
 
 
 

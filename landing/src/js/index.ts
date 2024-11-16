@@ -1,4 +1,6 @@
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
+import { loadHTML } from "../app";
+
 
 function formatearFecha(fechaString: string) {
 	const [year, month, day] = fechaString.split("-").map(Number);
@@ -39,4 +41,6 @@ async function loadEventos(url: string) {
 	}
 }
 
+loadHTML("header.html", "header", "inicio");
 loadEventos(URL_EVENTOS);
+

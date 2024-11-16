@@ -1,5 +1,6 @@
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
-import { formatearFecha } from "../app";
+import { formatearFecha, loadHTML } from "../app";
+
 
 
 // ------ TODO: Elegir imagen, esto es solamente provisorio ahsta que gonza agregue las imagenes en la BD ------
@@ -25,7 +26,7 @@ function elegirImagen(nombreImg: string) {
 	const indice = imagenes.findIndex((ruta) =>
 		ruta.includes(nombreImg.split(" ")[0]),
 	);
-	console.log(imagenes[indice]);
+
 	return imagenes[indice];
 }
 
@@ -35,7 +36,7 @@ async function loadEventos(url: string) {
 	try {
 		const res = await fetch(url);
 		const eventos = await res.json();
-		console.log(eventos);
+
 
 		const contendor_eventos = document.querySelector(".events-gallery");
 
@@ -66,4 +67,5 @@ async function loadEventos(url: string) {
 }
 
 // ------------
+loadHTML("header.html", "header", "eventos");
 loadEventos(URL_EVENTOS);
