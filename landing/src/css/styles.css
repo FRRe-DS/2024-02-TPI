@@ -2,7 +2,7 @@
 	--bg: #000;
 	--bg-2: #fff;
 	--text-200: #343434;
-	--text-300: #ebebeb;
+	--text-300: #f9f9f9;
 	--text-400: #fff;
 }
 
@@ -275,16 +275,32 @@ footer {
 	text-transform: uppercase;
 	font-weight: 600;
 	min-width: 250px;
+	
 }
 
 .btn-secundario {
+	backdrop-filter: blur(10px);
+	background-color: rgba(255, 255, 255, 0.1);
+
 	border: 1px solid #fff;
+	transition: transform ease 0.2s;
 }
 
 .btn-primario {
 	background-color: var(--bg);
 	border: 1px solid #000;
+	transition: transform ease 0.2s;
+
 }
+
+.btn-secundario:hover{
+	transform: translate(0, -3px);
+
+}
+
+.btn-primario:hover{
+	transform: translate(0, -3px);
+	}
 
 #up {
 	position: absolute;
