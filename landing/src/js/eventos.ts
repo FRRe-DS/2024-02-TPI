@@ -1,16 +1,6 @@
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
+import { formatearFecha } from "../app";
 
-function formatearFecha(fechaString: string) {
-	const [year, month, day] = fechaString.split("-").map(Number);
-
-	const fecha = new Date(year, month - 1, day);
-
-	const opciones: Intl.DateTimeFormatOptions = {
-		day: "2-digit",
-		month: "short",
-	};
-	return fecha.toLocaleDateString("es-ES", opciones);
-}
 
 // ------ TODO: Elegir imagen, esto es solamente provisorio ahsta que gonza agregue las imagenes en la BD ------
 const imagenes = [
@@ -65,7 +55,7 @@ async function loadEventos(url: string) {
                 <p>${formatearFecha(evento.fecha_inicio)} - \u200B<span>${formatearFecha(evento.fecha_fin)}</ span></p>
               </div>
             </div>
-            <button class="btn-secundarioV3">Ver detalles</button>
+            <a href="${evento.id === 1 ? 'certamen.html' : `detalle_evento.html?id=${evento.id}`}" class="btn-secundarioV3">Ver detalles</a>
       `;
 				contendor_eventos.appendChild(card);
 			}
@@ -75,4 +65,5 @@ async function loadEventos(url: string) {
 	}
 }
 
+// ------------
 loadEventos(URL_EVENTOS);

@@ -1,3 +1,16 @@
+export function formatearFecha(fechaString: string) {
+	const [year, month, day] = fechaString.split("-").map(Number);
+
+	const fecha = new Date(year, month - 1, day);
+
+	const opciones: Intl.DateTimeFormatOptions = {
+		day: "2-digit",
+		month: "short",
+	};
+	return fecha.toLocaleDateString("es-ES", opciones);
+}
+
+
 function loadHTML(file: string, elementId: string): void {
 	fetch(file)
 		.then((response) => {
@@ -17,3 +30,5 @@ function loadHTML(file: string, elementId: string): void {
 
 loadHTML("header.html", "header");
 loadHTML("footer.html", "footer");
+
+

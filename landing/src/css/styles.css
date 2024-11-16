@@ -672,6 +672,30 @@ footer {
 	font-size: clamp(2rem, 0.571rem + 3.81vw, 4rem);
 }
 
+.container-title-evento{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	z-index: 20;
+
+}
+
+.container-title-evento h1 {
+
+	text-align: center;
+	font-size: clamp(2rem, 0.571rem + 3.81vw, 4rem);
+}
+
+.container-title-evento p {
+
+	font-family:  "Dancing Script", cursive; 
+	text-align: center;
+	font-size: clamp(1rem, -0.429rem + 3.81vw, 3rem)
+
+}
+
 #left2 {
 	position: absolute;
 
@@ -802,7 +826,7 @@ footer {
 
 /* ---seccion certamen--- */
 .section-certamen {
-	width: min(1300px, 100% - 4rem);
+	width: min(1200px, 100% - 4rem);
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
