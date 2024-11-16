@@ -1,23 +1,61 @@
 # https://github.com/casey/just
-serve mode="dev": migrate inicializacion
-    DJANGO_ENV={{mode}} docker compose up --build
+serve mode="dev": cargardb
+    #!/usr/bin/env bash
+    set -x
+    set -eo pipefail
+    if [ "{{mode}}" = "dev" ]; then \
+        cd ./src/
+        DJANGO_ENV="{{mode}}" uv run ./manage.py runserver 0.0.0.0:8000 
+    elif [ "{{mode}}" = "prod" ]; then \
+        cd ./src/
+        DJANGO_ENV="{{mode}}" ../.venv/bin/gunicorn -c gunicorn.conf.py backend.wsgi:application
+    fi
 
-migrate: fmt
+runtasks:
+    uv run ./src/manage.py process_tasks
+
+cargardb: migrate
+    uv run ./src/scripts/iniciar_db.py
+
+test: migrate check
+    uv run ./src/manage.py test ./src/
+
+migrate: fmt 
     uv run ./src/manage.py makemigrations
     uv run ./src/manage.py migrate --run-syncdb
 
-check: fmt
-    ruff check ./
+initdb:
+    #!/usr/bin/env bash
+    set -x
+    set -eo pipefail
+    DB_USER=${POSTGRES_USER:=postgres}
+    DB_PASSWORD="${POSTGRES_PASSWORD:=password}"
+    DB_NAME="${POSTGRES_DB:=tpi}"
+    DB_PORT="${POSTGRES_PORT:=5432}"
+    
+    if [[ -z "${SKIP_DOCKER}"  ]]
+    then
+        docker run \
+        -e POSTGRES_USER=${DB_USER} \
+        -e POSTGRES_PASSWORD=${DB_PASSWORD} \
+        -e POSTGRES_DB=${DB_NAME} \
+        -p "${DB_PORT}":5432 \
+        -d postgres:17-bookworm \
+        postgres -N 1000
+    else
+        >&2 echo "Es probable que Postgres ya esté funcionando en el puerto ${DB_PORT}"
+    fi
 
-test: migrate check fmt
-    uv run ./src/manage.py test ./src/
+    export PGPASSWORD="${DB_PASSWORD}"
+
+    until psql -h "localhost" -U "${DB_USER}" -p "${DB_PORT}" -d "postgres" -c '\q'; do
+    >&2 echo "Postgres todavía no esta disponible"
+    sleep 1
+    done
+    >&2 echo "Postgres está disponible en el puerto ${DB_PORT}"
+
+check:
+    ruff check ./
 
 fmt:
     ruff format ./
-
-shell:
-    uv run ./src/manage.py shell
-
-
-inicializacion: 
-    uv run ./src/scripts/inicializacion_db.py

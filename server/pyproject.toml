@@ -11,8 +11,6 @@ dependencies = [
     "coverage>=7.6.1",
     "pygments>=2.18.0",
     "python-dotenv>=1.0.1",
-    "celery[redis]>=5.4.0",
-    "redis>=5.0.8",
     "python-json-logger>=2.0.7",
     "requests>=2.32.3",
     "django-cors-headers>=4.5.0",
@@ -26,6 +24,9 @@ dependencies = [
     "qrcode[pil]>=8.0",
     "ulid-py>=1.1.0",
     "datetime>=5.5",
+    "psycopg[pool]>=3.2.3",
+    "django-background-tasks>=1.2.8",
+    "ruff>=0.7.4",
 ]
 
 [build-system]

@@ -28,6 +28,10 @@
     <link rel="stylesheet" href="./css/styles.css" />
 
     <title>Bienal del Chaco</title>
+    <script type="module" src="./js/eventos.ts"></script>
+    <script type="module" src="./app.ts"></script>
+    <script type="module" src="./utils.ts"></script>
+   
   </head>
   <body>
     <div id="header"></div>
@@ -39,70 +43,10 @@
       </section>
       <div class="wrapped2">
         <section class="events-gallery">
-          <div
-            class="event-card hiddenImg"
-            style="background-image: url('./images/agitaLaBienal.jpeg')">
-            <div class="card-content">
-              <h2>Titulo del evento</h2>
-              <div>
-                <i class="material-icons-outlined">&#xebcc;</i>
-                <p>1 de Julio - 10 de Julio</p>
-              </div>
-            </div>
-
-            <button class="btn-secundarioV3">Ver detalles</button>
-          </div>
-          <div
-            class="event-card hiddenImg"
-            style="background-image: url('./images/bienal_aerea.jpeg')">
-            <div class="card-content">
-              <h2>Titulo del evento</h2>
-              <div>
-                <i class="material-icons-outlined">&#xebcc;</i>
-                <p>1 de Julio - 10 de Julio</p>
-              </div>
-            </div>
-
-            <button class="btn-secundarioV3">Ver detalles</button>
-          </div>
-          <div
-            class="event-card hiddenImg"
-            style="
-              background-image: url('./images/mujeresCantandoFolklore.jpeg');
-            ">
-            <div class="card-content">
-              <h2>Titulo del evento</h2>
-              <div>
-                <i class="material-icons-outlined">&#xebcc;</i>
-                <p>1 de Julio - 10 de Julio</p>
-              </div>
-            </div>
-
-            <button class="btn-secundarioV3">Ver detalles</button>
-          </div>
-          <div
-            class="event-card hiddenImg"
-            style="background-image: url('./images/AgitaLaBienal2.jpg')">
-            <div class="card-content">
-              <h2>Titulo del evento</h2>
-              <div>
-                <i class="material-icons-outlined">&#xebcc;</i>
-                <p>1 de Julio - 10 de Julio</p>
-              </div>
-            </div>
-
-            <button class="btn-secundarioV3">Ver detalles</button>
-          </div>
+         
         </section>
       </div>
     </main>
     <div id="footer"></div>
-
-    <script type="module" src="./app.ts"></script>
-    <script type="module">
-      import { loadHeaderFooter } from "./app.ts";
-      loadHeaderFooter();
-    </script>
-    <script type="module" src="./utils.ts"></script>
   </body>
 </html>

@@ -1,27 +1,30 @@
 import datetime
-from io import BytesIO
 import logging
+import smtplib
+from email.message import EmailMessage
+from io import BytesIO
 
-from django.db.models import Sum
-from django.db.models.base import Coalesce
 import qrcode
-from rest_framework import authentication, permissions, status, viewsets
 import ulid
-
-from app.serializers import VotoEscultorSerializer
-from app.utils import PositiveInt
+from django.conf import settings
+from django.db.models import ObjectDoesNotExist, Sum
+from django.db.models.base import Coalesce
 from django.http.response import HttpResponse
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import authentication, permissions, status, viewsets
+from rest_framework.decorators import api_view
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from app.models import Escultor, Votante, VotoEscultor
+from app.serializers import VotoEscultorSerializer
+from app.utils import PositiveInt
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
 def generar_qr(request: Request) -> HttpResponse:
+    from django.conf import settings
+
     escultor_id = request.query_params.get("escultor_id")
     if escultor_id is None:
         error = "Debe ingresar por query parameters el id del escultor"
@@ -49,10 +52,21 @@ def generar_qr(request: Request) -> HttpResponse:
             status=status.HTTP_404_NOT_FOUND,
         )
 
+    escultor = Escultor.objects.get(id=escultor_id)
+
     logging.info(f"Generando QR para {escultor_id}...")
 
     id = ulid.from_timestamp(datetime.datetime.now())
-    voto_url = f"https://2024-02-tpi-cloudflare.pages.dev/verificar_voto?escultor_id={escultor_id}&id={id}"
+
+    query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
+
+    if settings.DJANGO_ENV == "prod":
+        voto_url = (
+            f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
+        )
+    else:
+        voto_url = f"http://localhost:5173/validar.html?{query_params}"
+
     logging.info(voto_url)
 
     qr = qrcode.QRCode(
@@ -70,7 +84,7 @@ def generar_qr(request: Request) -> HttpResponse:
     img.save(buffer, format="PNG", optimize=True)
     _ = buffer.seek(0)
 
-    logging.info(f"Generando QR para escultor_id: {escultor_id}... listo!")
+    logging.info(f"Generando QR para escultor_id: {escultor_id}... listo! ")
     return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
 
 
@@ -87,17 +101,28 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
     def create(self, request: Request):
-        correo_votante = request.query_params.get("correo_votante")
+        correo_votante = str(request.query_params.get("correo_votante"))
+
         if not correo_votante:
             return Response(
                 {"error": "El correo del votante es obligatorio."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
-        votante, created = Votante.objects.get_or_create(correo=correo_votante)
-
-        if created:
-            logging.info(f"Se ha registrado un nuevo votante: {correo_votante}!")
+        votante: Votante
+        try:
+            votante = Votante.objects.get(correo=correo_votante)
+        except ObjectDoesNotExist:
+            logging.info(
+                "Este votante no se encuentra registrado hasta la fecha. Enviando correo electrónico para verificar su registro."
+            )
+            mandar_email(correo_votante)
+            return Response(
+                {
+                    "status": "Se ha enviado un email de verificación a la dirección indicada"
+                },
+                status=status.HTTP_202_ACCEPTED,
+            )
 
         request.data["votante_id"] = votante.id
         serialized_data = VotoEscultorSerializer(data=request.data)
@@ -126,6 +151,29 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
                 },
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
+
+def mandar_email(destinatario: str) -> Response:
+    """
+    Endpoint para enviar un mail usando la API REST de Resend.
+    """
+
+    remitente = settings.DEFAULT_FROM_EMAIL
+    print(remitente)
+
+    email = EmailMessage()
+    email["From"] = remitente
+    email["To"] = destinatario
+    email["Subject"] = "Confirmación de correo electrónico"
+    email.set_content("<strong> Funciona! </strong>")
+
+    smtp = smtplib.SMTP_SSL("smtp.gmail.com")
+    smtp.login(remitente, settings.EMAIL_APP_KEY)
+    smtp.sendmail(remitente, destinatario, email.as_string())
+    smtp.quit()
+
+    print(email.as_string())
+    return Response(status=status.HTTP_200_OK)
 
 
 @api_view(["GET"])

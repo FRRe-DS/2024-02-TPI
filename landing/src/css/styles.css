@@ -517,9 +517,18 @@ footer {
 
 .descripcion-evento div {
 	display: inline-flex;
-
 	align-items: center;
+
 	gap: 10px;
+}
+
+.descripcion-evento div p {
+	margin: 0;
+	text-align: left;
+	text-transform: capitalize;
+}
+.descripcion-evento div p span {
+	text-wrap: nowrap;
 }
 
 .hiddenImg {
@@ -644,7 +653,7 @@ footer {
 .container-title h1 {
 	z-index: 20;
 	text-align: center;
-	font-size: clamp(1.5rem, -0.286rem + 4.762vw, 4rem);
+	font-size: clamp(2rem, 0.571rem + 3.81vw, 4rem);
 }
 
 #left2 {
@@ -705,12 +714,37 @@ footer {
 	text-align: center;
 	padding: 24px 16px;
 	gap: 1.5rem;
-	box-shadow: inset 0 -120px 150px 0 rgba(0, 0, 0, 0.9);
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: cover;
+
 	cursor: pointer;
-	transition: transform 0.3s ease, opacity 1s, scale 1s;
+	transition: transform 0.3s ease, scale 1s;
+	overflow: hidden;
+	position: relative;
+}
+
+.card-img-evento {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	transition: transform 1s ease;
+}
+
+.event-card:hover .card-img-evento {
+	transform: scale(1.1);
+}
+
+.event-card::before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	box-shadow: inset 0 -120px 150px 0 rgba(0, 0, 0, 0.9);
+	pointer-events: none;
+	z-index: 5;
 }
 
 .card-content {
@@ -719,10 +753,11 @@ footer {
 	justify-content: flex-end;
 	flex-direction: column;
 	align-items: center;
+	z-index: 10;
 }
 
 .card-content h2 {
-	font-size: clamp(2rem, 1.643rem + 0.952vw, 2.5rem);
+	font-size: clamp(1.5rem, 0.786rem + 1.905vw, 2.5rem);
 	font-weight: 400;
 }
 
@@ -746,6 +781,7 @@ footer {
 	border: 1px solid #ffffffe8;
 	transition: 0.5s ease;
 	user-select: none;
+	z-index: 10;
 }
 
 /* ---seccion certamen--- */
@@ -758,7 +794,7 @@ footer {
 }
 
 .h2-mas-p {
-	padding-top: 64px;
+	padding-top: 36px;
 	width: 100%;
 	display: grid;
 	gap: 20px;
@@ -786,30 +822,55 @@ footer {
 	place-items: center;
 	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 	gap: 3rem;
-	padding-block: 3rem 5rem;
+	padding-block: 1.5rem 4rem ;
 }
 
 .card-escultor {
-	border-radius: 20px;
+	border-radius: 24px;
 	width: 100%;
-
+	height: 400px;
+	overflow: hidden;
 	position: relative;
-	transition: transform 0.3s ease, opacity 1s, scale 1s;
+	transition: transform 0.3s ease;
+}
+
+.card-escultor::before{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 5;
+	background-color: rgba(0, 0, 0, 0.40);
+	pointer-events: none;
 }
 
 .escultor-img {
 	border-radius: 20px 20px 0 0;
-	filter: grayscale();
 	width: 100%;
-	height: 400px;
+	height: 100%;
 	object-fit: cover;
-
+	
 	cursor: pointer;
 	transition: 0.5s ease;
 }
 
-.escultor-img:hover {
-	filter: none;
+.wrap-card{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding: 16px;
+}
+
+.card-escultor:hover .escultor-img  {
+	transform: scale(1.1);
 }
 
 .btn-primarioV2 {
@@ -826,47 +887,41 @@ footer {
 }
 
 .nombre-origen {
-	background-color: var(--bg-2);
+
 	width: 100%;
-	padding: 20px 30px 30px 30px;
-	border-radius: 0 0 20px 20px;
+	display:grid;
+
+	
 }
 
 .nombre-origen .space h3 {
 	font-size: clamp(1.3rem, 1.157rem + 0.381vw, 1.5rem);
 	color: var(--bg);
 	text-wrap: wrap;
+	color: var(--bg-2);
 }
 
 .nombre-origen p {
 	font-size: 1.25rem;
-	color: var(--bg);
+	color: var(--bg-2);
 }
 
 .btn-votar {
-	position: absolute;
-	z-index: 10;
-	bottom: calc(-64px / 2);
-	left: 50%;
-	transform: translatex(-50%);
-
 	color: var(--text-400);
 	display: inline-flex;
 	gap: 10px;
 	align-items: center;
 	justify-content: center;
-	background-image: linear-gradient(
-		-25deg,
-		rgba(116, 206, 255, 1),
-		rgba(137, 140, 255, 1)
-	);
-	padding: 14px 18px;
-	border-radius: 20px;
-	font-size: 1.5rem;
-	font-weight: 700;
-	text-transform: uppercase;
-	box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.25);
+	padding: 8px 36px;
+	border-radius: 16px;
+	font-size: 1.2rem;
+	background-color: #111111;
+	width: fit-content;
+	margin-top: 10px;
+	transition: all .1s ease;
 }
+
+
 
 .white {
 	background-color: var(--bg-2);
@@ -958,6 +1013,8 @@ footer {
 
 form {
 	display: flex;
+	flex-direction: column;
+	gap: 16px;
 	justify-content: center;
 	align-items: center;
 	width: 100%;
@@ -1074,6 +1131,151 @@ form {
 	.mosaico-gallery > :nth-child(6) {
 		min-height: 174px;
 	}
+}
+
+.overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 800;
+	background-color: rgba(0, 0, 0, 0.6);
+	width: 100%;
+	height: 100dvh;
+}
+
+.popUp-container {
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 900;
+	width: 100%;
+	height: 100dvh;
+
+	display: none;
+	justify-content: center;
+	align-items: center;
+}
+
+.popup {
+	padding: 16px;
+	border-radius: 20px;
+	width: min(500px, 100% - 3rem);
+
+	background-color: var(--bg-2);
+	color: var(--bg);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+
+	position: relative;
+}
+
+.popup form {
+	padding: 16px;
+}
+
+.cerrar-popup-container {
+	width: 100%;
+	display: flex;
+	justify-content: end;
+}
+
+.cerrar-popup {
+	color: #8c8c8c;
+	font-size: 24px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 32px;
+	height: 32px;
+	border-radius: 8px;
+	background-color: #fff;
+	transition: 0.1s ease;
+
+	padding-bottom: 3px;
+}
+
+.cerrar-popup:hover {
+	background-color: #f0f0f0;
+}
+
+.cerrar-popup:active {
+	transform: scale(0.9);
+}
+
+.popup div h4 {
+	font-size: 1.5rem;
+	font-weight: 700;
+	text-align: center;
+}
+
+.popup div p {
+	text-align: center;
+	margin-top: 16px;
+	color: var(--text-200);
+}
+
+.rating {
+	display: inline-block;
+}
+
+.rating input {
+	display: none;
+}
+
+.rating label {
+	float: right;
+	cursor: pointer;
+	color: #ccc;
+
+	transition: color 0.3s;
+}
+
+.rating label:before {
+	content: "\2605";
+	font-size: 40px;
+	margin-inline: 3px;
+}
+
+.rating input:checked ~ label,
+.rating label:hover,
+.rating label:hover ~ label {
+	color: #ffcd29;
+	transition: color 0.3s;
+}
+
+.starts li {
+	color: #c1c1c1;
+}
+
+.starts li:hover {
+	color: #fde593;
+}
+
+.starts li i {
+	font-size: 32px;
+	cursor: pointer;
+}
+
+.btn-votarV2 {
+	background-color: #497fff;
+	border-radius: 8px;
+	padding: 8px 16px;
+	color: #fff;
+	border: 1px solid #fff;
+	transition: all 0.3s;
+}
+
+.btn-votarV2:hover {
+	color: #497fff;
+	background-color: var(--bg-2);
+	border: 1px solid #497fff;
+}
+
+.btn-votarV2:active {
+	transform: scale(0.9);
 }
 
 @media (max-width: 850px) {

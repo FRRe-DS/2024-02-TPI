@@ -1,5 +1,29 @@
 -- USER
-INSERT INTO "auth_user" VALUES (1,'pbkdf2_sha256$870000$q7jZZSTbg7cV2RdU6ooNko$4k5FrQg30KnKPyG2M2yNC5filhPeaxCOC2ZKri0rZCs=',NULL,1,'admin','','admin@admin.com',1,1,'2024-11-01 22:17:39.218211','');
+INSERT INTO "auth_user" (
+    "id",
+    "password",
+    "last_login",
+    "is_superuser",
+    "username",
+    "first_name",
+    "email",
+    "is_staff",
+    "is_active",
+    "date_joined",
+    "last_name"
+) VALUES (
+    1,
+    'pbkdf2_sha256$870000$q7jZZSTbg7cV2RdU6ooNko$4k5FrQg30KnKPyG2M2yNC5filhPeaxCOC2ZKri0rZCs=',
+    NULL,
+    true,
+    'admin',
+    '',
+    'admin@admin.com',
+    true,
+    true,
+    '2024-11-01 22:17:39.218211',
+    ''
+);
 
 -- PAIS
 INSERT INTO "app_pais" (id, nombre, iso) VALUES (1,'Afganistán','AF');

@@ -28,6 +28,10 @@
     <link rel="stylesheet" href="./css/styles.css" />
 
     <title>Bienal del Chaco</title>
+
+    <script type="module" src="./app.ts"></script>
+    <script type="module" src="./utils.ts"></script>
+    <script type="module" src="./js/index.ts"></script>
   </head>
   <body>
     <div id="header"></div>
@@ -50,10 +54,10 @@
           </div>
           <div class="action-btns">
             <a href="/eventos.html">
-                <button class="btn-primario">Descubre la Bienal 2025</button>
+              <button class="btn-primario">Descubre la Bienal 2025</button>
             </a>
             <a href="/certamen.html">
-                <button class="btn-secundario">Certamen de Esculturas</button>
+              <button class="btn-secundario">Certamen de Esculturas</button>
             </a>
           </div>
         </div>
@@ -68,85 +72,52 @@
           programadas para ti. ¡No te pierdas ni un solo momento de diversión y
           entretenimiento!
         </p>
+
         <div class="mosaico-container">
           <div class="divider-m"></div>
+
           <div class="mosaico-gallery">
-            <div
-              class="mosaico-card-evento hiddenImg"
-              style="background-image: url(./images/escultor.jpeg)">
-              <div class="descripcion-evento">
-                <h3>Artes escenicas</h3>
-                <div>
-                  <i class="material-icons-outlined">&#xebcc;</i>
-                  <p>1 de Julio - 10 de Julio</p>
-                </div>
-              </div>
+            <div 
+              id="card-1"
+              class="mosaico-card-evento "
+              style="background-image: url(./images/Eventos/ExposicionesDeArte.jpg)"
+              title="Exposición de arte">
             </div>
             <div
-              class="mosaico-card-evento hiddenImg"
-              style="background-image: url(./images/escultor.jpeg)">
-              <div class="descripcion-evento">
-                <h3>Artes escenicas</h3>
-                <div>
-                  <i class="material-icons-outlined">&#xebcc;</i>
-                  <p>1 de Julio - 10 de Julio</p>
-                </div>
-              </div>
+              id="card-2"
+              class="mosaico-card-evento "
+              style="background-image: url(./images/Eventos/TalleresYCapacitacion.jpg)">
+              
             </div>
             <div
-              class="mosaico-card-evento hiddenImg"
-              style="background-image: url(./images/escultor.jpeg)">
-              <div class="descripcion-evento">
-                <h3>Artes escenicas</h3>
-                <div>
-                  <i class="material-icons-outlined">&#xebcc;</i>
-                  <p>1 de Julio - 10 de Julio</p>
-                </div>
-              </div>
+              id="card-3"
+              class="mosaico-card-evento "
+              style="background-image: url(./images/Eventos/ConferenciasYcharlas.jpg)">
+              
             </div>
             <div
-              class="mosaico-card-evento hiddenImg"
-              style="background-image: url(./images/escultor.jpeg)">
-              <div class="descripcion-evento">
-                <h3>Artes escenicas</h3>
-                <div>
-                  <i class="material-icons-outlined">&#xebcc;</i>
-                  <p>1 de Julio - 10 de Julio</p>
-                </div>
-              </div>
+              id="card-4"
+              class="mosaico-card-evento "
+              style="background-image: url(./images/Eventos/RecorridosGuiado.jpg)">
+              
             </div>
             <div
-              class="mosaico-card-evento hiddenImg"
-              style="background-image: url(./images/escultor.jpeg)">
-              <div class="descripcion-evento">
-                <h3>Artes escenicas</h3>
-                <div>
-                  <i class="material-icons-outlined">&#xebcc;</i>
-                  <p>1 de Julio - 10 de Julio</p>
-                </div>
-              </div>
+              id="card-0"
+              class="mosaico-card-evento "
+              style="background-image: url(./images/Eventos/ConcursoInternacionalDeEsculturas.jpg)">
+              
             </div>
             <div
-              class="mosaico-card-evento hiddenImg"
-              style="background-image: url(./images/escultor.jpeg)">
-              <div class="descripcion-evento">
-                <h3>Artes escenicas</h3>
-                <div>
-                  <i class="material-icons-outlined">&#xebcc;</i>
-                  <p>1 de Julio - 10 de Julio</p>
-                </div>
-              </div>
+              id="card-6"
+              class="mosaico-card-evento "
+              style="background-image: url(./images/Eventos/EspectáculosMusicaEnVivo.jpg)">
+              
             </div>
             <div
-              class="mosaico-card-evento hiddenImg"
-              style="background-image: url(./images/escultor.jpeg)">
-              <div class="descripcion-evento">
-                <h3>Artes escenicas</h3>
-                <div>
-                  <i class="material-icons-outlined">&#xebcc;</i>
-                  <p>1 de Julio - 10 de Julio</p>
-                </div>
-              </div>
+              id="card-5"
+              class="mosaico-card-evento "
+              style="background-image: url(./images/Eventos/IntervencionesUrbanas.jpg)">
+              
             </div>
           </div>
           <div class="divider-m"></div>
@@ -213,12 +184,5 @@
       </section>
     </main>
     <div id="footer"></div>
-
-    <script type="module" src="./app.ts"></script>
-    <script type="module">
-      import { loadHeaderFooter } from "./app.ts";
-      loadHeaderFooter();
-    </script>
-    <script type="module" src="./utils.ts"></script>
   </body>
 </html>

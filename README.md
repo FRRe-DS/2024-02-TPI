@@ -1,7 +1,7 @@
 <h1 align=center><code>Trabajo Practico Final - Desarrollo de Software</code></h1>
 <div align=center>
-    <a href=https://github.com/FRRe-DS/2024-02-TPI/actions/workflows/general.yaml>
-        <img src=https://github.com/FRRe-DS/2024-02-TPI/actions/workflows/general.yaml/badge.svg>
+    <a href=https://github.com/FRRe-DS/2024-02-TPI/actions/workflows/check.yaml>
+        <img src=https://github.com/FRRe-DS/2024-02-TPI/actions/workflows/check.yaml/badge.svg>
     </a>
 </div>
 <br>
@@ -11,24 +11,17 @@ Para trabajar en el cliente utilizamos [pnpm](https://pnpm.io/) con [vite](https
 ``` sh
 cd client
 pnpm install
+
 # Para ejecutar el servidor de desarrollo:
 pnpm run dev
-
-# Para crear los archivos estáticos:
-pnpm run build
 ```
 
-
 ## Server
-> [!IMPORTANT]
-> Para ejecutar la aplicación utilizamos `docker compose`, asi que es necesario que lo tengas instalado.
-
-![Visualización del compose.yaml](assets/compose.svg)
-
 ``` sh
 # https://github.com/casey/just
 # En ./src/Justfile o en cualquier subdirectorio:
 
+just initdb
 just test
 just serve dev  # Inicializa el servidor http con Django, configurado para desarrollo.
 just serve prod # Inicializa un servidor http con Gunicorn, configurado para producción.
@@ -36,6 +29,7 @@ just serve prod # Inicializa un servidor http con Gunicorn, configurado para pro
 # Ahora en otra terminal pueden ejecutar curl para ver si la aplicación está funcionando.
 curl -v http://127.0.0.1:8000/health_check/
 ```
+
 # API DOCS
 
 Se debe consultar desde `/api/` y en cada uno de los recursos listados a continuación:
@@ -63,15 +57,9 @@ La base de datos por defecto incluye un usuario administrador que puedes utiliza
 - **Usuario:** `admin`
 - **Contraseña:** `admin`
 
-
-
 ## Base de Datos
 
-Este proyecto utiliza SQLite como base de datos. Si la base de datos está vacía, ya sea porque se ha clonado el repositorio y no contiene datos, el sistema insertará automáticamente utilizando los archivos SQL que se encuentran en el directorio `server/src/scripts/insert_sql/` utilizando el archivo `inicizalicacion.py` que se encuentra en  el mismo directorio. Estos archivos incluyen instrucciones `INSERT` que agregarán datos iniciales a las tablas necesarias.
+Este proyecto utiliza PostgreSQL como base de datos. Previo a ejecutar la aplicación, corremos un script en python para cargar datos de prueba en ella. Si la base de datos está vacía se insertaran datos automáticamente utilizando el archivo SQL que se encuentran en el directorio `server/src/scripts/`.
 
-### Pasos para inserción automática
-
-**Ejecutar el proyecto mediante just serve** para que el sistema detecte si la base de datos esta vacía
-
-*Esto facilita la configuración inicial del proyecto, permitiendo pruebas y desarrollo sin necesidad de insertar datos manualmente.
+Para ver ejemplos de la ejecución, leer el `server/Justfile`.
 

@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 
 DJANGO_ENV = os.getenv("DJANGO_ENV", default="dev")
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 if DJANGO_ENV == "dev":
@@ -11,6 +12,12 @@ if DJANGO_ENV == "dev":
 
 if DJANGO_ENV == "prod":
     load_dotenv(BASE_DIR / ".env.production")
+
+
+load_dotenv(BASE_DIR / ".env")
+
+DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
+EMAIL_APP_KEY = os.getenv("EMAIL_APP_KEY", default="")
 
 SECRET_KEY = os.getenv(
     "SECRET_KEY", "django-insecure-j+&k(*o_vgi3d01+n^#r14+dagby)7-&-iq!@_2$2t(hd6hw7)"
@@ -49,45 +56,35 @@ LOGGING = {
         },
     },
     "handlers": {
-        "json": {
-            "class": "logging.FileHandler",
-            "filename": "/tmp/app.log",  # Path for JSON logs
-            "formatter": "json",
-        },
         "console": {
             "class": "logging.StreamHandler",
             "formatter": "color",
         },
     },
     "loggers": {
-        "celery": {
-            "handlers": ["json", "console"],
-            "level": "INFO",
-            "propagate": True,
-        },
         "django": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
         "app": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
         "gunicorn.error": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
         "gunicorn.access": {
-            "handlers": ["json", "console"],
+            "handlers": ["console"],
             "level": "INFO",
             "propagate": False,
         },
     },
     "root": {
-        "handlers": ["json", "console"],
+        "handlers": ["console"],
         "level": "INFO",
     },
 }
@@ -105,6 +102,7 @@ INSTALLED_APPS = [
     "rest_framework.authtoken",
     "corsheaders",
     "django.contrib.admindocs",
+    "background_task",
 ]
 
 MIDDLEWARE = [
@@ -148,10 +146,18 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": "tpi",
+        "USER": "postgres",
+        "PASSWORD": "password",
+        "HOST": "localhost",
+        "PORT": "5432",
+        "OPTIONS": {
+            "pool": True,
+        },
     }
 }
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -184,13 +190,3 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-CELERY_TIMEZONE = "UTC"
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
-
-CELERY_BROKER_URL = "redis://localhost:6379/0"
-CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
-CELERY_RESULT_BACKEND = "redis://localhost:6379/0"
-CELERYD_HIJACK_ROOT_LOGGER = False
-CELERY_BROKER_CONNECTION_MAX_RETRIES = 5
