@@ -22,7 +22,7 @@ const imagenes = [
 	"../images/Eventos/FeriaDeArtesania.jpg",
 ];
 
-function elegirImagen(nombreImg: string) {
+export function elegirImagen(nombreImg: string) {
 	const indice = imagenes.findIndex((ruta) =>
 		ruta.includes(nombreImg.split(" ")[0]),
 	);
