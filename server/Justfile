@@ -5,7 +5,7 @@ serve mode="dev": cargardb
     set -eo pipefail
     if [ "{{mode}}" = "dev" ]; then \
         cd ./src/
-        DJANGO_ENV="{{mode}}" uv run ./manage.py runserver 0.0.0.0:8000 
+        DJANGO_ENV="{{mode}}" uv run ./manage.py runserver 127.0.0.1:8000 
     elif [ "{{mode}}" = "prod" ]; then \
         cd ./src/
         DJANGO_ENV="{{mode}}" ../.venv/bin/gunicorn -c gunicorn.conf.py backend.wsgi:application
