@@ -1,5 +1,10 @@
-const URL_EVENTOS = "http://localhost:8000/api/escultores/";
+import { loadHTML } from "../app";
+
+
+const URL_ESCULTORES = "http://localhost:8000/api/escultores/";
 const URL_PAIS = "http://localhost:8000/api/paises/";
+const URL_TEMATICA= "http://localhost:8000/api/tematica/";
+const URL_EVENTOS = "http://localhost:8000/api/eventos/";
 
 // ------ Get pais del escultor ------
 async function loadPais(url: string, idPais: number) {
@@ -13,16 +18,49 @@ async function loadPais(url: string, idPais: number) {
 	}
 }
 
+// ------ Get tematica del certamen ------
+
+async function loadInfoCertamen(URL:string, id:string) {
+  try{
+    const res = await fetch(`${URL}${id}`)
+    const evento = await res.json() 
+
+		return evento.tematica_id
+ 
+  }catch(error){
+    console.log(`Error al carga el evento: ${error}`);
+  }
+  
+}
+async function loadTematica(URL:string, id:string){
+  try{
+    const res = await fetch(`${URL}${id}`)
+    const tematica = await res.json() 
+    
+    return tematica
+   
+  }catch(error){
+    console.log(`Error al carga la tematica: ${error}`);
+  }  
+}
+
+const tematicaObjeto = await loadTematica(URL_TEMATICA, await loadInfoCertamen(URL_EVENTOS,"1")) 
+
+const tematica = document.getElementById("tematica") as HTMLSpanElement
+
+tematica.textContent = tematicaObjeto.nombre
+
+
 // ------ Get url de la foto del escultor ------
 function urlFotoEscultor(url: string) {
-	const foto_url = url.slice(url.lastIndexOf("/") + 1);
+	
 
-	if (/\.[a-zA-Z]{1,5}$/.test(url)) {
-		// TODO: no se porque esto no anda:
-		// return `../../../server/src/perfiles/${foto_url}`
-		return "../images/escultor-1.jpg";
+	if (url.includes("perfiles")) {
+		// Cuando la imagen la cargamos desde la bd:
+		return url
 	}
 
+	const foto_url = url.slice(url.lastIndexOf("/") + 1);
 	return `https://drive.google.com/thumbnail?id=${foto_url}`;;
 }
 
@@ -42,12 +80,14 @@ async function loadEscultores(url: string) {
 		const res = await fetch(url);
 		const escultores = await res.json();
 		const contenedor_escultores = document.querySelector(".grid-escultores");
+		const totalEscultores = document.getElementById("total-escultores") as HTMLSpanElement
+
+		totalEscultores.textContent = escultores.length
 
 		if (contenedor_escultores) {
 			for (const escultor of escultores) {
 				const article = document.createElement("article");
 
-				// TODO: Falta agregar la clase hiddenImg para que tenga animacion, pero no se porque no funca, tengo que verlo
 				article.classList.add("card-escultor");
 				const foto = urlFotoEscultor(escultor.foto);
 				const pais = await loadPais(URL_PAIS, escultor.pais_id);
@@ -78,8 +118,7 @@ async function loadEscultores(url: string) {
 				contenedor_escultores.appendChild(article);
 			}
 
-		// Agarro todos los botones de votar, y despues hago un for each para agregrarles a todos un eventlistener y usar
-		// el event.target para obtener el id del escultor que esta en un data-id en cada voton
+		// Agarro todos los botones de votar, y despues hago un for each para agregrarles a todos un eventlistener y usar el event.target para obtener el id del escultor que esta en un data-id en cada voton
 		const botonesVotar = document.querySelectorAll(".btn-votar")
 
 		const overlay = document.querySelector(".overlay") as HTMLButtonElement;
@@ -98,12 +137,10 @@ async function loadEscultores(url: string) {
 				event.preventDefault();
 				const btnTarget = event.target as HTMLButtonElement; 
 
-				// con el id del escultor puedo hacer escultores[id].nombre, etc
+				// con el id del escultor puedo hacer escultores[id-1].nombre, etc
 				const id = btnTarget.getAttribute("data-id") ?? " ";
 
 				const email = localStorage.getItem("userEmail");
-
-			
 		
 				// Al hacer click en el btn votar en un escultor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se
 				// voto antes y quedo validado el mail, entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de
@@ -111,7 +148,12 @@ async function loadEscultores(url: string) {
 				if (email) {
 					overlay.style.display = "block";
 					popupContainer.style.display = "flex";
+					const nombreEscultor = document.getElementById("nombre-escultor") as HTMLHeadElement
+				
+					nombreEscultor.textContent = formatearNombre(escultores[Number(id) -1].nombre, escultores[Number(id) -1].apellido)
+
 					const formPopUp = document.createElement("form");
+
 					formPopUp.id = `votoForm-${id}`
 
 					formPopUp.innerHTML = `
@@ -206,7 +248,10 @@ function Voto(correo: string, escultor_id: string) {
 	});
 }
 
-loadEscultores(URL_EVENTOS);
+loadHTML("header.html", "header", "certamen");
+
+loadEscultores(URL_ESCULTORES);
+
 
 
 

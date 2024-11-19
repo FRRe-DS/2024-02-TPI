@@ -1,33 +1,5 @@
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
-import { formatearFecha } from "../app";
-
-
-// ------ TODO: Elegir imagen, esto es solamente provisorio ahsta que gonza agregue las imagenes en la BD ------
-const imagenes = [
-	"../images/Eventos/ConcursoInternacionalDeEsculturas.jpg",
-	"../images/Eventos/ConferenciasYcharlas.jpg",
-	"../images/Eventos/EspectáculosMusicaEnVivo.jpg",
-	"../images/Eventos/ExposicionesDeArte.jpg",
-	"../images/Eventos/IntervencionesUrbanas.jpg",
-	"../images/Eventos/RecorridosGuiado.jpg",
-	"../images/Eventos/TalleresYCapacitacion.jpg",
-	"../images/Eventos/ExhibicionesDeRealidadVirtual.jpg",
-	"../images/Eventos/PerformanceEnVivo.jpg",
-	"../images/Eventos/FestivalGastronomico.jpg",
-	"../images/Eventos/ProyeccionesDeCine.jpg",
-	"../images/Eventos/PremiaciónyClausura.jpg",
-	"../images/Eventos/ActividadesParaNiños.jpg",
-	"../images/Eventos/ArtistasInvitadosInternacionales.jpg",
-	"../images/Eventos/FeriaDeArtesania.jpg",
-];
-
-function elegirImagen(nombreImg: string) {
-	const indice = imagenes.findIndex((ruta) =>
-		ruta.includes(nombreImg.split(" ")[0]),
-	);
-	console.log(imagenes[indice]);
-	return imagenes[indice];
-}
+import { formatearFecha, loadHTML } from "../app";
 
 // ------ Get eventos ------
 
@@ -35,7 +7,7 @@ async function loadEventos(url: string) {
 	try {
 		const res = await fetch(url);
 		const eventos = await res.json();
-		console.log(eventos);
+
 
 		const contendor_eventos = document.querySelector(".events-gallery");
 
@@ -44,10 +16,8 @@ async function loadEventos(url: string) {
 				const card = document.createElement("div");
 				card.classList.add("event-card");
 
-				// card.style.backgroundImage = `url('${elegirImagen(evento.nombre)}')`
-
 				card.innerHTML = `
-            <img class="card-img-evento" loading="lazy" src="${elegirImagen(evento.nombre)}" alt="${evento.nombre}">
+            <img class="card-img-evento" loading="lazy" src="${evento.foto}" alt="${evento.nombre}">
             <div class="card-content">
               <h2>${evento.nombre}</h2>
               <div>
@@ -66,4 +36,5 @@ async function loadEventos(url: string) {
 }
 
 // ------------
+loadHTML("header.html", "header", "eventos");
 loadEventos(URL_EVENTOS);
