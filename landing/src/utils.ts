@@ -1,13 +1,14 @@
-function loadNombre() {
-	const queryParams = new URLSearchParams(window.location.search);
-	let nombre_escultor = queryParams.get("nombre-escultor");
-	const titulo = document.getElementById("nombre-escultor") as HTMLHeadElement;
+export function setPaginaActual(pagina: string) {
+	const paginas = ["inicio", "eventos", "certamen"];
 
-	if (nombre_escultor) {
-		nombre_escultor = decodeURIComponent(nombre_escultor);
-		titulo.textContent = nombre_escultor;
-	} else {
-		titulo.textContent = " ";
+	const indice = paginas.findIndex((el) => el.includes(pagina));
+
+	const paginaActual = document.getElementById(
+		`${paginas[indice]}-tag`,
+	) as HTMLElement;
+
+	if (paginaActual) {
+		paginaActual.classList.add("paginaActual");
 	}
 }
 
@@ -55,5 +56,3 @@ for (const element of hiddenElements) {
 for (const image of hiddenImgElements) {
 	observer.observe(image);
 }
-
-loadNombre();

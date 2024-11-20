@@ -1,5 +1,25 @@
-const URL_EVENTOS = "http://localhost:8000/api/escultores/";
+import { loadHTML } from "../app";
+
+const URL_ESCULTORES = "http://localhost:8000/api/escultores/";
 const URL_PAIS = "http://localhost:8000/api/paises/";
+const URL_TEMATICA = "http://localhost:8000/api/tematica/";
+const URL_EVENTOS = "http://localhost:8000/api/eventos/";
+
+async function inicializar() {
+	try {
+		const tematicaId = await loadInfoCertamen(URL_EVENTOS, "1");
+		const tematicaObjeto = await loadTematica(URL_TEMATICA, tematicaId);
+
+		const tematica = document.getElementById("tematica") as HTMLSpanElement;
+		if (tematica && tematicaObjeto) {
+			tematica.textContent = tematicaObjeto.nombre;
+		}
+
+		await loadEscultores(URL_ESCULTORES);
+	} catch (error) {
+		console.error("Error inicializando la página:", error);
+	}
+}
 
 // ------ Get pais del escultor ------
 async function loadPais(url: string, idPais: number) {
@@ -13,23 +33,45 @@ async function loadPais(url: string, idPais: number) {
 	}
 }
 
+// ------ Get tematica del certamen ------
+
+async function loadInfoCertamen(URL: string, id: string) {
+	try {
+		const res = await fetch(`${URL}${id}`);
+		const evento = await res.json();
+
+		return evento.tematica_id;
+	} catch (error) {
+		console.log(`Error al carga el evento: ${error}`);
+	}
+}
+async function loadTematica(URL: string, id: string) {
+	try {
+		const res = await fetch(`${URL}${id}`);
+		const tematica = await res.json();
+
+		return tematica;
+	} catch (error) {
+		console.log(`Error al carga la tematica: ${error}`);
+	}
+}
+
 // ------ Get url de la foto del escultor ------
 function urlFotoEscultor(url: string) {
-	const foto_url = url.slice(url.lastIndexOf("/") + 1);
-
-	if (/\.[a-zA-Z]{1,5}$/.test(url)) {
-		// TODO: no se porque esto no anda:
-		// return `../../../server/src/perfiles/${foto_url}`
-		return "../images/escultor-1.jpg";
+	if (url.includes("perfiles")) {
+		// Cuando la imagen la cargamos desde la bd:
+		return url;
 	}
 
-	return `https://drive.google.com/thumbnail?id=${foto_url}`;;
+	const foto_url = url.slice(url.lastIndexOf("/") + 1);
+	return `https://drive.google.com/thumbnail?id=${foto_url}`;
 }
 
 // ------ Formatear correctamente el nombre ------
 function formatearNombre(nombre: string, apellido: string) {
 	const nom = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
-	const ape = apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase();
+	const ape =
+		apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase();
 
 	const nombreFormateado = `${nom} ${ape}`;
 	return nombreFormateado;
@@ -42,12 +84,16 @@ async function loadEscultores(url: string) {
 		const res = await fetch(url);
 		const escultores = await res.json();
 		const contenedor_escultores = document.querySelector(".grid-escultores");
+		const totalEscultores = document.getElementById(
+			"total-escultores",
+		) as HTMLSpanElement;
+
+		totalEscultores.textContent = escultores.length;
 
 		if (contenedor_escultores) {
 			for (const escultor of escultores) {
 				const article = document.createElement("article");
 
-				// TODO: Falta agregar la clase hiddenImg para que tenga animacion, pero no se porque no funca, tengo que verlo
 				article.classList.add("card-escultor");
 				const foto = urlFotoEscultor(escultor.foto);
 				const pais = await loadPais(URL_PAIS, escultor.pais_id);
@@ -78,43 +124,48 @@ async function loadEscultores(url: string) {
 				contenedor_escultores.appendChild(article);
 			}
 
-		// Agarro todos los botones de votar, y despues hago un for each para agregrarles a todos un eventlistener y usar
-		// el event.target para obtener el id del escultor que esta en un data-id en cada voton
-		const botonesVotar = document.querySelectorAll(".btn-votar")
+			// Agarro todos los botones de votar, y despues hago un for each para agregrarles a todos un eventlistener y usar el event.target para obtener el id del escultor que esta en un data-id en cada voton
+			const botonesVotar = document.querySelectorAll(".btn-votar");
 
-		const overlay = document.querySelector(".overlay") as HTMLButtonElement;
-		const popupContainer = document.querySelector(
-			".popUp-container",
-		) as HTMLDivElement;
-		const popup = document.querySelector(
-			".popup",
-		) as HTMLElement;
-		const cerrar_popup = document.querySelector(
-			".cerrar-popup",
-		) as HTMLButtonElement;
+			const overlay = document.querySelector(".overlay") as HTMLButtonElement;
+			const popupContainer = document.querySelector(
+				".popUp-container",
+			) as HTMLDivElement;
+			const popup = document.querySelector(".popup") as HTMLElement;
+			const cerrar_popup = document.querySelector(
+				".cerrar-popup",
+			) as HTMLButtonElement;
 
-		botonesVotar.forEach((boton)=>{
-			boton.addEventListener("click", (event)=>{
-				event.preventDefault();
-				const btnTarget = event.target as HTMLButtonElement; 
+			for (const boton of botonesVotar) {
+				boton.addEventListener("click", (event) => {
+					event.preventDefault();
+					const btnTarget = event.target as HTMLButtonElement;
 
-				// con el id del escultor puedo hacer escultores[id].nombre, etc
-				const id = btnTarget.getAttribute("data-id") ?? " ";
+					// con el id del escultor puedo hacer escultores[id-1].nombre, etc
+					const id = btnTarget.getAttribute("data-id") ?? " ";
 
-				const email = localStorage.getItem("userEmail");
+					const email = localStorage.getItem("userEmail");
 
-			
-		
-				// Al hacer click en el btn votar en un escultor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se
-				// voto antes y quedo validado el mail, entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de
-				// validadr.html para validad su mail.	
-				if (email) {
-					overlay.style.display = "block";
-					popupContainer.style.display = "flex";
-					const formPopUp = document.createElement("form");
-					formPopUp.id = `votoForm-${id}`
+					// Al hacer click en el btn votar en un escultor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se
+					// voto antes y quedo validado el mail, entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de
+					// validadr.html para validad su mail.
+					if (email) {
+						overlay.style.display = "block";
+						popupContainer.style.display = "flex";
+						const nombreEscultor = document.getElementById(
+							"nombre-escultor",
+						) as HTMLHeadElement;
 
-					formPopUp.innerHTML = `
+						nombreEscultor.textContent = formatearNombre(
+							escultores[Number(id) - 1].nombre,
+							escultores[Number(id) - 1].apellido,
+						);
+
+						const formPopUp = document.createElement("form");
+
+						formPopUp.id = `votoForm-${id}`;
+
+						formPopUp.innerHTML = `
 					
 							<div class="rating">
 								<input value="5" name="rating" id="star5" type="radio" />
@@ -131,31 +182,28 @@ async function loadEscultores(url: string) {
 
 							<button type="submit" class="btn-votarV2">Votar</button>
 						
-					`
+					`;
 
-					popup.appendChild(formPopUp)
-					
-					Voto(email, id);
+						popup.appendChild(formPopUp);
 
-				} else {
-					// Le paso el id a validar.html entonces puedo obtener los datos de ese escultor, su nombre y su foto
-					window.location.href = `./validar.html?id=${id}`;
-				}
-					
-				})
-			})
+						Voto(email, id);
+					} else {
+						// Le paso el id a validar.html entonces puedo obtener los datos de ese escultor, su nombre y su foto
+						window.location.href = `./validar.html?id=${id}`;
+					}
+				});
+			}
 
-		if (cerrar_popup){
-			cerrar_popup.addEventListener("click", () => {
-				const form = popup?.querySelector('form');
-				overlay.style.display = "none";
-				popupContainer.style.display = "none";
-				if (form) {
-					popup.removeChild(form);
-				}
-			});
-		}
-	
+			if (cerrar_popup) {
+				cerrar_popup.addEventListener("click", () => {
+					const form = popup?.querySelector("form");
+					overlay.style.display = "none";
+					popupContainer.style.display = "none";
+					if (form) {
+						popup.removeChild(form);
+					}
+				});
+			}
 		}
 	} catch (error) {
 		console.log(`Error al carga los escultores: ${error}`);
@@ -206,9 +254,5 @@ function Voto(correo: string, escultor_id: string) {
 	});
 }
 
-loadEscultores(URL_EVENTOS);
-
-
-
-
-
+loadHTML("header.html", "header", "certamen");
+inicializar();
