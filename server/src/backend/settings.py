@@ -15,7 +15,6 @@ if DJANGO_ENV == "prod":
 
 
 load_dotenv(BASE_DIR / ".env")
-
 DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
 EMAIL_APP_KEY = os.getenv("EMAIL_APP_KEY", default="")
 
@@ -25,7 +24,7 @@ SECRET_KEY = os.getenv(
 
 DEBUG = os.getenv("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "localhost").split(",")
+ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 LOGGING = {
     "version": 1,
