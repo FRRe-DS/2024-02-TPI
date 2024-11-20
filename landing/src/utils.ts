@@ -1,20 +1,16 @@
-export function setPaginaActual(pagina: string){
-	const paginas = ["inicio", "eventos", "certamen"]
+export function setPaginaActual(pagina: string) {
+	const paginas = ["inicio", "eventos", "certamen"];
 
-	
-	const indice = paginas.findIndex((el)=> el.includes(pagina))
-	
+	const indice = paginas.findIndex((el) => el.includes(pagina));
 
-	const paginaActual = document.getElementById(`${paginas[indice]}-tag`) as HTMLElement
-	
-	if (paginaActual){
-		paginaActual.classList.add("paginaActual")
+	const paginaActual = document.getElementById(
+		`${paginas[indice]}-tag`,
+	) as HTMLElement;
+
+	if (paginaActual) {
+		paginaActual.classList.add("paginaActual");
 	}
-	
-	
 }
-
-
 
 let lastScrollTop = 0;
 const header = document.getElementById("header");
@@ -60,5 +56,3 @@ for (const element of hiddenElements) {
 for (const image of hiddenImgElements) {
 	observer.observe(image);
 }
-
-

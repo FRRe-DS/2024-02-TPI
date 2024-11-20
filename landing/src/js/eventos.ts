@@ -8,7 +8,6 @@ async function loadEventos(url: string) {
 		const res = await fetch(url);
 		const eventos = await res.json();
 
-
 		const contendor_eventos = document.querySelector(".events-gallery");
 
 		if (contendor_eventos) {
@@ -25,7 +24,7 @@ async function loadEventos(url: string) {
                 <p>${formatearFecha(evento.fecha_inicio)} - \u200B<span>${formatearFecha(evento.fecha_fin)}</ span></p>
               </div>
             </div>
-            <a href="${evento.id === 1 ? 'certamen.html' : `detalle_evento.html?id=${evento.id}`}" class="btn-secundarioV3">Ver detalles</a>
+            <a href="${evento.id === 1 ? "certamen.html" : `detalle_evento.html?id=${evento.id}`}" class="btn-secundarioV3">Ver detalles</a>
       `;
 				contendor_eventos.appendChild(card);
 			}

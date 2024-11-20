@@ -1,61 +1,62 @@
-
 import { formatearFecha, loadHTML } from "../app";
 
-
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
-const URL_LUGAR= "http://localhost:8000/api/lugar/";
+const URL_LUGAR = "http://localhost:8000/api/lugar/";
 
+async function loadLugar(URL: string, id: string) {
+	try {
+		const res = await fetch(`${URL}${id}`);
+		const lugar = await res.json();
 
-async function loadLugar(URL:string, id:string){
-  try{
-    const res = await fetch(`${URL}${id}`)
-    const lugar = await res.json() 
-   
-    return lugar
-   
-  }catch(error){
-    console.log(`Error al carga el lugar: ${error}`);
-  }
-  
+		return lugar;
+	} catch (error) {
+		console.log(`Error al carga el lugar: ${error}`);
+	}
 }
 
+async function loadEvento(URL: string, id: string) {
+	try {
+		const res = await fetch(`${URL}${id}`);
+		const evento = await res.json();
 
-async function loadEvento(URL:string, id:string) {
-  try{
-    const res = await fetch(`${URL}${id}`)
-    const evento = await res.json() 
+		const titulo = document.querySelector(
+			"#nombre-evento",
+		) as HTMLHeadingElement;
+		const titulo2 = document.querySelector(
+			"#nombre-evento-h2",
+		) as HTMLHeadingElement;
+		const fecha = document.querySelector("#fecha-evento") as HTMLHeadingElement;
+		const descripcion = document.querySelector(
+			"#descripcion-evento",
+		) as HTMLParagraphElement;
+		const lugarNombre = document.querySelector(
+			"#lugar-evento",
+		) as HTMLHeadingElement;
+		const lugarDescripcion = document.querySelector(
+			"#lugar-descripcion",
+		) as HTMLParagraphElement;
+		const lugar = await loadLugar(URL_LUGAR, evento.lugar_id);
 
-    const titulo = document.querySelector("#nombre-evento") as HTMLHeadingElement
-    const titulo2 = document.querySelector("#nombre-evento-h2") as HTMLHeadingElement
-    const fecha = document.querySelector("#fecha-evento") as HTMLHeadingElement
-    const descripcion = document.querySelector("#descripcion-evento") as HTMLParagraphElement
-    const lugarNombre = document.querySelector("#lugar-evento") as HTMLHeadingElement
-    const lugarDescripcion = document.querySelector("#lugar-descripcion") as HTMLParagraphElement
-    const lugar = await loadLugar(URL_LUGAR, evento.lugar_id) 
- 
-    const imagenEvento = document.querySelector("#imagen-evento") as HTMLImageElement 
-    
-    titulo.textContent = evento.nombre
-    titulo2.textContent = evento.nombre
-    fecha.textContent = `${formatearFecha(evento.fecha_inicio)} - ${formatearFecha(evento.fecha_fin)}`
-    descripcion.textContent = evento.descripcion
-    lugarNombre.textContent = lugar.nombre
-    lugarDescripcion.textContent = lugar.descripcion
+		const imagenEvento = document.querySelector(
+			"#imagen-evento",
+		) as HTMLImageElement;
 
-    imagenEvento.src = evento.foto;
-    imagenEvento.title = evento.nombre;
+		titulo.textContent = evento.nombre;
+		titulo2.textContent = evento.nombre;
+		fecha.textContent = `${formatearFecha(evento.fecha_inicio)} - ${formatearFecha(evento.fecha_fin)}`;
+		descripcion.textContent = evento.descripcion;
+		lugarNombre.textContent = lugar.nombre;
+		lugarDescripcion.textContent = lugar.descripcion;
 
- 
-  }catch(error){
-    console.log(`Error al carga el evento: ${error}`);
-  }
-  
+		imagenEvento.src = evento.foto;
+		imagenEvento.title = evento.nombre;
+	} catch (error) {
+		console.log(`Error al carga el evento: ${error}`);
+	}
 }
 
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id") as string;
 
 loadHTML("header.html", "header", "eventos");
-loadEvento(URL_EVENTOS, id)
-
-
+loadEvento(URL_EVENTOS, id);

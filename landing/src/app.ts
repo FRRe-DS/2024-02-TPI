@@ -12,8 +12,11 @@ export function formatearFecha(fechaString: string) {
 	return fecha.toLocaleDateString("es-ES", opciones);
 }
 
-
-export function loadHTML(file: string, elementId: string, paginaActual: string): void {
+export function loadHTML(
+	file: string,
+	elementId: string,
+	paginaActual: string,
+): void {
 	fetch(file)
 		.then((response) => {
 			if (!response.ok) throw Error("Error al cargar el archivo");
@@ -23,10 +26,9 @@ export function loadHTML(file: string, elementId: string, paginaActual: string):
 			const element = document.getElementById(elementId);
 			if (element) {
 				element.innerHTML = data;
-				if (paginaActual){
-					setPaginaActual(paginaActual)
+				if (paginaActual) {
+					setPaginaActual(paginaActual);
 				}
-				
 			} else {
 				console.error(`Elemento con ID "${elementId}" no fue encontrado.`);
 			}
@@ -34,7 +36,4 @@ export function loadHTML(file: string, elementId: string, paginaActual: string):
 		.catch((error) => console.error(error));
 }
 
-
 loadHTML("footer.html", "footer", "");
-
-

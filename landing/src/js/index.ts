@@ -1,8 +1,6 @@
 const URL_EVENTOS = "http://localhost:8000/api/eventos/";
 import { loadHTML } from "../app";
 
-
-
 function formatearFecha(fechaString: string) {
 	const [year, month, day] = fechaString.split("-").map(Number);
 
@@ -22,14 +20,12 @@ async function loadEventos(url: string) {
 		const res = await fetch(url);
 		const evento = await res.json();
 
-
 		for (let index = 0; index < 7; index++) {
 			const card = document.getElementById(`card-${index}`);
 
-
 			if (card) {
 				card.innerHTML = `
-				 <a class="mosaico-a" href="${evento[index].id === 1 ? 'certamen.html' : `detalle_evento.html?id=${evento[index].id}`}">
+				 <a class="mosaico-a" href="${evento[index].id === 1 ? "certamen.html" : `detalle_evento.html?id=${evento[index].id}`}">
 					<img class="card-img-evento" loading="lazy" src="${evento[index].foto}" alt="${evento[index].nombre}">
           <div class="descripcion-evento">
             <h3>${evento[index].nombre}</h3>
@@ -49,4 +45,3 @@ async function loadEventos(url: string) {
 
 loadHTML("header.html", "header", "inicio");
 loadEventos(URL_EVENTOS);
-

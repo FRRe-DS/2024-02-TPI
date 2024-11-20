@@ -78,12 +78,11 @@ header {
 	padding-inline: clamp(10px, 5vw, 4rem);
 }
 
-.paginaActual{
+.paginaActual {
 	position: relative;
-	
 }
 
-.paginaActual::before{
+.paginaActual::before {
 	content: "";
 	position: absolute;
 	bottom: -5px;
@@ -122,17 +121,15 @@ header nav ul {
 	gap: 32px;
 	padding: 0;
 	margin: 0;
-
 }
 
-.nav-btn{
+.nav-btn {
 	color: var(--bg-2);
 }
 
-.nav-btn:hover{
+.nav-btn:hover {
 	color: #e5e5e5;
 }
-
 
 header div {
 	width: 113px;
@@ -300,7 +297,6 @@ footer {
 	text-transform: uppercase;
 	font-weight: 600;
 	min-width: 250px;
-	
 }
 
 .btn-secundario {
@@ -315,17 +311,15 @@ footer {
 	background-color: var(--bg);
 	border: 1px solid #000;
 	transition: transform ease 0.2s;
-
 }
 
-.btn-secundario:hover{
+.btn-secundario:hover {
 	transform: translate(0, -3px);
-
 }
 
-.btn-primario:hover{
+.btn-primario:hover {
 	transform: translate(0, -3px);
-	}
+}
 
 #up {
 	position: absolute;
@@ -530,17 +524,14 @@ footer {
 }
 
 .mosaico-card-evento {
-	position:relative;
-	overflow: hidden;	
+	position: relative;
+	overflow: hidden;
 	padding: 12px 14px;
 	border-radius: 20px;
 	width: 100%;
-
-
-	
 }
 
-.mosaico-a{
+.mosaico-a {
 	transition: transform 0.3s ease;
 	width: 100%;
 	height: 100%;
@@ -549,13 +540,13 @@ footer {
 	cursor: pointer;
 }
 
-.mosaico-card-evento .card-img-evento{
+.mosaico-card-evento .card-img-evento {
 	position: absolute;
 	top: 0;
 	left: 0;
 }
 
-.mosaico-card-evento:hover .card-img-evento{
+.mosaico-card-evento:hover .card-img-evento {
 	transform: scale(1.1);
 }
 
@@ -569,9 +560,7 @@ footer {
 	box-shadow: inset 0 -50px 90px 0 rgba(0, 0, 0, 0.8);
 	pointer-events: none;
 	z-index: 1;
-
 }
-
 
 .descripcion-evento {
 	display: flex;
@@ -579,8 +568,6 @@ footer {
 	gap: 8px;
 	z-index: 10;
 }
-
-
 
 .descripcion-evento div {
 	display: inline-flex;
@@ -723,28 +710,24 @@ footer {
 	font-size: clamp(2rem, 0.571rem + 3.81vw, 4rem);
 }
 
-.container-title-evento{
+.container-title-evento {
 	position: relative;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	z-index: 20;
-
 }
 
 .container-title-evento h1 {
-
 	text-align: center;
 	font-size: clamp(2rem, 0.571rem + 3.81vw, 4rem);
 }
 
 .container-title-evento p {
-
-	font-family:  "Dancing Script", cursive; 
+	font-family: "Dancing Script", cursive;
 	text-align: center;
-	font-size: clamp(1rem, -0.429rem + 3.81vw, 3rem)
-
+	font-size: clamp(1rem, -0.429rem + 3.81vw, 3rem);
 }
 
 #left2 {
@@ -880,22 +863,20 @@ footer {
 	display: grid;
 	grid-template-columns: 1fr max-content;
 	gap: 2rem;
-	
 }
 
-.imagen-evento{
+.imagen-evento {
 	padding-block: 36px 0;
 	width: 400px;
-	
+
 	height: 500px;
 }
 
-.imagen-evento img{
+.imagen-evento img {
 	object-fit: cover;
 	width: 100%;
 	height: 100%;
 	border-radius: 20px;
-
 }
 
 /* ---seccion certamen--- */
@@ -907,10 +888,9 @@ footer {
 	align-items: center;
 }
 
-.pad-bottom-36{
+.pad-bottom-36 {
 	padding-bottom: 36px;
 }
-
 
 .h2-mas-p {
 	padding-top: 36px;
@@ -942,7 +922,6 @@ footer {
 	place-items: center;
 	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 	gap: 3rem;
-
 }
 
 .card-escultor {
@@ -954,15 +933,15 @@ footer {
 	transition: transform 0.3s ease;
 }
 
-.card-escultor::before{
-	content: '';
+.card-escultor::before {
+	content: "";
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
 	z-index: 5;
-	background-color: rgba(0, 0, 0, 0.40);
+	background-color: rgba(0, 0, 0, 0.4);
 	pointer-events: none;
 }
 
@@ -971,12 +950,12 @@ footer {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-	
+
 	cursor: pointer;
 	transition: 0.5s ease;
 }
 
-.wrap-card{
+.wrap-card {
 	position: absolute;
 	top: 0;
 	left: 0;
@@ -989,7 +968,7 @@ footer {
 	padding: 16px;
 }
 
-.card-escultor:hover .escultor-img  {
+.card-escultor:hover .escultor-img {
 	transform: scale(1.1);
 }
 
@@ -1007,11 +986,8 @@ footer {
 }
 
 .nombre-origen {
-
 	width: 100%;
-	display:grid;
-
-	
+	display: grid;
 }
 
 .nombre-origen .space h3 {
@@ -1040,8 +1016,6 @@ footer {
 	margin-top: 10px;
 	transition: all .1s ease;
 }
-
-
 
 .white {
 	background-color: var(--bg-2);
@@ -1399,15 +1373,13 @@ form {
 }
 
 @media (max-width: 850px) {
-
 	.detalle-evento {
 		grid-template-columns: 1fr;
 		gap: 0rem;
 	}
 
-	.imagen-evento{
+	.imagen-evento {
 		width: 100%;
-		
 	}
 
 	.container-votar {
