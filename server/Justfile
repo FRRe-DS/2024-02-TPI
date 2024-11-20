@@ -7,8 +7,8 @@ serve mode="dev": cargardb
         cd ./src/
         DJANGO_ENV="{{mode}}" uv run ./manage.py runserver 0.0.0.0:8000 
     elif [ "{{mode}}" = "prod" ]; then \
-        cd ./src/
-        DJANGO_ENV="{{mode}}" ../.venv/bin/gunicorn -c gunicorn.conf.py backend.wsgi:application
+        docker build -t django-rest .
+        docker run -p 8000:8000 --network=host django-rest:latest
     fi
 
 runtasks:
