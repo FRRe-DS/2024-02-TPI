@@ -195,6 +195,7 @@ class Evento(models.Model):
         fecha_fin (DateField): Fecha de fin del evento.
         descripcion (CharField): Descripción del evento, requerida.
         tematica_id (ForeignKey): Relación con la temática del evento.
+        foto (fileField): Almacena una unica foto del evento.
     """
 
     id = models.AutoField(primary_key=True)
@@ -206,6 +207,7 @@ class Evento(models.Model):
     tematica_id = models.ForeignKey(
         Tematica, on_delete=models.CASCADE, db_column="tematica_id"
     )
+    foto = models.FileField(upload_to="eventos/", blank=True, null=True)
 
 
 class EscultorEvento(models.Model):

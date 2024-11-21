@@ -31,36 +31,45 @@
 
     <script type="module" src="./app.ts"></script>
     <script type="module" src="./utils.ts"></script>
-    <script type="module" src="./js/validar.ts"></script>
+    <script type="module" src="./js/detalle_escultor.ts"></script>
+    
+   
   </head>
   <body>
     <div id="header"></div>
     <main>
-      <section class="hero-section">
-        <section id="up"></section>
-        <section id="down"></section>
-        <section id="left"></section>
-        <section id="right"></section>
-        <div class="pantalla-completa">
-          <article class="container-votar">
-            <div class="formulario-voto">
-              <h1 id="nombre-escultor"></h1>
-              <p>Para confirmar su voto, ingrese su dirección de correo.</p>
-              <form id="votoForm">
-                <input
-                  id="email"
-                  type="email"
-                  class="input-email"
-                  placeholder="ejemplo@gmail.com" />
-                <button type="submit" class="btn-enviar-email" id="btn-votar">
-                  Enviar <i class="material-icons-outlined">&#xe5c8;</i>
-                </button>
-              </form>
-            </div>
-            <img id="img_escultor"/>
-          </article>
+      <section class="container-title">
+        <div class="container-title-evento"> 
+          <h1 id="nombre-evento"></h1>
+          <p id="fecha-evento"></p>
         </div>
+       
+        <div id="left2"></div>
+        <div id="right2"></div>
       </section>
+      <div class="wrapped2">
+        <div class="section-certamen pad-bottom-36">
+          <section class=" detalle-evento">
+          <div class="h2-mas-p ">
+            <div>
+              <h2 id="nombre-evento-h2"></h2>
+              <div class="divider-sm"></div>
+            </div>
+            <div class="info-certamen">
+              <p class="text-pretty" id="descripcion-evento">
+              </p>
+              <h3 id="lugar-evento"></h3>
+              <p id="lugar-descripcion"></p>
+            </div>
+            
+          </div>   
+          <div class="imagen-evento"> 
+            <img id="imagen-evento"> </div>
+         
+        </section>    
+        </div>
+    
+      </div>
     </main>
     <div id="footer"></div>
   </body>

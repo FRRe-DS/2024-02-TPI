@@ -57,7 +57,7 @@ async function loadTematica(URL: string, id: string) {
 }
 
 // ------ Get url de la foto del escultor ------
-function urlFotoEscultor(url: string) {
+export function urlFotoEscultor(url: string) {
 	if (url.includes("perfiles")) {
 		// Cuando la imagen la cargamos desde la bd:
 		return url;
@@ -68,7 +68,7 @@ function urlFotoEscultor(url: string) {
 }
 
 // ------ Formatear correctamente el nombre ------
-function formatearNombre(nombre: string, apellido: string) {
+export function formatearNombre(nombre: string, apellido: string): string {
 	const nom = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
 	const ape =
 		apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase();
@@ -98,7 +98,7 @@ async function loadEscultores(url: string) {
 				const foto = urlFotoEscultor(escultor.foto);
 				const pais = await loadPais(URL_PAIS, escultor.pais_id);
 				const NyA = formatearNombre(escultor.nombre, escultor.apellido);
-
+				
 				article.innerHTML = `
 						
 						<img
@@ -107,7 +107,7 @@ async function loadEscultores(url: string) {
 								alt="${NyA}"
 								class="escultor-img" />
 						<div class="wrap-card">
-							<a href="">Ver más</a>
+							 <a href="detalle_escultor.html?id=${escultor.id}">Ver más</a>
 							<div class="nombre-origen">
 									<div class="space">
 									<h3 id="nombre-escultor" >${NyA}</h3>

@@ -1,3 +1,6 @@
+import { formatearNombre, urlFotoEscultor } from "./certamen";
+const URL_ESCULTORES = "http://localhost:8000/api/escultores/";
+
 function extractTimeStampFromULID(input: string): Date {
 	const ulid_timestamp_str = input.slice(0, 10);
 	const base32Chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
@@ -20,11 +23,32 @@ function getUrlParams(): Record<string, string> {
 const TIME_LIMIT_MINS = 0.5;
 // const TIME_LIMIT_MINS = 10.0;
 
-function validar_qr() {
-	const params = getUrlParams();
-	console.table(params);
-	const ulid_id = params.id;
+async function getNombreEscultor(id:string, url:string){
+	try{
+		
+		const res = await fetch(`${url}${id}`);
+		const escultor = await res.json();
 
+		console.log(escultor)
+		const nombreEscultor = document.getElementById("nombre-escultor") as HTMLHeadingElement
+		const fotoEscultor = document.getElementById("img_escultor") as HTMLImageElement
+
+		const nombre = formatearNombre(escultor.nombre, escultor.apellido);
+		nombreEscultor.textContent = nombre;
+		const foto = urlFotoEscultor(escultor.foto);
+		fotoEscultor.src= foto
+		fotoEscultor.alt= nombre
+		fotoEscultor.title= nombre
+		
+	}catch(error){
+		console.log(`Error al cargar el escultor: ${error}`)
+	}
+}
+
+function validar_qr(params: Record<string, string>) {
+
+	const ulid_id = params.id;
+	
 	if (!ulid_id) {
 		console.warn("No se encuentra el ulid id");
 		return;
@@ -108,6 +132,8 @@ function Voto() {
 		}
 	});
 }
-
-validar_qr();
+const params = getUrlParams();
+getNombreEscultor(params.id, URL_ESCULTORES)
+// validar_qr(params);
 Voto();
+
