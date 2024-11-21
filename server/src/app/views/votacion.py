@@ -18,6 +18,7 @@ from rest_framework.response import Response
 from app.models import Escultor, Votante, VotoEscultor
 from app.serializers import VotoEscultorSerializer
 from app.utils import PositiveInt
+from django.conf import settings
 
 
 class generarQR(APIView):
