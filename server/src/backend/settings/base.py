@@ -4,7 +4,7 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
-EMAIL_APP_KEY = config("EMAIL_APP_KEY")
+EMAIL_APP_KEY = config("EMAIL_APP_KEY", default="")
 
 LOGGING = {
     "version": 1,
