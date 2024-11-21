@@ -33,4 +33,4 @@ ADD ./src /app
 
 EXPOSE 8000
 # CMD ["gunicorn", "-c", "./gunicorn.conf.py", "backend.wsgi:application"]
-CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate --noinput && gunicorn -c ./gunicorn.conf.py backend.wsgi:application"]
+CMD ["sh", "-c", "gunicorn -c ./gunicorn.conf.py backend.wsgi:application"]
