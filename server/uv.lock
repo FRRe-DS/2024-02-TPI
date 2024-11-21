@@ -138,6 +138,7 @@ dependencies = [
     { name = "colorlog" },
     { name = "coverage" },
     { name = "datetime" },
+    { name = "dj-database-url" },
     { name = "django" },
     { name = "django-background-tasks" },
     { name = "django-cors-headers" },
@@ -147,9 +148,11 @@ dependencies = [
     { name = "docutils" },
     { name = "gunicorn" },
     { name = "markdown" },
+    { name = "pathlib" },
     { name = "pillow" },
     { name = "psycopg", extra = ["pool"] },
     { name = "pygments" },
+    { name = "python-decouple" },
     { name = "python-dotenv" },
     { name = "python-json-logger" },
     { name = "qrcode", extra = ["pil"] },
@@ -164,6 +167,7 @@ requires-dist = [
     { name = "colorlog", specifier = ">=6.9.0" },
     { name = "coverage", specifier = ">=7.6.1" },
     { name = "datetime", specifier = ">=5.5" },
+    { name = "dj-database-url", specifier = ">=2.3.0" },
     { name = "django", specifier = ">=5.1" },
     { name = "django-background-tasks", specifier = ">=1.2.8" },
     { name = "django-cors-headers", specifier = ">=4.5.0" },
@@ -173,9 +177,11 @@ requires-dist = [
     { name = "docutils", specifier = ">=0.21.2" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "markdown", specifier = ">=3.7" },
+    { name = "pathlib", specifier = ">=1.0.1" },
     { name = "pillow", specifier = ">=11.0.0" },
     { name = "psycopg", extras = ["pool"], specifier = ">=3.2.3" },
     { name = "pygments", specifier = ">=2.18.0" },
+    { name = "python-decouple", specifier = ">=3.8" },
     { name = "python-dotenv", specifier = ">=1.0.1" },
     { name = "python-json-logger", specifier = ">=2.0.7" },
     { name = "qrcode", extras = ["pil"], specifier = ">=8.0" },
@@ -183,6 +189,19 @@ requires-dist = [
     { name = "ruff", specifier = ">=0.7.4" },
     { name = "ulid-py", specifier = ">=1.1.0" },
     { name = "whitenoise", specifier = ">=6.8.2" },
+]
+
+[[package]]
+name = "dj-database-url"
+version = "2.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "django" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/98/9f/fc9905758256af4f68a55da94ab78a13e7775074edfdcaddd757d4921686/dj_database_url-2.3.0.tar.gz", hash = "sha256:ae52e8e634186b57e5a45e445da5dc407a819c2ceed8a53d1fac004cc5288787", size = 10980 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e5/91/641a4e5c8903ed59f6cbcce571003bba9c5d2f731759c31db0ba83bb0bdb/dj_database_url-2.3.0-py3-none-any.whl", hash = "sha256:bb0d414ba0ac5cd62773ec7f86f8cc378a9dbb00a80884c2fc08cc570452521e", size = 7793 },
 ]
 
 [[package]]
@@ -307,6 +326,15 @@ wheels = [
 ]
 
 [[package]]
+name = "pathlib"
+version = "1.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ac/aa/9b065a76b9af472437a0059f77e8f962fe350438b927cb80184c32f075eb/pathlib-1.0.1.tar.gz", hash = "sha256:6940718dfc3eff4258203ad5021090933e5c04707d5ca8cc9e73c94a7894ea9f", size = 49298 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/78/f9/690a8600b93c332de3ab4a344a4ac34f00c8f104917061f779db6a918ed6/pathlib-1.0.1-py3-none-any.whl", hash = "sha256:f35f95ab8b0f59e6d354090350b44a80a80635d22efdedfa84c7ad1cf0a74147", size = 14363 },
+]
+
+[[package]]
 name = "pillow"
 version = "11.0.0"
 source = { registry = "https://pypi.org/simple" }
@@ -381,6 +409,15 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/8e/62/8336eff65bcbc8e4cb5d05b55faf041285951b6e80f33e2bff2024788f31/pygments-2.18.0.tar.gz", hash = "sha256:786ff802f32e91311bff3889f6e9a86e81505fe99f2735bb6d60ae0c5004f199", size = 4891905 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/f7/3f/01c8b82017c199075f8f788d0d906b9ffbbc5a47dc9918a945e13d5a2bda/pygments-2.18.0-py3-none-any.whl", hash = "sha256:b8e6aca0523f3ab76fee51799c488e38782ac06eafcf95e7ba832985c8e7b13a", size = 1205513 },
+]
+
+[[package]]
+name = "python-decouple"
+version = "3.8"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/e1/97/373dcd5844ec0ea5893e13c39a2c67e7537987ad8de3842fe078db4582fa/python-decouple-3.8.tar.gz", hash = "sha256:ba6e2657d4f376ecc46f77a3a615e058d93ba5e465c01bbe57289bfb7cce680f", size = 9612 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/a2/d4/9193206c4563ec771faf2ccf54815ca7918529fe81f6adb22ee6d0e06622/python_decouple-3.8-py3-none-any.whl", hash = "sha256:d0d45340815b25f4de59c974b855bb38d03151d81b037d9e3f463b0c9f8cbd66", size = 9947 },
 ]
 
 [[package]]

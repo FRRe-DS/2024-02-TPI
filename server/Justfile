@@ -1,5 +1,5 @@
 # https://github.com/casey/just
-serve mode="dev": cargardb
+serve mode="dev":
     #!/usr/bin/env bash
     set -x
     set -eo pipefail
@@ -8,21 +8,25 @@ serve mode="dev": cargardb
         DJANGO_ENV="{{mode}}" uv run ./manage.py runserver 127.0.0.1:8000 
     elif [ "{{mode}}" = "prod" ]; then \
         cd ./src/
-        DJANGO_ENV="{{mode}}" ../.venv/bin/gunicorn -c gunicorn.conf.py backend.wsgi:application
+        DJANGO_ENV="{{mode}}" ../.venv/bin/gunicorn -b 0.0.0.0:8000 -c gunicorn.conf.py backend.wsgi:application
     fi
 
 runtasks:
     uv run ./src/manage.py process_tasks
 
-cargardb: migrate
+cargardb: 
     uv run ./src/scripts/iniciar_db.py
 
-test: migrate check
-    uv run ./src/manage.py test ./src/
+test: check
+    DJANGO_ENV="testing" uv run ./src/manage.py test ./src/
 
-migrate: fmt 
-    uv run ./src/manage.py makemigrations
-    uv run ./src/manage.py migrate --run-syncdb
+migrate mode="dev": fmt 
+    DJANGO_ENV="{{mode}}" uv run ./src/manage.py makemigrations 
+    DJANGO_ENV="{{mode}}" uv run ./src/manage.py migrate --run-syncdb 
+
+docker:
+    docker build -t django-rest .
+    docker run -p 8000:8000 --network=host django-rest:latest
 
 initdb:
     #!/usr/bin/env bash

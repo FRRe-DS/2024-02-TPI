@@ -1,30 +1,10 @@
 from pathlib import Path
-import os
-from dotenv import load_dotenv
-
-DJANGO_ENV = os.getenv("DJANGO_ENV", default="dev")
-
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-if DJANGO_ENV == "dev":
-    load_dotenv(BASE_DIR / ".env.development")
-
-if DJANGO_ENV == "prod":
-    load_dotenv(BASE_DIR / ".env.production")
-
-
-load_dotenv(BASE_DIR / ".env")
 DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
-EMAIL_APP_KEY = os.getenv("EMAIL_APP_KEY", default="")
-
-SECRET_KEY = os.getenv(
-    "SECRET_KEY", "django-insecure-j+&k(*o_vgi3d01+n^#r14+dagby)7-&-iq!@_2$2t(hd6hw7)"
-)
-
-DEBUG = os.getenv("DEBUG", "False") == "True"
-
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
+EMAIL_APP_KEY = config("EMAIL_APP_KEY", default="")
 
 LOGGING = {
     "version": 1,
@@ -94,7 +74,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
+    # "django.contrib.staticfiles",
     "rest_framework",
     "django_filters",
     "app",
@@ -144,20 +124,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "backend.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "tpi",
-        "USER": "postgres",
-        "PASSWORD": "password",
-        "HOST": "localhost",
-        "PORT": "5432",
-        "OPTIONS": {
-            "pool": True,
-        },
-    }
-}
-
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -188,8 +154,5 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-
-MEDIA_URL = "/imagenes/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "imagenes")
+# STATIC_URL = "/static/"
+# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
