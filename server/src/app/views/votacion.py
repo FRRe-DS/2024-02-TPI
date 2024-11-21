@@ -15,18 +15,17 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.throttling import AnonRateThrottle
 
 from app.models import Escultor, Votante, VotoEscultor
 from app.serializers import VotoEscultorSerializer
 from app.utils import PositiveInt
 from django.conf import settings
 
+
 class generarQR(APIView):
-    throttle_scope = 'qr'
+    throttle_scope = "qr"
 
     def get(self, request):
-
         escultor_id = request.query_params.get("escultor_id")
         if escultor_id is None:
             error = "Debe ingresar por query parameters el id del escultor"
@@ -89,8 +88,9 @@ class generarQR(APIView):
         logging.info(f"Generando QR para escultor_id: {escultor_id}... listo! ")
         return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
 
-#@api_view(["GET"])
-#def generar_qr(request: Request) -> HttpResponse:
+
+# @api_view(["GET"])
+# def generar_qr(request: Request) -> HttpResponse:
 
 
 class VotoEscultorViewSet(viewsets.ModelViewSet):
