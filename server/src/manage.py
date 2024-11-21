@@ -1,16 +1,16 @@
 #!/usr/bin/env python
 import os
 import sys
+from decouple import config
 
 
 def main():
-    os.environ.setdefault("DJANGO_ENV", "dev")
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 
-    env = os.getenv("DJANGO_ENV")
+    env = config("DJANGO_ENV")
 
-    if env != "prod" and env != "dev":
-        print("DJANGO_ENV debe tener los valores `prod` o `dev`")
+    if env != "prod" and env != "dev" and env != "testing":
+        print("DJANGO_ENV debe tener los valores `prod`, `dev` o `testing`!")
         exit(1)
 
     try:
