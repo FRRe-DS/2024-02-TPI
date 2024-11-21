@@ -19,11 +19,11 @@ from rest_framework.response import Response
 from app.models import Escultor, Votante, VotoEscultor
 from app.serializers import VotoEscultorSerializer
 from app.utils import PositiveInt
-from django.conf import settings
 
 
 class generarQR(APIView):
-    throttle_scope = "qr"
+    if settings.DJANGO_ENV != "testing":
+        throttle_scope = "qr"
 
     def get(self, request):
         escultor_id = request.query_params.get("escultor_id")

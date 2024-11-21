@@ -11,7 +11,7 @@ from app.views.sets import (
     AdminSisViewSet,
     TematicaViewSet,
     background_task_ejemplo,
-    check_django_task_status
+    check_django_task_status,
 )
 from app.views.health_check import health_check
 from app.views.votacion import estado_votacion, generarQR, VotoEscultorViewSet
