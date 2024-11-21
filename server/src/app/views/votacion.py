@@ -6,7 +6,6 @@ from io import BytesIO
 
 import qrcode
 import ulid
-from django.conf import settings
 from django.db.models import ObjectDoesNotExist, Sum
 from django.db.models.base import Coalesce
 from django.http.response import HttpResponse
