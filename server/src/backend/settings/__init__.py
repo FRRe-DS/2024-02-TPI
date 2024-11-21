@@ -28,6 +28,8 @@ elif DJANGO_ENV == "testing":
 else:
     from .development import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
 
+print(ALLOWED_HOSTS)
+
 __all__ = [
     "LANGUAGE_CODE",
     "LOGGING",
