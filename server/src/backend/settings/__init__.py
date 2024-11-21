@@ -1,4 +1,4 @@
-import os
+from decouple import config
 from .base import (
     LANGUAGE_CODE,
     LOGGING,
@@ -19,7 +19,7 @@ from .base import (
     INSTALLED_APPS,
 )
 
-DJANGO_ENV = os.getenv("DJANGO_ENV", "dev")
+DJANGO_ENV = config("DJANGO_ENV")
 
 if DJANGO_ENV == "prod":
     from .production import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY

@@ -1,5 +1,5 @@
 # https://github.com/casey/just
-serve mode="dev": cargardb
+serve mode="dev":
     #!/usr/bin/env bash
     set -x
     set -eo pipefail
@@ -14,15 +14,15 @@ serve mode="dev": cargardb
 runtasks:
     uv run ./src/manage.py process_tasks
 
-cargardb: migrate
+cargardb: 
     uv run ./src/scripts/iniciar_db.py
 
 test: check
     DJANGO_ENV="testing" uv run ./src/manage.py test ./src/
 
-migrate: fmt 
-    uv run ./src/manage.py makemigrations 
-    uv run ./src/manage.py migrate --run-syncdb 
+migrate mode="dev": fmt 
+    DJANGO_ENV="{{mode}}" uv run ./src/manage.py makemigrations 
+    DJANGO_ENV="{{mode}}" uv run ./src/manage.py migrate --run-syncdb 
 
 docker:
     docker build -t django-rest .
