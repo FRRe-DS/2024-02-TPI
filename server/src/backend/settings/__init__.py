@@ -23,6 +23,8 @@ DJANGO_ENV = os.getenv("DJANGO_ENV", "dev")
 
 if DJANGO_ENV == "prod":
     from .production import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
+elif DJANGO_ENV == "testing":
+    from .testing import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
 else:
     from .development import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
 

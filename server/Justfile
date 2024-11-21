@@ -17,8 +17,8 @@ runtasks:
 cargardb: migrate
     uv run ./src/scripts/iniciar_db.py
 
-test: migrate check
-    uv run ./src/manage.py test ./src/
+test: check
+    DJANGO_ENV="testing" uv run ./src/manage.py test ./src/
 
 migrate: fmt 
     uv run ./src/manage.py makemigrations 
