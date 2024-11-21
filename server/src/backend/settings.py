@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from google.oauth2 import service_account
 
 DJANGO_ENV = os.getenv("DJANGO_ENV", default="dev")
 
@@ -160,6 +161,7 @@ DATABASES = {
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -190,3 +192,39 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+# Credenciales de Google Cloud
+KEY_PATH = os.path.abspath(
+    os.path.join(BASE_DIR, "../src/key/bienaldelchaco-d0c76ba734ab.json")
+)
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    os.path.join(KEY_PATH)
+)
+
+
+GS_BUCKET_NAME = 'bienaldelchaco'
+
+# Configuración del almacenamiento
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "OPTIONS": {
+            "bucket_name": "bienaldelchaco",
+            "credentials": GS_CREDENTIALS,  # Asegúrate de haber definido GS_CREDENTIALS antes
+        },
+    },
+    "staticfiles": {  # Archivos estáticos (local)
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "OPTIONS": {
+            "location": STATIC_ROOT,  # Directorio local para archivos estáticos
+        },
+    },
+}
+
+# URL base para servir archivos multimedia y estáticos
+MEDIA_URL = f'https://storage.googleapis.com/{GS_BUCKET_NAME}/'
+
+
+
+
+

@@ -27,6 +27,8 @@ dependencies = [
     "psycopg[pool]>=3.2.3",
     "django-background-tasks>=1.2.8",
     "ruff>=0.7.4",
+    "django-storages[google]>=1.14.4",
+    "google-cloud-storage>=2.18.2",
 ]
 
 [build-system]
