@@ -1,0 +1,51 @@
+import os
+from .base import (
+    LANGUAGE_CODE,
+    LOGGING,
+    TEMPLATES,
+    TIME_ZONE,
+    USE_TZ,
+    USE_I18N,
+    REST_FRAMEWORK,
+    AUTH_PASSWORD_VALIDATORS,
+    EMAIL_APP_KEY,
+    DEFAULT_FROM_EMAIL,
+    DEFAULT_AUTO_FIELD,
+    BASE_DIR,
+    WSGI_APPLICATION,
+    ROOT_URLCONF,
+    CORS_ALLOWED_ORIGINS,
+    MIDDLEWARE,
+    INSTALLED_APPS,
+)
+
+DJANGO_ENV = os.getenv("DJANGO_ENV", "dev")
+
+if DJANGO_ENV == "prod":
+    from .production import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
+else:
+    from .development import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
+
+__all__ = [
+    "LANGUAGE_CODE",
+    "LOGGING",
+    "TEMPLATES",
+    "TIME_ZONE",
+    "USE_TZ",
+    "USE_I18N",
+    "REST_FRAMEWORK",
+    "AUTH_PASSWORD_VALIDATORS",
+    "EMAIL_APP_KEY",
+    "DEFAULT_FROM_EMAIL",
+    "INSTALLED_APPS",
+    "MIDDLEWARE",
+    "DEFAULT_AUTO_FIELD",
+    "BASE_DIR",
+    "WSGI_APPLICATION",
+    "ROOT_URLCONF",
+    "CORS_ALLOWED_ORIGINS",
+    "SECRET_KEY",
+    "DATABASES",
+    "DEBUG",
+    "ALLOWED_HOSTS",
+]

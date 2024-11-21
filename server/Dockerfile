@@ -27,9 +27,10 @@ RUN apt-get update && apt-get install -y libpq-dev && rm -rf /var/lib/apt/lists/
 COPY --from=builder --chown=app:app /app /app
 
 ENV PATH="/app/.venv/bin:$PATH"
-ENV DJANGO_env="prod"
+ENV DJANGO_ENV="prod"
 
 ADD ./src /app
 
 EXPOSE 8000
-CMD ["gunicorn", "-c", "./gunicorn.conf.py", "backend.wsgi:application"]
+# CMD ["gunicorn", "-c", "./gunicorn.conf.py", "backend.wsgi:application"]
+CMD ["sh", "-c", "python manage.py makemigrations && python manage.py migrate --noinput && gunicorn -c ./gunicorn.conf.py backend.wsgi:application"]

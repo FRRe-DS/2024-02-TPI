@@ -7,8 +7,8 @@ serve mode="dev": cargardb
         cd ./src/
         DJANGO_ENV="{{mode}}" uv run ./manage.py runserver 127.0.0.1:8000 
     elif [ "{{mode}}" = "prod" ]; then \
-        docker build -t django-rest .
-        docker run -p 8000:8000 --network=host django-rest:latest
+        cd ./src/
+        DJANGO_ENV="{{mode}}" ../.venv/bin/gunicorn -c gunicorn.conf.py backend.wsgi:application
     fi
 
 runtasks:
@@ -21,8 +21,12 @@ test: migrate check
     uv run ./src/manage.py test ./src/
 
 migrate: fmt 
-    uv run ./src/manage.py makemigrations
-    uv run ./src/manage.py migrate --run-syncdb
+    uv run ./src/manage.py makemigrations 
+    uv run ./src/manage.py migrate --run-syncdb 
+
+docker:
+    docker build -t django-rest .
+    docker run -p 8000:8000 --network=host django-rest:latest
 
 initdb:
     #!/usr/bin/env bash
