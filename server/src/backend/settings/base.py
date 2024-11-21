@@ -163,7 +163,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
-GS_CREDENTIALS = service_account.Credentials.from_service_account_info(config("STORAGE_KEY", cast=json.loads))
+GS_CREDENTIALS = service_account.Credentials.from_service_account_info(config("STORAGE_KEY", default="", cast=json.loads))
 
 
 GS_BUCKET_NAME = 'bienaldelchaco'
