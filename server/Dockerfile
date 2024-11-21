@@ -31,6 +31,5 @@ ENV DJANGO_ENV="prod"
 
 ADD ./src /app
 
-EXPOSE 8000
-# CMD ["gunicorn", "-c", "./gunicorn.conf.py", "backend.wsgi:application"]
-CMD ["sh", "-c", "gunicorn -c ./gunicorn.conf.py backend.wsgi:application"]
+EXPOSE 80
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:80 -c ./gunicorn.conf.py backend.wsgi:application"]
