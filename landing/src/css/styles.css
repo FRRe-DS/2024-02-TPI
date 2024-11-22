@@ -1140,7 +1140,7 @@ form {
 
 .formulario-voto p {
 	color: var(--text-200);
-	margin-bottom: 1.5rem;
+
 }
 
 .container-votar img {
@@ -1356,7 +1356,7 @@ form {
 .btn-votarV2 {
 	background-color: #497fff;
 	border-radius: 8px;
-	padding: 8px 16px;
+	padding: 8px 24px;
 	color: #fff;
 	border: 1px solid #fff;
 	transition: all 0.3s;

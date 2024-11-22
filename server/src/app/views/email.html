@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet" />
+
+    <title>Bienal del Chaco</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+      }
+      .email-container {
+        width: 90%;
+        background-color: #f4f4f4;
+        padding: 20px;
+      }
+      .divider{
+        height: 1px;
+        background-color: #333;
+        width: 100%;
+
+      }
+      .email-body {
+        width: 600px;
+        background-color: white;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        border-radius: 8px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      }
+      h1 {
+        font-size: 24px;
+        color: #333;
+        margin: 0;
+      }
+
+      td{text-align: center;}
+      p {
+        color: #555;
+        line-height: 1.5;
+        margin: 10px 0;
+      }
+      button {
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        margin-top: 20px;
+        
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
+        <tr>
+          <td>
+            <div class="email-body">
+              <h1>Bienal del Chaco</h1>
+              <div class="divider"></div>
+              <p>
+                Una manifestación internacional de arte contemporáneo que reúne artistas y pueblo en un mismo espacio, conectando de manera potente a la gente con el arte y la naturaleza.
+              </p>
+            
+              <strong><p>Verifica tu correo para realizar la votación</p></strong>
+          
+              <form id="verify-form" >
+                <button type="submit" >Verificar correo</button>
+              </form>
+              
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <script>
+      const correoVotante = "{{correo}}"; 
+      const form = document.getElementById('verify-form');
+
+    // Añadimos un event listener para interceptar el envío del formulario
+    form.addEventListener('submit', function(event) {
+        
+        fetch("http//localhost:8000/api/votantes/", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          
+          },
+          body: JSON.stringify({
+           correo: correoVotante,
+          })
+        })
+        .then(response => {
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error('Error en el servidor');
+          }
+        })
+        .then(data => {
+          console.log('Correo verificado exitosamente:', data);
+          alert('Correo verificado exitosamente!');
+        
+          window.location.href = 'https://elrincondelinge.org/certamen'; 
+        })
+        .catch(error => {
+          console.error('Error al verificar correo:', error);
+          alert('Hubo un error al verificar el correo. Intenta nuevamente.');
+        });
+      })
+    </script>
+  </body>
+</html>

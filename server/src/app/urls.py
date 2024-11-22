@@ -15,6 +15,7 @@ from app.views.sets import (
 )
 from app.views.health_check import health_check
 from app.views.votacion import estado_votacion, generar_qr, VotoEscultorViewSet
+from app.views.verify_captcha import VerifyCaptchaView
 
 router = routers.DefaultRouter()
 
@@ -54,4 +55,5 @@ urlpatterns = [
         name="check_task_status",
     ),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
+    path('verify-captcha/', VerifyCaptchaView.as_view(), name='verify-captcha'),
 ]

@@ -17,6 +17,7 @@ from .base import (
     CORS_ALLOWED_ORIGINS,
     MIDDLEWARE,
     INSTALLED_APPS,
+    CLOUDFLARE_TURNSTILE_SECRET_KEY,
 )
 
 DJANGO_ENV = config("DJANGO_ENV")
@@ -52,4 +53,5 @@ __all__ = [
     "DATABASES",
     "DEBUG",
     "ALLOWED_HOSTS",
+    "CLOUDFLARE_TURNSTILE_SECRET_KEY"
 ]

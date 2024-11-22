@@ -68,26 +68,23 @@ function validar_qr(params: Record<string, string>) {
 	}
 }
 
-function Voto() {
-	document.getElementById("votoForm")?.addEventListener("submit", async (e) => {
-		e?.preventDefault();
-
+async function Voto() {
 		const stored_email = localStorage.getItem("userEmail");
 
 		if (stored_email) {
-			// Mostrar el popup para que puntúe, obtener el valor y hacer el POST?
+			// A esto le tendria que pasar el id del escultor
+			window.location.href = "./votar.html";
+			
 		} else {
 			const params = getUrlParams();
-			const escultor_id = params.escultor_id;
+			const escultor_id = params.id;
 
 			if (!escultor_id) {
 				alert("Error inesperado, el escultor_id es nulo");
 				window.location.href = "./certamen.html";
 			}
 
-			const email = (document.getElementById("email") as HTMLInputElement)
-				?.value;
-			console.log(email);
+			const email = (document.getElementById("email") as HTMLInputElement)?.value;
 
 			if (!email) {
 				alert("Error inesperado, el email es nulo");
@@ -99,6 +96,7 @@ function Voto() {
 				error: string;
 			};
 
+			// tryhardeo el puntaje, el puntaje lo asigno despues de verificar el email
 			const data = { escultor_id: escultor_id, puntaje: 5 };
 
 			try {
@@ -130,10 +128,64 @@ function Voto() {
 				console.error("Server error:", error);
 			}
 		}
-	});
+	};
+
+
+// Verificar el captcha
+declare global {
+  interface Window {
+    turnstile: any; 
+  }
 }
+
+const form = document.getElementById("votoForm");
+
+if (form) {
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();  // Prevenir el envío del formulario
+
+    // Crear FormData a partir del formulario
+    const formData = new FormData(this);
+    
+    // Obtener la respuesta del CAPTCHA
+    const turnstileResponse = window.turnstile.getResponse();
+    
+    // Asegurarse de que el token de Turnstile esté presente
+    if (!turnstileResponse) {
+      alert("Por favor, completa el CAPTCHA.");
+      return;
+    }
+
+    // Añadir el token de Turnstile al FormData
+    formData.append("cf-turnstile-response", turnstileResponse);
+
+    // Verificar el contenido de FormData (opcional, solo para depuración)
+    console.log([...formData]);  // Esto mostrará todos los pares clave-valor del FormData
+
+    try {
+      const response = await fetch("http://localhost:8000/verify-captcha/", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+      console.log("Resultado de verificación del CAPTCHA:", result);
+      
+      if (response.ok && result.success) {
+        // Si el CAPTCHA es verificado correctamente
+				Voto();
+      } else {
+        alert(result.error || "CAPTCHA inválido.");
+      }
+    } catch (error) {
+      console.error("Error al verificar el CAPTCHA:", error);
+      alert(`Ocurrió un error. Por favor, inténtalo nuevamente.`);
+    }
+  });
+}
+
 const params = getUrlParams();
 getNombreEscultor(params.id, URL_ESCULTORES)
 // validar_qr(params);
-Voto();
+
 

@@ -5,6 +5,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
 EMAIL_APP_KEY = config("EMAIL_APP_KEY", default="")
+CLOUDFLARE_TURNSTILE_SECRET_KEY = config("CLOUDFLARE_TURNSTILE_SECRET_KEY")
 
 LOGGING = {
     "version": 1,

@@ -107,6 +107,20 @@ class VotanteViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+    
+    def create(self, request, *args, **kwargs):
+        """
+        Crear un nuevo Votante y devolverlo.
+        """
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
 
 
 class EventoViewSet(viewsets.ModelViewSet):
