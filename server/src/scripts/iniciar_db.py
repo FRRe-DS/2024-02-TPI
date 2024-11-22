@@ -48,7 +48,6 @@ def populate_database(sql_file: str):
     with open(sql_file, "r", encoding="utf-8") as file:
         sql_script = file.read()
 
-    # Ejecutar el script de inserción
     cursor.execute(sql_script)
     conn.commit()
     logging.info("Datos insertados en la base de datos.")
