@@ -21,11 +21,35 @@ from .base import (
 DJANGO_ENV = config("DJANGO_ENV")
 
 if DJANGO_ENV == "prod":
-    from .production import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY, BASE_DIR
+    from .production import (
+        DATABASES,
+        DEBUG,
+        ALLOWED_HOSTS,
+        SECRET_KEY,
+        BASE_DIR,
+        STORAGES,
+        MEDIA_URL,
+    )
 elif DJANGO_ENV == "testing":
-    from .testing import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY, BASE_DIR
+    from .testing import (
+        DATABASES,
+        DEBUG,
+        ALLOWED_HOSTS,
+        SECRET_KEY,
+        BASE_DIR,
+        STORAGES,
+        MEDIA_URL,
+    )
 else:
-    from .development import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY, BASE_DIR
+    from .development import (
+        DATABASES,
+        DEBUG,
+        ALLOWED_HOSTS,
+        SECRET_KEY,
+        BASE_DIR,
+        STORAGES,
+        MEDIA_URL,
+    )
 
 print(ALLOWED_HOSTS)
 
@@ -51,4 +75,6 @@ __all__ = [
     "DATABASES",
     "DEBUG",
     "ALLOWED_HOSTS",
+    "STORAGES",
+    "MEDIA_URL",
 ]

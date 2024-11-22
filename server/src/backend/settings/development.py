@@ -38,7 +38,7 @@ STORAGES = {
     "default": {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
         "OPTIONS": {
-            "bucket_name": "bienaldelchaco",
+            "bucket_name": GS_BUCKET_NAME,
             "credentials": GS_CREDENTIALS,  # Asegúrate de haber definido GS_CREDENTIALS antes
         },
     },
