@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import Max
 from rest_framework.fields import MaxValueValidator, MinValueValidator
 
 from .utils import convertir_a_webp
