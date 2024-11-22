@@ -14,7 +14,7 @@ from app.views.sets import (
     check_django_task_status,
 )
 from app.views.health_check import health_check
-from app.views.votacion import estado_votacion, generar_qr, VotoEscultorViewSet
+from app.views.votacion import estado_votacion, generarQR, VotoEscultorViewSet
 
 router = routers.DefaultRouter()
 
@@ -44,8 +44,8 @@ router.register("api/voto_escultor", VotoEscultorViewSet, "voto_escultor")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("generar_qr/", generar_qr, name="generar_qr"),
     path("health_check/", health_check, name="health_check"),
+    path("generar_qr/", generarQR.as_view(), name="generar_qr"),
     path("estado_votacion/", estado_votacion, name="estado_votacion"),
     path("test_background/", background_task_ejemplo, name="background_task_ejemplo"),
     path(

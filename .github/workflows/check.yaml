@@ -89,7 +89,7 @@ jobs:
           path: /tmp/.uv-cache
           key: ${{ needs.setup-and-cache.outputs.cache-key }}
       - name: Run tests
-        run: cd ./src && uv run ./manage.py test
+        run: cd ./src && DJANGO_ENV="testing" uv run ./manage.py test
 
   lint:
     needs: setup-and-cache
