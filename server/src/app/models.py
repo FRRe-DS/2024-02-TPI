@@ -3,6 +3,7 @@ from rest_framework.fields import MaxValueValidator, MinValueValidator
 
 from .utils import convertir_a_webp
 
+
 class Votante(models.Model):
     """
     Almacena la información de un votante.

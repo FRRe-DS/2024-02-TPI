@@ -2,6 +2,7 @@ from PIL import Image
 import io
 from django.core.files.base import ContentFile
 
+
 class PositiveInt(int):
     """
     Representa un número entero que debe ser positivo.
@@ -43,7 +44,6 @@ class PositiveInt(int):
 
     def __init__(self, value):
         super().__init__()
-
 
 
 def convertir_a_webp(image_field, quality=100):
