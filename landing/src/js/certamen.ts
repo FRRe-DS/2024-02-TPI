@@ -1,9 +1,10 @@
 import { loadHTML } from "../app";
 
-const URL_ESCULTORES = "http://localhost:8000/api/escultores/";
-const URL_PAIS = "http://localhost:8000/api/paises/";
-const URL_TEMATICA = "http://localhost:8000/api/tematica/";
-const URL_EVENTOS = "http://localhost:8000/api/eventos/";
+console.log(__API_URL__);
+const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
+const URL_PAIS = `${__API_URL__}/api/paises/`;
+const URL_TEMATICA = `${__API_URL__}/api/tematica/`;
+const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
 
 async function inicializar() {
 	try {
@@ -230,7 +231,7 @@ function Voto(correo: string, escultor_id: string) {
 			console.table(data);
 
 			const response = await fetch(
-				`http://localhost:8000/api/voto_escultor/?correo_votante=${correo}`,
+				`${__API_URL__}/api/voto_escultor/?correo_votante=${correo}`,
 				{
 					method: "POST",
 					headers: {

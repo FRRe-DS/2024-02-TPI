@@ -1,7 +1,7 @@
 import { formatearFecha, loadHTML } from "../app";
 
-const URL_EVENTOS = "http://localhost:8000/api/eventos/";
-const URL_LUGAR = "http://localhost:8000/api/lugar/";
+const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
+const URL_LUGAR = `${__API_URL__}/api/lugar/`;
 
 async function loadLugar(URL: string, id: string) {
 	try {

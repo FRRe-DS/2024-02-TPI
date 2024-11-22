@@ -79,7 +79,7 @@ function Voto() {
 
 			try {
 				const response = await fetch(
-					`http://localhost:8000/api/voto_escultor/?correo_votante=${email}`,
+					`${__API_URL__}/api/voto_escultor/?correo_votante=${email}`,
 					{
 						method: "POST",
 						headers: {
