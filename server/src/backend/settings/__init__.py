@@ -37,8 +37,6 @@ elif DJANGO_ENV == "testing":
         ALLOWED_HOSTS,
         SECRET_KEY,
         BASE_DIR,
-        STORAGES,
-        MEDIA_URL,
     )
 else:
     from .development import (
