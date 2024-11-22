@@ -1,9 +1,7 @@
 from django.db import models
-from django.core.files.base import ContentFile
-from PIL import Image
-import io
-
 from rest_framework.fields import MaxValueValidator, MinValueValidator
+
+from .utils import convertir_a_webp
 
 
 class Votante(models.Model):
@@ -57,29 +55,12 @@ class Escultor(models.Model):
     fecha_nacimiento = models.DateField(blank=True, null=True)
     # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes,
     # este campo tendría que ser un URLField.
-    foto = models.FileField(upload_to="perfiles/", blank=True, null=True)
+    foto = models.ImageField(upload_to="img/perfiles/", blank=True, null=True)
     bibliografia = models.CharField(max_length=400, blank=False, null=False)
 
     def save(self, *args, **kwargs):
         if self.foto:
-            # Abrir la imagen usando PIL
-            img = Image.open(self.foto)
-
-            # Convertir a RGB si no lo está
-            if img.mode != "RGB":
-                img = img.convert("RGB")
-
-            # Convertir la imagen a webp
-            img_io = io.BytesIO()
-            # Puedes ajustar la calidad
-            img.save(img_io, format="WEBP", quality=100)
-            img_content = ContentFile(
-                img_io.getvalue(), name=self.foto.name.split(".")[0] + ".webp"
-            )
-
-            # Reemplazar la imagen original
-            self.foto = img_content
-
+            self.foto = convertir_a_webp(self.foto)
         super(Escultor, self).save(*args, **kwargs)
 
 
@@ -123,34 +104,13 @@ class Imagen(models.Model):
     escultura_id = models.ForeignKey(
         Escultura, on_delete=models.CASCADE, db_column="escultura_id"
     )
-    imagen = models.FileField(upload_to="imagenes/", blank=True, null=True)
+    imagen = models.ImageField(upload_to="img/esculturas/", blank=True, null=True)
     descripcion = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        if self.imagen and self.imagen.name:
-            try:
-                img_data = self.imagen.read()
-                img = Image.open(io.BytesIO(img_data))
-
-                if img.mode != "RGB":
-                    img = img.convert("RGB")
-
-                img_io = io.BytesIO()
-                img.save(img_io, format="WEBP", quality=100)
-
-                filename = self.imagen.name.rsplit(".", 1)[0]
-
-                img_content = ContentFile(img_io.getvalue(), name=f"{filename}.webp")
-
-                self.imagen = img_content
-
-            except Exception as e:
-                print(f"Error processing image: {e}")
-            finally:
-                if hasattr(img, "close"):
-                    img.close()
-
-        super().save(*args, **kwargs)
+        if self.imagen:
+            self.imagen = convertir_a_webp(self.imagen)
+        super(Imagen, self).save(*args, **kwargs)
 
 
 class Tematica(models.Model):
@@ -203,9 +163,15 @@ class Evento(models.Model):
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
     descripcion = models.CharField(max_length=255, blank=False, null=False)
+    foto = models.ImageField(upload_to="img/eventos/", blank=True, null=True)
     tematica_id = models.ForeignKey(
         Tematica, on_delete=models.CASCADE, db_column="tematica_id"
     )
+
+    def save(self, *args, **kwargs):
+        if self.foto:
+            self.foto = convertir_a_webp(self.foto)
+        super(Evento, self).save(*args, **kwargs)
 
 
 class EscultorEvento(models.Model):

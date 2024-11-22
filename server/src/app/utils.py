@@ -1,3 +1,8 @@
+from PIL import Image
+import io
+from django.core.files.base import ContentFile
+
+
 class PositiveInt(int):
     """
     Representa un número entero que debe ser positivo.
@@ -39,3 +44,30 @@ class PositiveInt(int):
 
     def __init__(self, value):
         super().__init__()
+
+
+def convertir_a_webp(image_field, quality=100):
+    """
+    Convierte una imagen a formato WEBP.
+
+    Args:
+        image_field (File): Archivo de imagen a convertir.
+        quality (int): Calidad de la imagen WEBP (por defecto 100).
+
+    Returns:
+        ContentFile: Imagen convertida en formato WEBP.
+    """
+    if not image_field:
+        return None
+
+    # Abrir la imagen usando PIL
+    img = Image.open(image_field)
+
+    # Convertir a RGB si no lo está
+    if img.mode != "RGB":
+        img = img.convert("RGB")
+
+    # Convertir la imagen a webp
+    img_io = io.BytesIO()
+    img.save(img_io, format="WEBP", quality=quality)
+    return ContentFile(img_io.getvalue(), name=image_field.name.split(".")[0] + ".webp")

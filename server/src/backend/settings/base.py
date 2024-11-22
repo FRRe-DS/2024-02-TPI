@@ -1,7 +1,7 @@
-from pathlib import Path
 from decouple import config
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+DJANGO_ENV = config("DJANGO_ENV", default="dev")
+
 
 DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
 EMAIL_APP_KEY = config("EMAIL_APP_KEY", default="")
@@ -126,6 +126,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -155,6 +156,3 @@ LANGUAGE_CODE = "es"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
-
-# STATIC_URL = "/static/"
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
