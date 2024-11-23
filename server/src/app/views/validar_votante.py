@@ -1,28 +1,33 @@
-import smtplib
-from django.http.response import HttpResponse
-from django.conf import settings
-from email.message import EmailMessage
-from django.http import JsonResponse
-import requests
-from app.models import Votante
-from django.shortcuts import redirect
-
-
 import os
+import smtplib
+from email.message import EmailMessage
+
+import requests
+from django.conf import settings
+from django.http import JsonResponse
+from django.http.response import HttpResponse
+from django.shortcuts import redirect
+from django.utils.autoreload import logging
+from requests.sessions import Request
+from rest_framework import status
+
+from app.models import Votante
 
 
 def mandar_email(destinatario: str, escultor_id: str) -> HttpResponse:
     """
     Endpoint para enviar un mail con un enlace que permite registrar un nuevo usuario.
     """
-    # Ruta al archivo HTML
     html_file_path = os.path.join(os.path.dirname(__file__), "email.html")
 
     try:
         with open(html_file_path, "r", encoding="utf-8") as file:
-            html_content = file.read()  # Leer el contenido del archivo HTML
+            html_content = file.read()
     except FileNotFoundError:
-        return HttpResponse({"error": "No se encontró el archivo HTML"}, status=500)
+        return HttpResponse(
+            {"error": "No se encontró el archivo HTML."},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        )
 
     html_content = html_content.replace("{{correo}}", destinatario)
     html_content = html_content.replace("{{escultor_id}}", escultor_id)
@@ -34,10 +39,8 @@ def mandar_email(destinatario: str, escultor_id: str) -> HttpResponse:
     email["To"] = destinatario
     email["Subject"] = "Registro de nuevo usuario"
 
-    # Añadir contenido HTML
     email.add_alternative(html_content, subtype="html")
 
-    # Enviar el correo
     try:
         smtp = smtplib.SMTP_SSL("smtp.gmail.com")
         smtp.login(remitente, settings.EMAIL_APP_KEY)
@@ -45,24 +48,29 @@ def mandar_email(destinatario: str, escultor_id: str) -> HttpResponse:
         smtp.quit()
     except Exception as e:
         return HttpResponse(
-            {"error": f"Error al enviar el correo: {str(e)}"}, status=500
+            {"error": f"Error al enviar el correo: {str(e)}"},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
-    return HttpResponse({"message": "Correo enviado correctamente"}, status=200)
+    logging.info(f"Correo a {destinatario} Enviado!")
+    return HttpResponse(
+        {"message": "Correo enviado correctamente"}, status=status.HTTP_200_OK
+    )
 
 
-def validar_votante(request):
+def validar_votante(request: Request) -> HttpResponse:
     correo = request.GET.get("correo")
     escultor_id = request.GET.get("escultor_id")
 
     if correo:
         try:
             Votante.objects.get(correo=correo)
-            response = redirect(
-                f"http://127.0.0.1:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
+
+            logging.info(f"El usuario con el correo {correo} ya existe!")
+
+            return redirect(
+                f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
             )
-            print("YA EXISTE EL USUARIO")
-            return response
 
         except Votante.DoesNotExist:
             mandar_email(correo, escultor_id)
@@ -70,16 +78,25 @@ def validar_votante(request):
                 {
                     "mensaje": "Se envío un mail de verificación a la dirección de correo indicada"
                 },
-                status=201,
+                status=status.HTTP_201_CREATED,
             )
 
     else:
-        return JsonResponse({"error": "Faltan parámetros necesarios."}, status=400)
+        return JsonResponse(
+            {"error": "Faltan parámetros obligatorios `correo` y `escultor_id`."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
 
-def crear_votante(request):
+def crear_votante(request: Request) -> HttpResponse:
     correo = request.GET.get("correo")
     escultor_id = request.GET.get("escultor_id")
+
+    if not correo or not escultor_id:
+        return JsonResponse(
+            {"error": "Faltan parámetros obligatorios `correo` y `escultor_id`."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     try:
         url = "http://localhost:8000/api/votantes/"
@@ -90,13 +107,14 @@ def crear_votante(request):
         response = requests.post(url, json=data)
 
         if response.status_code == 201:
-            response = redirect(
-                f"http://127.0.0.1:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
+            return redirect(
+                f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
             )
-            return response
         else:
-            return JsonResponse({"error": "Error al crear el votante."}, status=500)
+            return JsonResponse(
+                {"error": "Error al crear el votante."},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            )
 
-    except:
-        response = redirect(f"http://127.0.0.1:5173/certamen.html")
-        return response
+    except Exception:
+        return redirect("http://localhost:5173/certamen.html")

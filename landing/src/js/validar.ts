@@ -20,35 +20,36 @@ export function getUrlParams(): Record<string, string> {
 	return searchConfig;
 }
 
-const TIME_LIMIT_MINS = 0.5;
-// const TIME_LIMIT_MINS = 10.0;
+// const TIME_LIMIT_MINS = 0.5;
+const TIME_LIMIT_MINS = 10.0;
 
-async function getNombreEscultor(id:string, url:string){
-	try{
-		
+async function getNombreEscultor(id: string, url: string) {
+	try {
 		const res = await fetch(`${url}${id}`);
 		const escultor = await res.json();
 
-		console.log(escultor)
-		const nombreEscultor = document.getElementById("nombre-escultor") as HTMLHeadingElement
-		const fotoEscultor = document.getElementById("img_escultor") as HTMLImageElement
+		console.log(escultor);
+		const nombreEscultor = document.getElementById(
+			"nombre-escultor",
+		) as HTMLHeadingElement;
+		const fotoEscultor = document.getElementById(
+			"img_escultor",
+		) as HTMLImageElement;
 
 		const nombre = formatearNombre(escultor.nombre, escultor.apellido);
 		nombreEscultor.textContent = nombre;
 		const foto = urlFotoEscultor(escultor.foto);
-		fotoEscultor.src= foto
-		fotoEscultor.alt= nombre
-		fotoEscultor.title= nombre
-		
-	}catch(error){
-		console.log(`Error al cargar el escultor: ${error}`)
+		fotoEscultor.src = foto;
+		fotoEscultor.alt = nombre;
+		fotoEscultor.title = nombre;
+	} catch (error) {
+		console.log(`Error al cargar el escultor: ${error}`);
 	}
 }
 
 function validar_qr(params: Record<string, string>) {
-
 	const ulid_id = params.id;
-	
+
 	if (!ulid_id) {
 		console.warn("No se encuentra el ulid id");
 		return;
@@ -73,14 +74,13 @@ async function validar_votante() {
 	const params = getUrlParams();
 	const escultor_id = params.id;
 	if (!escultor_id) {
-			alert("Error inesperado, el escultor_id es nulo");
-			window.location.href = "./certamen.html";
-		}
+		alert("Error inesperado, el escultor_id es nulo");
+		window.location.href = "./certamen.html";
+	}
 
 	if (stored_email) {
 		// A esto le tendria que pasar el id del escultor
-		window.location.href =`./votar.html?correo=${stored_email}&escultor_id=${escultor_id}`;
-	
+		window.location.href = `./votar.html?correo=${stored_email}&escultor_id=${escultor_id}`;
 	} else {
 		const email = (document.getElementById("email") as HTMLInputElement)?.value;
 
@@ -95,20 +95,18 @@ async function validar_votante() {
 				`http://localhost:8000/validar_votante/?correo=${email}&escultor_id=${escultor_id}`,
 
 				{
-					method: "GET", 
+					method: "GET",
 					headers: {
-						"Accept": "application/json",
+						Accept: "application/json",
 					},
-				}
+				},
 			);
 
-			
 			if (response.status === 200) {
-				window.location.href = response.url;  
+				window.location.href = response.url;
 			} else if (response.status === 201) {
-			
 				const data = await response.json();
-				alert(data.mensaje); 
+				alert(data.mensaje);
 			} else {
 				console.error("Error al validar votante:", response.status);
 			}
@@ -116,63 +114,58 @@ async function validar_votante() {
 			console.error("Server error:", error);
 		}
 	}
-};
-
-
-
+}
 
 // Verificar el captcha
 declare global {
-  interface Window {
-    turnstile: any; 
-  }
+	interface Window {
+		turnstile: any;
+	}
 }
 
 const form = document.getElementById("votoForm");
 
 if (form) {
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();  
-	
-    const formData = new FormData(this);
+	form.addEventListener("submit", async (event) => {
+		event.preventDefault();
 
-    // Obtener la respuesta del CAPTCHA
-    const turnstileResponse = window.turnstile.getResponse();
-    
-    // Asegurarse de que el token de Turnstile esté presente
-    if (!turnstileResponse) {
-      alert("Por favor, completa el CAPTCHA.");
-      return;
-    }
+		const formData = new FormData(event.target as HTMLFormElement);
 
-    // Añadir el token de Turnstile al FormData
-    formData.append("cf-turnstile-response", turnstileResponse);
-   
-    try {
-      const response = await fetch("http://localhost:8000/verify-captcha/", {
-        method: "POST",
-        body: formData,
-      });
+		// Obtener la respuesta del CAPTCHA
+		const turnstileResponse = window.turnstile?.getResponse();
 
-      const result = await response.json();
-      
-      if (response.ok && result.success) {
-        // Si el CAPTCHA es verificado correctamente tengo que validar si el votante tiene su mail registrado
+		// Asegurarse de que el token de Turnstile esté presente
+		if (!turnstileResponse) {
+			alert("Por favor, completa el CAPTCHA.");
+			return;
+		}
+
+		// Añadir el token de Turnstile al FormData
+		formData.append("cf-turnstile-response", turnstileResponse);
+
+		try {
+			const response = await fetch("http://localhost:8000/verify-captcha/", {
+				method: "POST",
+				body: formData,
+			});
+
+			const result = await response.json();
+
+			if (response.ok && result.success) {
+				// Si el CAPTCHA es verificado correctamente tengo que validar si el votante tiene su mail registrado
 				// si no lo tiene lo debo crear
-				validar_votante()
+				validar_votante();
 				// Luego lo redirecciono a votar.html ahi se ejecuta voto()
-      } else {
-        alert(result.error || "CAPTCHA inválido.");
-      }
-    } catch (error) {
-      console.error("Error al verificar el CAPTCHA:", error);
-      alert(`Ocurrió un error. Por favor, inténtalo nuevamente.`);
-    }
-  });
+			} else {
+				alert(result.error || "CAPTCHA inválido.");
+			}
+		} catch (error) {
+			console.error("Error al verificar el CAPTCHA:", error);
+			alert("Ocurrió un error. Por favor, inténtalo nuevamente.");
+		}
+	});
 }
 
 const params = getUrlParams();
-getNombreEscultor(params.id, URL_ESCULTORES)
+getNombreEscultor(params.id, URL_ESCULTORES);
 // validar_qr(params);
-
-

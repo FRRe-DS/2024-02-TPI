@@ -78,49 +78,52 @@ export function formatearNombre(nombre: string, apellido: string): string {
 }
 
 function Voto(correo: string, escultor_id: string) {
-	document.getElementById(`votoForm-${escultor_id}`)?.addEventListener("submit", async (e) => {
-		e.preventDefault();
+	document
+		.getElementById(`votoForm-${escultor_id}`)
+		?.addEventListener("submit", async (e) => {
+			e.preventDefault();
 
-		const formElement = e.target as HTMLFormElement;
+			const formElement = e.target as HTMLFormElement;
 
-		if (formElement) {
-			const formData = new FormData(formElement);
-			const rating = formData.get('rating'); 
+			if (formElement) {
+				const formData = new FormData(formElement);
+				const rating = formData.get("rating");
 
-			if (rating) {
-				try {
-					const response = await fetch("http://localhost:8000/api/voto_escultor/", {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({
-							puntaje: rating, 
-							escultor_id: escultor_id,
-							correo_votante: correo 
-						}),
-					});
+				if (rating) {
+					try {
+						const response = await fetch(
+							"http://localhost:8000/api/voto_escultor/",
+							{
+								method: "POST",
+								headers: {
+									"Content-Type": "application/json",
+								},
+								body: JSON.stringify({
+									puntaje: rating,
+									escultor_id: escultor_id,
+									correo_votante: correo,
+								}),
+							},
+						);
 
-					if (response.ok) {
-						const data = await response.json();
-						console.log('Rating enviado:', data);
-						alert('¡Gracias por tu calificación!');
-						localStorage.setItem("userEmail", correo);
-						window.location.href = "./certamen.html";
-					} else {
-						alert("Usted ya ha votado a este escultor")
+						if (response.ok) {
+							const data = await response.json();
+							console.log("Rating enviado:", data);
+							alert("¡Gracias por tu calificación!");
+							localStorage.setItem("userEmail", correo);
+							window.location.href = "./certamen.html";
+						} else {
+							alert("Usted ya ha votado a este escultor");
+						}
+					} catch (error) {
+						console.error("Error al enviar rating:", error);
 					}
-				} catch (error) {
-					console.error('Error al enviar rating:', error);
+				} else {
+					alert("Por favor, selecciona una calificación.");
 				}
-			} else {
-				alert('Por favor, selecciona una calificación.');
 			}
-		}
-	});
+		});
 }
-
-
 
 // ------ Get escultores ------
 
@@ -143,7 +146,7 @@ async function loadEscultores(url: string) {
 				const foto = urlFotoEscultor(escultor.foto);
 				const pais = await loadPais(URL_PAIS, escultor.pais_id);
 				const NyA = formatearNombre(escultor.nombre, escultor.apellido);
-				
+
 				article.innerHTML = `
 						
 						<img
@@ -185,26 +188,28 @@ async function loadEscultores(url: string) {
 				boton.addEventListener("click", (event) => {
 					event.preventDefault();
 					const btnTarget = event.target as HTMLButtonElement;
-			
+
 					// con el id del escultor podemos usarlo para identificar al escultor
 					const id = btnTarget.getAttribute("data-id") ?? " ";
-			
+
 					const email = localStorage.getItem("userEmail");
-			
+
 					if (email) {
 						overlay.style.display = "block";
 						popupContainer.style.display = "flex";
-						const nombreEscultor = document.getElementById("nombre-escultor") as HTMLHeadElement;
-			
+						const nombreEscultor = document.getElementById(
+							"nombre-escultor",
+						) as HTMLHeadElement;
+
 						nombreEscultor.textContent = formatearNombre(
 							escultores[Number(id) - 1].nombre,
 							escultores[Number(id) - 1].apellido,
 						);
-			
+
 						const formPopUp = document.createElement("form");
-			
+
 						formPopUp.id = `votoForm-${id}`;
-			
+
 						formPopUp.innerHTML = `
 							<div class="rating">
 								<input value="5" name="rating" id="star5" type="radio" />
@@ -225,9 +230,9 @@ async function loadEscultores(url: string) {
 			
 							<button type="submit" class="btn-votarV2">Votar</button>
 						`;
-			
+
 						popup.appendChild(formPopUp);
-			
+
 						// Ahora pasamos el correo y el id del escultor a la función Voto
 						Voto(email, id);
 					} else {
@@ -236,7 +241,6 @@ async function loadEscultores(url: string) {
 					}
 				});
 			}
-			
 
 			if (cerrar_popup) {
 				cerrar_popup.addEventListener("click", () => {
@@ -253,8 +257,6 @@ async function loadEscultores(url: string) {
 		console.log(`Error al carga los escultores: ${error}`);
 	}
 }
-
-
 
 loadHTML("header.html", "header", "certamen");
 inicializar();

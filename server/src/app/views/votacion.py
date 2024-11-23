@@ -1,13 +1,11 @@
 import datetime
 import logging
-import smtplib
-from email.message import EmailMessage
 from io import BytesIO
 
 import qrcode
 import ulid
 from django.conf import settings
-from django.db.models import ObjectDoesNotExist, Sum
+from django.db.models import Sum
 from django.db.models.base import Coalesce
 from django.http.response import HttpResponse
 from rest_framework import authentication, permissions, status, viewsets
@@ -24,8 +22,6 @@ from app.utils import PositiveInt
 @api_view(["GET"])
 # @permission_classes([IsAuthenticated])
 def generar_qr(request: Request) -> HttpResponse:
-    from django.conf import settings
-
     escultor_id = request.query_params.get("escultor_id")
     if escultor_id is None:
         error = "Debe ingresar por query parameters el id del escultor"
@@ -99,7 +95,7 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         # Esta linea la uso para poder ver si se efectua o no un voto
         # if self.request.method in ["GET", "POST"]:
-        if self.request.method in  "POST":
+        if self.request.method in "POST":
             return [AllowAny()]
         return [permission() for permission in self.permission_classes]
 
