@@ -13,7 +13,16 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project --no-dev
 
 
-ADD . /app
+# ADD . /app
+
+COPY ./pyproject.toml /app
+COPY ./uv.lock /app
+
+COPY ./src/manage.py /app/manage.py
+COPY ./src/gunicorn.conf.py /app/gunicorn.conf.py
+COPY ./src/backend /app/backend
+COPY ./src/app /app/app
+
 
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev
@@ -29,7 +38,6 @@ COPY --from=builder --chown=app:app /app /app
 ENV PATH="/app/.venv/bin:$PATH"
 ENV DJANGO_ENV="prod"
 
-ADD ./src /app
 
 EXPOSE 80
 CMD ["sh", "-c", "gunicorn -b 0.0.0.0:80 -c ./gunicorn.conf.py backend.wsgi:application"]

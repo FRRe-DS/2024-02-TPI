@@ -2,7 +2,7 @@
 name = "desarrollo"
 version = "0.1.0"
 description = "Trabajo Práctico Final de Desarrollo de Software"
-readme = "README.md"
+# readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "django>=5.1",
