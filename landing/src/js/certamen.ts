@@ -77,6 +77,51 @@ export function formatearNombre(nombre: string, apellido: string): string {
 	return nombreFormateado;
 }
 
+function Voto(correo: string, escultor_id: string) {
+	document.getElementById(`votoForm-${escultor_id}`)?.addEventListener("submit", async (e) => {
+		e.preventDefault();
+
+		const formElement = e.target as HTMLFormElement;
+
+		if (formElement) {
+			const formData = new FormData(formElement);
+			const rating = formData.get('rating'); 
+
+			if (rating) {
+				try {
+					const response = await fetch("http://localhost:8000/api/voto_escultor/", {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							puntaje: rating, 
+							escultor_id: escultor_id,
+							correo_votante: correo 
+						}),
+					});
+
+					if (response.ok) {
+						const data = await response.json();
+						console.log('Rating enviado:', data);
+						alert('¡Gracias por tu calificación!');
+						localStorage.setItem("userEmail", correo);
+						window.location.href = "./certamen.html";
+					} else {
+						alert("Usted ya ha votado a este escultor")
+					}
+				} catch (error) {
+					console.error('Error al enviar rating:', error);
+				}
+			} else {
+				alert('Por favor, selecciona una calificación.');
+			}
+		}
+	});
+}
+
+
+
 // ------ Get escultores ------
 
 async function loadEscultores(url: string) {
@@ -140,59 +185,58 @@ async function loadEscultores(url: string) {
 				boton.addEventListener("click", (event) => {
 					event.preventDefault();
 					const btnTarget = event.target as HTMLButtonElement;
-
-					// con el id del escultor puedo hacer escultores[id-1].nombre, etc
+			
+					// con el id del escultor podemos usarlo para identificar al escultor
 					const id = btnTarget.getAttribute("data-id") ?? " ";
-
+			
 					const email = localStorage.getItem("userEmail");
-
-					// Al hacer click en el btn votar en un escultor verificamos primero si tenemos un mail en el localstorage, esto implica que ya se
-					// voto antes y quedo validado el mail, entonces solo le muestro un popup para votar, en caso contrario lo mando a la pantalla de
-					// validadr.html para validad su mail.
+			
 					if (email) {
 						overlay.style.display = "block";
 						popupContainer.style.display = "flex";
-						const nombreEscultor = document.getElementById(
-							"nombre-escultor",
-						) as HTMLHeadElement;
-
+						const nombreEscultor = document.getElementById("nombre-escultor") as HTMLHeadElement;
+			
 						nombreEscultor.textContent = formatearNombre(
 							escultores[Number(id) - 1].nombre,
 							escultores[Number(id) - 1].apellido,
 						);
-
+			
 						const formPopUp = document.createElement("form");
-
+			
 						formPopUp.id = `votoForm-${id}`;
-
+			
 						formPopUp.innerHTML = `
-					
 							<div class="rating">
 								<input value="5" name="rating" id="star5" type="radio" />
 								<label for="star5"></label>
+								
 								<input value="4" name="rating" id="star4" type="radio" />
 								<label for="star4"></label>
+								
 								<input value="3" name="rating" id="star3" type="radio" />
 								<label for="star3"></label>
+								
 								<input value="2" name="rating" id="star2" type="radio" />
 								<label for="star2"></label>
+								
 								<input value="1" name="rating" id="star1" type="radio" />
 								<label for="star1"></label>
 							</div>
-
+			
 							<button type="submit" class="btn-votarV2">Votar</button>
-						
-					`;
-
+						`;
+			
 						popup.appendChild(formPopUp);
-
+			
+						// Ahora pasamos el correo y el id del escultor a la función Voto
 						Voto(email, id);
 					} else {
-						// Le paso el id a validar.html entonces puedo obtener los datos de ese escultor, su nombre y su foto
+						// Si no hay email en localStorage, redirigimos para validación
 						window.location.href = `./validar.html?id=${id}`;
 					}
 				});
 			}
+			
 
 			if (cerrar_popup) {
 				cerrar_popup.addEventListener("click", () => {
@@ -210,49 +254,7 @@ async function loadEscultores(url: string) {
 	}
 }
 
-function Voto(correo: string, escultor_id: string) {
-	document.getElementById("votoForm")?.addEventListener("submit", async (e) => {
-		e?.preventDefault();
 
-		const form = e.target as HTMLFormElement;
-		const puntajeInput = form.elements.namedItem(
-			"rating",
-		) as HTMLInputElement | null;
-		const puntaje = puntajeInput ? puntajeInput.value : "";
-
-		type Response = {
-			status: string;
-			error: string;
-		};
-
-		try {
-			const data = { escultor_id: escultor_id, puntaje: puntaje };
-			console.table(data);
-
-			const response = await fetch(
-				`http://localhost:8000/api/voto_escultor/?correo_votante=${correo}`,
-				{
-					method: "POST",
-					headers: {
-						"Content-Type": "application/json",
-					},
-					body: JSON.stringify(data),
-				},
-			);
-
-			if (response.status === 201) {
-				const data: Response = await response.json();
-				localStorage.setItem("userEmail", correo);
-				alert(`El voto se ha registrado de manera exitosa: ${data.status}`);
-			} else {
-				const data: Response = await response.json();
-				alert(`Ha ocurrido un fallo al registrar su voto:${data.error}`);
-			}
-		} catch (error) {
-			console.error("Server error:", error);
-		}
-	});
-}
 
 loadHTML("header.html", "header", "certamen");
 inicializar();

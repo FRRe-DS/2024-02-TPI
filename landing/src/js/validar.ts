@@ -11,7 +11,7 @@ function extractTimeStampFromULID(input: string): Date {
 	return new Date(timestamp);
 }
 
-function getUrlParams(): Record<string, string> {
+export function getUrlParams(): Record<string, string> {
 	const params = new URLSearchParams(window.location.search);
 	const searchConfig: Record<string, string> = {};
 	for (const [key, value] of params) {
@@ -68,67 +68,57 @@ function validar_qr(params: Record<string, string>) {
 	}
 }
 
-async function Voto() {
-		const stored_email = localStorage.getItem("userEmail");
-
-		if (stored_email) {
-			// A esto le tendria que pasar el id del escultor
-			window.location.href = "./votar.html";
-			
-		} else {
-			const params = getUrlParams();
-			const escultor_id = params.id;
-
-			if (!escultor_id) {
-				alert("Error inesperado, el escultor_id es nulo");
-				window.location.href = "./certamen.html";
-			}
-
-			const email = (document.getElementById("email") as HTMLInputElement)?.value;
-
-			if (!email) {
-				alert("Error inesperado, el email es nulo");
-				window.location.href = "./certamen.html";
-			}
-
-			type Response = {
-				status: number;
-				error: string;
-			};
-
-			// tryhardeo el puntaje, el puntaje lo asigno despues de verificar el email
-			const data = { escultor_id: escultor_id, puntaje: 5 };
-
-			try {
-				const response = await fetch(
-					`http://localhost:8000/api/voto_escultor/?correo_votante=${email}`,
-					{
-						method: "POST",
-						headers: {
-							"Content-Type": "application/json",
-						},
-						body: JSON.stringify(data),
-					},
-				);
-
-				if (response.status === 201) {
-					const data: Response = await response.json();
-					localStorage.setItem("userEmail", email);
-					alert(`El voto se ha registrado de manera exitosa: ${data.status}`);
-					window.location.href = "./certamen.html";
-				} else if (response.status === 202) {
-					const data: Response = await response.json();
-					alert(`${data.status}`);
-				} else {
-					const data: Response = await response.json();
-					alert(`Ha ocurrido un fallo al registrar su voto:${data.error}`);
-					window.location.href = "./certamen.html";
-				}
-			} catch (error) {
-				console.error("Server error:", error);
-			}
+async function validar_votante() {
+	const stored_email = localStorage.getItem("userEmail");
+	const params = getUrlParams();
+	const escultor_id = params.id;
+	if (!escultor_id) {
+			alert("Error inesperado, el escultor_id es nulo");
+			window.location.href = "./certamen.html";
 		}
-	};
+
+	if (stored_email) {
+		// A esto le tendria que pasar el id del escultor
+		window.location.href =`./votar.html?correo=${stored_email}&escultor_id=${escultor_id}`;
+	
+	} else {
+		const email = (document.getElementById("email") as HTMLInputElement)?.value;
+
+		if (!email) {
+			alert("Error inesperado, el email es nulo");
+			window.location.href = "./certamen.html";
+		}
+
+		try {
+			const response = await fetch(
+				// Le tengo que pasar el id escultor ya que cuando se valide quiero que me redirija a votar.html y necesito el id del escultor que iba a votar.
+				`http://localhost:8000/validar_votante/?correo=${email}&escultor_id=${escultor_id}`,
+
+				{
+					method: "GET", 
+					headers: {
+						"Accept": "application/json",
+					},
+				}
+			);
+
+			
+			if (response.status === 200) {
+				window.location.href = response.url;  
+			} else if (response.status === 201) {
+			
+				const data = await response.json();
+				alert(data.mensaje); 
+			} else {
+				console.error("Error al validar votante:", response.status);
+			}
+		} catch (error) {
+			console.error("Server error:", error);
+		}
+	}
+};
+
+
 
 
 // Verificar el captcha
@@ -142,11 +132,10 @@ const form = document.getElementById("votoForm");
 
 if (form) {
   form.addEventListener("submit", async (event) => {
-    event.preventDefault();  // Prevenir el envío del formulario
-
-    // Crear FormData a partir del formulario
+    event.preventDefault();  
+	
     const formData = new FormData(this);
-    
+
     // Obtener la respuesta del CAPTCHA
     const turnstileResponse = window.turnstile.getResponse();
     
@@ -158,10 +147,7 @@ if (form) {
 
     // Añadir el token de Turnstile al FormData
     formData.append("cf-turnstile-response", turnstileResponse);
-
-    // Verificar el contenido de FormData (opcional, solo para depuración)
-    console.log([...formData]);  // Esto mostrará todos los pares clave-valor del FormData
-
+   
     try {
       const response = await fetch("http://localhost:8000/verify-captcha/", {
         method: "POST",
@@ -169,11 +155,12 @@ if (form) {
       });
 
       const result = await response.json();
-      console.log("Resultado de verificación del CAPTCHA:", result);
       
       if (response.ok && result.success) {
-        // Si el CAPTCHA es verificado correctamente
-				Voto();
+        // Si el CAPTCHA es verificado correctamente tengo que validar si el votante tiene su mail registrado
+				// si no lo tiene lo debo crear
+				validar_votante()
+				// Luego lo redirecciono a votar.html ahi se ejecuta voto()
       } else {
         alert(result.error || "CAPTCHA inválido.");
       }

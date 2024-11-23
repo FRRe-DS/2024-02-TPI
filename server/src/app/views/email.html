@@ -78,50 +78,16 @@
             
               <strong><p>Verifica tu correo para realizar la votación</p></strong>
           
-              <form id="verify-form" >
-                <button type="submit" >Verificar correo</button>
-              </form>
+              <a href="http://localhost:8000/crear_votante?correo={{correo}}&escultor_id={{escultor_id}}">
+                <button type="submit">Verificar correo</button>
+              </a>
               
+          
             </div>
           </td>
         </tr>
       </table>
     </div>
-    <script>
-      const correoVotante = "{{correo}}"; 
-      const form = document.getElementById('verify-form');
-
-    // Añadimos un event listener para interceptar el envío del formulario
-    form.addEventListener('submit', function(event) {
-        
-        fetch("http//localhost:8000/api/votantes/", {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          
-          },
-          body: JSON.stringify({
-           correo: correoVotante,
-          })
-        })
-        .then(response => {
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error('Error en el servidor');
-          }
-        })
-        .then(data => {
-          console.log('Correo verificado exitosamente:', data);
-          alert('Correo verificado exitosamente!');
-        
-          window.location.href = 'https://elrincondelinge.org/certamen'; 
-        })
-        .catch(error => {
-          console.error('Error al verificar correo:', error);
-          alert('Hubo un error al verificar el correo. Intenta nuevamente.');
-        });
-      })
-    </script>
+   
   </body>
 </html>
