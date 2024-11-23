@@ -19,8 +19,8 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = [
     host.strip() for host in config("WEBSITE_HOSTNAME", default="localhost").split(",")
 ]
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
+# SESSION_COOKIE_SECURE = True
 
 
 DATABASES = {"default": config("DATABASE_URL", cast=dj_database_url.parse)}
