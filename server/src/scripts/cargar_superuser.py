@@ -8,7 +8,7 @@ logging.basicConfig(
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-INSERT_SQL_FILE = os.path.join(BASE_DIR, "insert_data.sql")
+INSERT_SQL_FILE = os.path.join(BASE_DIR, "insert_superuser.sql")
 
 DB_HOST = "localhost"
 DB_PORT = 5432
@@ -48,6 +48,7 @@ def populate_database(sql_file: str):
     with open(sql_file, "r", encoding="utf-8") as file:
         sql_script = file.read()
 
+    # Ejecutar el script de inserción
     cursor.execute(sql_script)
     conn.commit()
     logging.info("Datos insertados en la base de datos.")
@@ -60,6 +61,8 @@ if __name__ == "__main__":
         cursor.close()
         conn.close()
 
-        logging.info("La base de datos está vacía. Insertando datos... listo!")
+        logging.info(
+            "La base de datos está vacía. Insertando el usuario admin... listo!"
+        )
     else:
-        logging.info("La base de datos ya contiene datos!")
+        logging.info("La base de datos ya contiene un usuario admin!")

@@ -1,4 +1,4 @@
-const URL_EVENTOS = "http://localhost:8000/api/eventos/";
+const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
 import { loadHTML } from "../app";
 
 function formatearFecha(fechaString: string) {

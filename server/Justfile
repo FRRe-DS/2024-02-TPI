@@ -17,6 +17,9 @@ runtasks:
 cargardb: 
     uv run ./src/scripts/iniciar_db.py
 
+cargarsu: 
+    uv run ./src/scripts/cargar_superuser.py
+
 test: check
     DJANGO_ENV="testing" uv run ./src/manage.py test ./src/
 

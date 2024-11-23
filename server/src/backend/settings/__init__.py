@@ -11,7 +11,6 @@ from .base import (
     EMAIL_APP_KEY,
     DEFAULT_FROM_EMAIL,
     DEFAULT_AUTO_FIELD,
-    BASE_DIR,
     WSGI_APPLICATION,
     ROOT_URLCONF,
     CORS_ALLOWED_ORIGINS,
@@ -21,13 +20,39 @@ from .base import (
 )
 
 DJANGO_ENV = config("DJANGO_ENV")
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 if DJANGO_ENV == "prod":
-    from .production import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
+    from .production import (
+        DATABASES,
+        DEBUG,
+        ALLOWED_HOSTS,
+        SECRET_KEY,
+        BASE_DIR,
+        STORAGES,
+        MEDIA_URL,
+        CSRF_COOKIE_SECURE,
+        CSRF_TRUSTED_ORIGINS,
+        SESSION_COOKIE_SECURE,
+    )
 elif DJANGO_ENV == "testing":
-    from .testing import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
+    from .testing import (
+        DATABASES,
+        DEBUG,
+        ALLOWED_HOSTS,
+        SECRET_KEY,
+        BASE_DIR,
+    )
 else:
-    from .development import DATABASES, DEBUG, ALLOWED_HOSTS, SECRET_KEY
+    from .development import (
+        DATABASES,
+        DEBUG,
+        ALLOWED_HOSTS,
+        SECRET_KEY,
+        BASE_DIR,
+        STORAGES,
+        MEDIA_URL,
+    )
 
 print(ALLOWED_HOSTS)
 
@@ -53,5 +78,10 @@ __all__ = [
     "DATABASES",
     "DEBUG",
     "ALLOWED_HOSTS",
+    "STORAGES",
+    "MEDIA_URL",
+    "CSRF_COOKIE_SECURE",
+    "CSRF_TRUSTED_ORIGINS",
+    "SESSION_COOKIE_SECURE",
     "CLOUDFLARE_TURNSTILE_SECRET_KEY",
 ]

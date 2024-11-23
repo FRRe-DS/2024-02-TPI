@@ -1,7 +1,7 @@
-from pathlib import Path
 from decouple import config
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+DJANGO_ENV = config("DJANGO_ENV", default="dev")
+
 
 DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
 EMAIL_APP_KEY = config("EMAIL_APP_KEY", default="")
@@ -101,8 +101,8 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5173",
+    "https://e395fb21.2024-02-tpi-cloudflare-shared.pages.dev",
+    "https://elrincondelinge.org",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -127,6 +127,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
@@ -147,6 +148,8 @@ REST_FRAMEWORK = {
         "rest_framework.authentication.TokenAuthentication",
     ],
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
+    "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.ScopedRateThrottle"],
+    "DEFAULT_THROTTLE_RATES": {"qr": "5/hour"},
 }
 
 LANGUAGE_CODE = "es"
@@ -154,6 +157,3 @@ LANGUAGE_CODE = "es"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
-
-# STATIC_URL = "/static/"
-# STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

@@ -4,85 +4,92 @@ from io import BytesIO
 
 import qrcode
 import ulid
-from django.conf import settings
 from django.db.models import Sum
 from django.db.models.base import Coalesce
 from django.http.response import HttpResponse
 from rest_framework import authentication, permissions, status, viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 
 from app.models import Escultor, Votante, VotoEscultor
 from app.serializers import VotoEscultorSerializer
 from app.utils import PositiveInt
+from django.conf import settings
 
 
-@api_view(["GET"])
-# @permission_classes([IsAuthenticated])
-def generar_qr(request: Request) -> HttpResponse:
-    escultor_id = request.query_params.get("escultor_id")
-    if escultor_id is None:
-        error = "Debe ingresar por query parameters el id del escultor"
-        logging.error(error)
-        return Response(
-            {"error": error},
-            status=status.HTTP_400_BAD_REQUEST,
+class generarQR(APIView):
+    if settings.DJANGO_ENV != "testing":
+        throttle_scope = "qr"
+
+    def get(self, request):
+        escultor_id = request.query_params.get("escultor_id")
+        if escultor_id is None:
+            error = "Debe ingresar por query parameters el id del escultor"
+            logging.error(error)
+            return Response(
+                {"error": error},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            escultor_id = PositiveInt(int(escultor_id))
+        except (TypeError, ValueError):
+            error = "El id del escultor debe ser un número válido, entero y positivo"
+            logging.error(error)
+            return Response(
+                {"error": error},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        if not Escultor.objects.filter(id=escultor_id).exists():
+            error = "El id del escultor no existe en la base de datos"
+            logging.error(error)
+            return Response(
+                {"error": error},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        escultor = Escultor.objects.get(id=escultor_id)
+
+        logging.info(f"Generando QR para {escultor_id}...")
+
+        id = ulid.from_timestamp(datetime.datetime.now())
+
+        query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
+
+        if settings.DJANGO_ENV == "prod":
+            voto_url = (
+                f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
+            )
+        else:
+            voto_url = f"http://localhost:5173/validar.html?{query_params}"
+
+        logging.info(voto_url)
+
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
         )
+        qr.add_data(voto_url)
+        qr.make(fit=True)
 
-    try:
-        escultor_id = PositiveInt(int(escultor_id))
-    except (TypeError, ValueError):
-        error = "El id del escultor debe ser un número válido, entero y positivo"
-        logging.error(error)
-        return Response(
-            {"error": error},
-            status=status.HTTP_400_BAD_REQUEST,
-        )
+        img = qr.make_image(fill="black", back_color="white")
 
-    if not Escultor.objects.filter(id=escultor_id).exists():
-        error = "El id del escultor no existe en la base de datos"
-        logging.error(error)
-        return Response(
-            {"error": error},
-            status=status.HTTP_404_NOT_FOUND,
-        )
+        buffer = BytesIO()
+        img.save(buffer, format="PNG", optimize=True)
+        _ = buffer.seek(0)
 
-    escultor = Escultor.objects.get(id=escultor_id)
+        logging.info(f"Generando QR para escultor_id: {escultor_id}... listo! ")
+        return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
 
-    logging.info(f"Generando QR para {escultor_id}...")
 
-    id = ulid.from_timestamp(datetime.datetime.now())
-
-    query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
-
-    if settings.DJANGO_ENV == "prod":
-        voto_url = (
-            f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
-        )
-    else:
-        voto_url = f"http://localhost:5173/validar.html?{query_params}"
-
-    logging.info(voto_url)
-
-    qr = qrcode.QRCode(
-        version=1,
-        error_correction=qrcode.ERROR_CORRECT_L,
-        box_size=10,
-        border=4,
-    )
-    qr.add_data(voto_url)
-    qr.make(fit=True)
-
-    img = qr.make_image(fill="black", back_color="white")
-
-    buffer = BytesIO()
-    img.save(buffer, format="PNG", optimize=True)
-    _ = buffer.seek(0)
-
-    logging.info(f"Generando QR para escultor_id: {escultor_id}... listo! ")
-    return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
+# @api_view(["GET"])
+# def generar_qr(request: Request) -> HttpResponse:
 
 
 class VotoEscultorViewSet(viewsets.ModelViewSet):
