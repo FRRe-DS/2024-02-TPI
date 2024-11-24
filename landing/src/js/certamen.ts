@@ -260,4 +260,5 @@ async function loadEscultores(url: string) {
 }
 
 loadHTML("header.html", "header", "certamen");
+loadHTML("footer.html", "footer", "certamen");
 inicializar();

@@ -69,6 +69,27 @@ function validar_qr(params: Record<string, string>) {
 	}
 }
 
+function notificarEmail() {
+
+	const formularioVoto = document.querySelector("#formulario-voto") as HTMLElement;
+	const imgEscultor = document.querySelector("#img_escultor") as HTMLElement;
+	const notificarMail = document.querySelector("#notificarMail") as HTMLElement;
+	const containerVotar = document.querySelector(".container-votar") as HTMLElement;
+
+	containerVotar.style.display ="block"
+	containerVotar.style.width ="auto"
+	containerVotar.style.paddingBlock ="32px 46px"
+	containerVotar.style.paddingInline ="32px"
+
+	formularioVoto.style.display = "none";
+	
+	imgEscultor.style.display = "none";
+	notificarMail.style.display = "flex";
+	
+
+	}
+
+
 async function validar_votante() {
 	const stored_email = localStorage.getItem("userEmail");
 	const params = getUrlParams();
@@ -79,15 +100,16 @@ async function validar_votante() {
 	}
 
 	if (stored_email) {
-		// A esto le tendria que pasar el id del escultor
+	
 		window.location.href = `./votar.html?correo=${stored_email}&escultor_id=${escultor_id}`;
 	} else {
 		const email = (document.getElementById("email") as HTMLInputElement)?.value;
-
+		
 		if (!email) {
 			alert("Error inesperado, el email es nulo");
 			window.location.href = "./certamen.html";
 		}
+		notificarEmail()
 
 		try {
 			const response = await fetch(
@@ -106,7 +128,6 @@ async function validar_votante() {
 				window.location.href = response.url;
 			} else if (response.status === 201) {
 				const data = await response.json();
-				alert(data.mensaje);
 			} else {
 				console.error("Error al validar votante:", response.status);
 			}
@@ -166,6 +187,12 @@ if (form) {
 	});
 }
 
+const volverAValidar = document.getElementById("volverAValidar") as HTMLLinkElement;
 const params = getUrlParams();
+
+volverAValidar.href = `validar.html?id=${params.id}`
+
+
 getNombreEscultor(params.id, URL_ESCULTORES);
+
 // validar_qr(params);

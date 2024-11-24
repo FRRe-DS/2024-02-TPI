@@ -68,7 +68,11 @@ class VotacionAPITest(BaseAPITest):
         self.votante = Votante.objects.create(correo="ramon@ejemplo.com")
 
     def test_votar_escultor_201_CREATED(self):
-        valid_input = {"escultor_id": self.escultor.id, "puntaje": 5, "correo_votante":self.votante.correo}
+        valid_input = {
+            "escultor_id": self.escultor.id,
+            "puntaje": 5,
+            "correo_votante": self.votante.correo,
+        }
         response = self.client.post(
             self.base_url,
             valid_input,
@@ -82,7 +86,11 @@ class VotacionAPITest(BaseAPITest):
 
     def test_votar_escultor_403_FORBIDDEN(self):
         self.test_votar_escultor_201_CREATED()
-        valid_input = {"escultor_id": self.escultor.id, "puntaje": 5, "correo_votante":self.votante.correo}
+        valid_input = {
+            "escultor_id": self.escultor.id,
+            "puntaje": 5,
+            "correo_votante": self.votante.correo,
+        }
         response = self.client.post(
             self.base_url,
             valid_input,
@@ -92,7 +100,11 @@ class VotacionAPITest(BaseAPITest):
 
     def test_votar_escultor_400_BAD_REQUEST(self):
         self.test_votar_escultor_201_CREATED()
-        valid_input = {"escultor_id": self.escultor.id, "puntaje": 10, "correo_votante":self.votante.correo}
+        valid_input = {
+            "escultor_id": self.escultor.id,
+            "puntaje": 10,
+            "correo_votante": self.votante.correo,
+        }
         response = self.client.post(
             self.base_url,
             valid_input,
@@ -100,7 +112,11 @@ class VotacionAPITest(BaseAPITest):
         )
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-        valid_input = {"escultor_id": self.escultor.id, "puntaje": -10, "correo_votante":self.votante.correo}
+        valid_input = {
+            "escultor_id": self.escultor.id,
+            "puntaje": -10,
+            "correo_votante": self.votante.correo,
+        }
         response = self.client.post(
             self.base_url,
             valid_input,

@@ -4,11 +4,13 @@
 	--text-200: #343434;
 	--text-300: #f9f9f9;
 	--text-400: #fff;
+	--blue: #497fff,
 }
 
 /* modifico la scrollbar */
 ::-webkit-scrollbar {
 	width: 10px;
+	
 }
 
 /* Track */
@@ -1125,17 +1127,77 @@ form {
 	width: 100%;
 }
 
+/* From Uiverse.io by adamgiebl */ 
 .btn-enviar-email {
-	font-weight: 700;
-	color: #497fff;
-	display: inline-flex;
-	gap: 5px;
-	justify-content: center;
-	align-items: center;
+  font-family: inherit;
+  font-size: 20px;
+  background: #497fff;
+  color: white;
+  padding: 10px 24px;
+  padding-left: 0.9em;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
-.btn-enviar-email i {
-	font-size: 16px;
+.btn-enviar-email span {
+  display: block;
+  margin-left: 0.3em;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-enviar-email svg {
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.btn-enviar-email:hover .svg-wrapper {
+  animation: fly-1 0.6s ease-in-out infinite alternate;
+}
+
+.btn-enviar-email:hover svg {
+  transform: translateX(1.2em) rotate(45deg) scale(1.1);
+}
+
+.btn-enviar-email:hover span {
+  transform: translateX(5em);
+}
+
+.btn-enviar-email:active {
+  transform: scale(0.95);
+}
+
+@keyframes fly-1 {
+  from {
+    transform: translateY(0.1em);
+  }
+
+  to {
+    transform: translateY(-0.1em);
+  }
+}
+
+.notificarMail{
+	display: none;
+	width: 100%;
+	justify-content: center;	
+	align-items: center;
+	flex-direction: column;
+	gap: 15px;
+	text-align: center;
+}
+
+.notificarMail p{
+	color: var(--text-200);
+}
+
+#volverAValidar{
+	color: #497fff;
 }
 
 .formulario-voto p {
