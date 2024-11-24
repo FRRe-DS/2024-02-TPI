@@ -1,5 +1,4 @@
 import { formatearNombre, urlFotoEscultor } from "./certamen";
-const URL_ESCULTORES = "http://localhost:8000/api/escultores/";
 
 function extractTimeStampFromULID(input: string): Date {
 	const ulid_timestamp_str = input.slice(0, 10);
@@ -23,7 +22,8 @@ export function getUrlParams(): Record<string, string> {
 // const TIME_LIMIT_MINS = 0.5;
 const TIME_LIMIT_MINS = 10.0;
 
-async function getNombreEscultor(id: string, url: string) {
+export async function getNombreEscultor(id: string) {
+	const url = "http://localhost:8000/api/escultores/";
 	try {
 		const res = await fetch(`${url}${id}`);
 		const escultor = await res.json();
@@ -100,7 +100,6 @@ async function validar_votante() {
 	}
 
 	if (stored_email) {
-	
 		window.location.href = `./votar.html?correo=${stored_email}&escultor_id=${escultor_id}`;
 	} else {
 		const email = (document.getElementById("email") as HTMLInputElement)?.value;
@@ -108,8 +107,7 @@ async function validar_votante() {
 		if (!email) {
 			alert("Error inesperado, el email es nulo");
 			window.location.href = "./certamen.html";
-		}
-		notificarEmail()
+		}	
 
 		try {
 			const response = await fetch(
@@ -127,7 +125,9 @@ async function validar_votante() {
 			if (response.status === 200) {
 				window.location.href = response.url;
 			} else if (response.status === 201) {
-				const data = await response.json();
+				// await response.json();
+				notificarEmail()
+				console.log("Envio exitoso")
 			} else {
 				console.error("Error al validar votante:", response.status);
 			}
@@ -190,9 +190,12 @@ if (form) {
 const volverAValidar = document.getElementById("volverAValidar") as HTMLLinkElement;
 const params = getUrlParams();
 
-volverAValidar.href = `validar.html?id=${params.id}`
+if (volverAValidar){
+	volverAValidar.href = `validar.html?id=${params.id}`
+}
 
 
-getNombreEscultor(params.id, URL_ESCULTORES);
+
+getNombreEscultor(params.id);
 
 // validar_qr(params);

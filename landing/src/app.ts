@@ -26,24 +26,6 @@ export function loadHTML(
 			const element = document.getElementById(elementId);
 			if (element) {
 				element.innerHTML = data;
-				
-				if (elementId === "footer"){
-					
-					if (paginaActual !== "inicio"){
-						const ubicacionElement = document.querySelector("#footer-ubicacion") as HTMLElement;
-						const sponsor = document.querySelector("#footer-sponsors") as HTMLElement;
-						if (ubicacionElement) {
-							ubicacionElement.style.display = "none";
-						}
-				
-						if (sponsor) {
-							sponsor.style.display = "none";
-						}
-						}
-					
-				}
-			
-			
 				if (paginaActual) {
 					setPaginaActual(paginaActual);
 				}
@@ -54,4 +36,4 @@ export function loadHTML(
 		.catch((error) => console.error(error));
 }
 
-
+loadHTML("footer.html", "footer", "");

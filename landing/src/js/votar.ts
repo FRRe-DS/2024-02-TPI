@@ -1,6 +1,12 @@
-import { getUrlParams } from "./validar";
+import { getNombreEscultor, getUrlParams } from "./validar";
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 
-const form = document.getElementById("ratingForm");
+
+const form = document.getElementById("ratingForm") as HTMLFormElement;
+const button = document.querySelector(".btn-votarV2") as HTMLButtonElement;
+
+
 
 if (form) {
 	form.addEventListener("submit", async (event) => {
@@ -13,7 +19,16 @@ if (form) {
 		const escultor_id = params.escultor_id;
 
 		if (!escultor_id || !correo) {
-			alert("Error inesperado, parametros insuficientes");
+			Toastify({
+        text: "Error inesperado, parámetros insuficientes",
+        duration: 3000,
+        gravity: "bottom",
+        position: "right",
+        style: {
+          background: "#f63e3e",
+        },
+      }).showToast();
+
 			window.location.href = "./certamen.html";
 		}
 
@@ -22,6 +37,7 @@ if (form) {
 			const rating = formData.get("rating");
 
 			if (rating) {
+
 				try {
 					const response = await fetch(
 						"http://localhost:8000/api/voto_escultor/",
@@ -39,20 +55,63 @@ if (form) {
 					);
 
 					if (response.ok) {
+						if (!button.classList.contains("active")) {
+							button.classList.add("active");
+							
+							button.textContent = ""
+							button.innerHTML += `
+							 <dotlottie-player class="succesOperation" src="https://lottie.host/5e9375ca-af9f-4fff-8889-bba227a76782/yZOGBi0SfR.lottie" background="transparent" speed="1" style="width: 100px; height: 100px"  autoplay></dotlottie-player>`
+						
+						}
 						const data = await response.json();
 						console.log("Rating enviado:", data);
-						alert("¡Gracias por tu calificación!");
+			
 						localStorage.setItem("userEmail", correo);
-						window.location.href = "./certamen.html";
+						setTimeout(() => {
+							window.location.href = "./certamen.html";
+						}, 3000);
+
 					} else {
+						Toastify({
+							text: "¡Error al enviar la calificación, usted ya voto a este escultor!",
+							duration: 3000,
+							gravity: "bottom",
+							position: "right",
+							style: {
+								background: "#f63e3e",
+							},
+						}).showToast();
 						console.error("Error al enviar rating:", response.status);
 					}
 				} catch (error) {
+					Toastify({
+						text: "¡Error al enviar la calificación, vuelva a intentarlo más tarde!",
+						duration: 3000,
+						gravity: "bottom",
+						position: "right",
+						style: {
+							background: "#f63e3e",
+						},
+					}).showToast();
 					console.error("Error al enviar rating:", error);
 				}
 			} else {
-				alert("Por favor, selecciona una calificación.");
+				Toastify({
+					text: "Por favor, seleccione una calificación",
+					duration: 3000,
+					gravity: "bottom",
+					position: "right",
+					style: {
+						background: "#f63e3e",
+					},
+				}).showToast();
+			
 			}
 		}
 	});
 }
+
+
+
+const params = getUrlParams();
+getNombreEscultor(params.escultor_id)

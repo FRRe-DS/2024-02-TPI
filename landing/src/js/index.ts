@@ -44,5 +44,5 @@ async function loadEventos(url: string) {
 }
 
 loadHTML("header.html", "header", "inicio");
-loadHTML("footer.html", "footer", "inicio");
+
 loadEventos(URL_EVENTOS);

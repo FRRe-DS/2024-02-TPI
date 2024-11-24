@@ -924,6 +924,7 @@ footer {
 	place-items: center;
 	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 	gap: 3rem;
+	padding-bottom: 36px;
 }
 
 .card-escultor {
@@ -1077,6 +1078,7 @@ footer {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
 }
 
 .container-votar {
@@ -1414,24 +1416,44 @@ form {
 	cursor: pointer;
 }
 
+
+
 .btn-votarV2 {
-	background-color: #497fff;
-	border-radius: 8px;
-	padding: 8px 24px;
-	color: #fff;
-	border: 1px solid #fff;
-	transition: all 0.3s;
+  background-color: #497fff;
+  border-radius: 8px;
+  padding: 8px 24px;
+  color: #fff;
+  border: 1px solid #fff;
+  transition: all 0.3s;
+  cursor: pointer;
+
 }
 
 .btn-votarV2:hover {
-	color: #497fff;
-	background-color: var(--bg-2);
-	border: 1px solid #497fff;
+  color: #497fff;
+  background-color: var(--bg-2);
+  border: 1px solid #497fff;
 }
 
-.btn-votarV2:active {
-	transform: scale(0.9);
+/* Estado activado */
+.btn-votarV2.active {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--blue);
+  color: #fff;
+	position: relative;
 }
+
+.succesOperation{
+	position: absolute;
+}
+
 
 @media (max-width: 850px) {
 	.detalle-evento {

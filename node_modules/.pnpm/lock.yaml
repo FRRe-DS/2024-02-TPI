@@ -11,12 +11,29 @@ importers:
       gsap:
         specifier: ^3.12.5
         version: 3.12.5
+      toastify-js:
+        specifier: ^1.12.0
+        version: 1.12.0
+    devDependencies:
+      '@types/toastify-js':
+        specifier: ^1.12.3
+        version: 1.12.3
 
 packages:
+
+  '@types/toastify-js@1.12.3':
+    resolution: {integrity: sha512-9RjLlbAHMSaae/KZNHGv19VG4gcLIm3YjvacCXBtfMfYn26h76YP5oxXI8k26q4iKXCB9LNfv18lsoS0JnFPTg==}
 
   gsap@3.12.5:
     resolution: {integrity: sha512-srBfnk4n+Oe/ZnMIOXt3gT605BX9x5+rh/prT2F1SsNJsU1XuMiP0E2aptW481OnonOGACZWBqseH5Z7csHxhQ==}
 
+  toastify-js@1.12.0:
+    resolution: {integrity: sha512-HeMHCO9yLPvP9k0apGSdPUWrUbLnxUKNFzgUoZp1PHCLploIX/4DSQ7V8H25ef+h4iO9n0he7ImfcndnN6nDrQ==}
+
 snapshots:
 
+  '@types/toastify-js@1.12.3': {}
+
   gsap@3.12.5: {}
+
+  toastify-js@1.12.0: {}
