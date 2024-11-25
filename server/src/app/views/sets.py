@@ -2,7 +2,7 @@ from background_task.models import CompletedTask
 from background_task.tasks import Task
 from django.http import JsonResponse
 from rest_framework import authentication, permissions, status, viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -47,8 +47,7 @@ def background_task_ejemplo(request: Request) -> JsonResponse:
 
 @api_view(["GET"])
 def check_django_task_status(request):
-    """
-    Example view to check the status of tasks.
+    """ Example view to check the status of tasks.
     """
     # Query pending tasks
     pending_tasks = Task.objects.all()
@@ -66,6 +65,23 @@ def check_django_task_status(request):
 
     return JsonResponse({"pending_tasks": pending, "completed_tasks": completed})
 
+    # esta es la forma de obtener el token de un admin
+    # se obtiene haciendo un post con el username y password del usuario a la rutaBase/get_token/
+    # es decir api/adminsis/get_token/
+@api_view(["POST"])
+@permission_classes([permissions.AllowAny])
+def get_token(request): 
+
+    userAdmin = get_object_or_404(User, username=request.data["username"])
+
+    if not userAdmin.check_password(request.data["password"]):
+        return Response(
+            {"error": "contra incorrecta"}, status=status.HTTP_400_BAD_REQUEST
+        )
+
+    token, created = Token.objects.get_or_create(user=userAdmin)
+
+    return Response({"token": token.key}, status=status.HTTP_200_OK)
 
 class VotanteViewSet(viewsets.ModelViewSet):
     """
@@ -334,45 +350,10 @@ class AdminSisViewSet(viewsets.ModelViewSet):
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-
-    def get_permissions(self):
-        if self.request.method == "POST":
-            return [permissions.AllowAny()]
-        return [permission() for permission in self.permission_classes]
-
-    # basicamente es el metodo post
-    # pero a este lo sobreescribo para que genere el token de cada nuevo admin
-    def create(self, request, *args, **kwargs):
-        serializer = AdminSisSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-
-            userAdmin = User.objects.get(username=serializer.data["username"])
-            userAdmin.set_password(serializer.data["password"])
-            userAdmin.save()
-
-            token = Token.objects.create(user=userAdmin)
-
-            return Response({"token": token.key}, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # esta es la forma de obtener el token de un admin
-    # se obtiene haciendo un post con el username y password del usuario a la rutaBase/get_token/
-    # es decir api/adminsis/get_token/
-    @action(detail=False, methods=["post"], permission_classes=[permissions.AllowAny])
-    def get_token(self, request):
-        userAdmin = get_object_or_404(User, username=request.data["username"])
-
-        if not userAdmin.check_password(request.data["password"]):
-            return Response(
-                {"error": "contra incorrecta"}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        token, created = Token.objects.get_or_create(user=userAdmin)
-
-        return Response({"token": token.key}, status=status.HTTP_200_OK)
+    
+    def create(self, request):
+        response = {'message': 'No se puede hacer post a este endpoint'}
+        return Response(response, status=status.HTTP_403_FORBIDDEN)
 
 
 class TematicaViewSet(viewsets.ModelViewSet):
