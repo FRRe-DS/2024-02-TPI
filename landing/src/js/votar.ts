@@ -81,6 +81,9 @@ if (form) {
 								background: "#f63e3e",
 							},
 						}).showToast();
+						setTimeout(() => {
+							window.location.href = "./certamen.html";
+						}, 3000);
 						console.error("Error al enviar rating:", response.status);
 					}
 				} catch (error) {

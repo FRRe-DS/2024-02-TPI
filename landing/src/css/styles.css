@@ -1093,7 +1093,7 @@ footer {
 
 }
 
-.container-votar {
+.container-votar, .error-container {
 	display: grid;
 	grid-template-columns: 60% 40%;
 	width: 100%;
@@ -1105,6 +1105,12 @@ footer {
 	z-index: 10px !important;
 
 	overflow: hidden;
+}
+
+.error-container{
+	display: block;
+	padding: 32px;
+	width: auto;
 }
 
 .formulario-voto {
@@ -1199,7 +1205,7 @@ form {
   }
 }
 
-.notificarMail{
+.notificarMail, .error{
 	display: none;
 	width: 100%;
 	justify-content: center;	
@@ -1209,8 +1215,15 @@ form {
 	text-align: center;
 }
 
+
+
 .notificarMail p{
 	color: var(--text-200);
+}
+
+.error{
+	display: flex;
+	
 }
 
 #volverAValidar{

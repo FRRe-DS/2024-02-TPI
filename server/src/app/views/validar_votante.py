@@ -111,10 +111,13 @@ def crear_votante(request: Request) -> HttpResponse:
                 f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
             )
         else:
-            return JsonResponse(
-                {"error": "Error al crear el votante."},
-                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            return redirect(
+                f"http://localhost:5173/error.html?&escultor_id={escultor_id}"
             )
+            # return JsonResponse(
+            #     {"error": "Error al crear el votante."},
+            #     status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            # )
 
     except Exception:
         return redirect("http://localhost:5173/certamen.html")

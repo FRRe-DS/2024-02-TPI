@@ -29,8 +29,6 @@ export function loadHTML(
 				if (paginaActual) {
 					setPaginaActual(paginaActual);
 				}
-			}else {
-				console.error(`Elemento con ID "${elementId}" no fue encontrado.`);
 			}
 		})
 		.catch((error) => console.error(error));
