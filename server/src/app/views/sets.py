@@ -115,6 +115,7 @@ class VotanteViewSet(viewsets.ModelViewSet):
 
     queryset = Votante.objects.all()
     serializer_class = VotanteSerializer
+    filterset_fields = ["id", "correo"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -162,7 +163,7 @@ class EventoViewSet(viewsets.ModelViewSet):
 
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
-    filterset_fields = ["tematica_id"]
+    filterset_fields = ["nombre", "lugar_id", "tematica_id", "fecha_inicio"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -208,6 +209,7 @@ class EsculturaViewSet(viewsets.ModelViewSet):
 
     queryset = Escultura.objects.all()
     serializer_class = EsculturaSerializer
+    filterset_fields = ["id", "nombre", "escultor_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -255,7 +257,7 @@ class EscultorViewSet(viewsets.ModelViewSet):
 
     queryset = Escultor.objects.all()
     serializer_class = EscultorSerializer
-    filterset_fields = ["nombre"]
+    filterset_fields = ["id", "nombre", "pais_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -300,7 +302,15 @@ class ImagenViewSet(viewsets.ModelViewSet):
 
     queryset = Imagen.objects.all()
     serializer_class = ImagenSerializer
+    filterset_fields = ["id", "escultura_id"]
 
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 class PaisViewSet(viewsets.ModelViewSet):
     """
@@ -334,6 +344,7 @@ class PaisViewSet(viewsets.ModelViewSet):
 
     queryset = Pais.objects.all()
     serializer_class = PaisSerializer
+    filterset_fields = ["id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -347,6 +358,7 @@ class PaisViewSet(viewsets.ModelViewSet):
 class AdminSisViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = AdminSisSerializer
+    filterset_fields = ["id", "username", "email"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -389,6 +401,7 @@ class TematicaViewSet(viewsets.ModelViewSet):
 
     queryset = Tematica.objects.all()
     serializer_class = TematicaSerializer
+    filterset_fields = ["id", "nombre"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -432,6 +445,7 @@ class LugarViewSet(viewsets.ModelViewSet):
 
     queryset = Lugar.objects.all()
     serializer_class = LugarSerializer
+    filterset_fields = ["id", "nombre"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
