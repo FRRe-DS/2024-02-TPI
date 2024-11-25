@@ -88,6 +88,8 @@ function Voto(correo: string, escultor_id: string) {
 
 			const formElement = e.target as HTMLFormElement;
 			 const button = formElement.querySelector(".btn-votarV2") as HTMLButtonElement;
+			
+
 
 			if (formElement) {
 				const formData = new FormData(formElement);
@@ -124,9 +126,7 @@ function Voto(correo: string, escultor_id: string) {
 							console.log("Rating enviado:", data);
 				
 							localStorage.setItem("userEmail", correo);
-							setTimeout(() => {
-								window.location.href = "./certamen.html";
-							}, 3000);
+						
 	
 						} else {
 							Toastify({
@@ -199,11 +199,12 @@ async function loadEscultores(url: string) {
 
 			// Agarro todos los botones de votar, y despues hago un for each para agregrarles a todos un eventlistener y usar el event.target para obtener el id del escultor que esta en un data-id en cada voton
 			const botonesVotar = document.querySelectorAll(".btn-votar");
-
 			const overlay = document.querySelector(".overlay") as HTMLButtonElement;
 			const popupContainer = document.querySelector(
-				".popUp-container",
-			) as HTMLDivElement;
+							".popUp-container",
+						) as HTMLDivElement;
+
+			
 			const popup = document.querySelector(".popup") as HTMLElement;
 			const cerrar_popup = document.querySelector(
 				".cerrar-popup",
@@ -282,6 +283,7 @@ async function loadEscultores(url: string) {
 		console.log(`Error al carga los escultores: ${error}`);
 	}
 }
+
 
 loadHTML("header.html", "header", "certamen");
 

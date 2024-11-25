@@ -1,4 +1,6 @@
 import { formatearNombre, urlFotoEscultor } from "./certamen";
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 
 function extractTimeStampFromULID(input: string): Date {
 	const ulid_timestamp_str = input.slice(0, 10);
@@ -64,7 +66,16 @@ function validar_qr(params: Record<string, string>) {
 		console.log(spanned);
 	} else {
 		console.error(`Es inválido!, el qr tiene un timestamp de ${timestamp}`);
-		alert("Es inválido, el qr ha caducado!");
+		Toastify({
+			text: "Es inválido, el qr ha caducado!",
+			duration: 3000,
+			gravity: "bottom",
+			position: "right",
+			style: {
+				background: "#f63e3e",
+			},
+		}).showToast();
+
 		window.location.href = "./certamen.html";
 	}
 }
@@ -95,7 +106,16 @@ async function validar_votante() {
 	const params = getUrlParams();
 	const escultor_id = params.id;
 	if (!escultor_id) {
-		alert("Error inesperado, el escultor_id es nulo");
+		Toastify({
+			text: "Error inesperado, el escultor_id es nulo",
+			duration: 3000,
+			gravity: "bottom",
+			position: "right",
+			style: {
+				background: "#f63e3e",
+			},
+		}).showToast();
+		
 		window.location.href = "./certamen.html";
 	}
 
@@ -105,7 +125,16 @@ async function validar_votante() {
 		const email = (document.getElementById("email") as HTMLInputElement)?.value;
 		
 		if (!email) {
-			alert("Error inesperado, el email es nulo");
+			Toastify({
+				text: "Error inesperado, el correo es nulo",
+				duration: 3000,
+				gravity: "bottom",
+				position: "right",
+				style: {
+					background: "#f63e3e",
+				},
+			}).showToast();
+			
 			window.location.href = "./certamen.html";
 		}	
 
@@ -129,9 +158,28 @@ async function validar_votante() {
 				notificarEmail()
 				console.log("Envio exitoso")
 			} else {
+				Toastify({
+					text: "Error al validar votante",
+					duration: 3000,
+					gravity: "bottom",
+					position: "right",
+					style: {
+						background: "#f63e3e",
+					},
+				}).showToast();
+				
 				console.error("Error al validar votante:", response.status);
 			}
 		} catch (error) {
+			Toastify({
+				text: "Error de servidor",
+				duration: 3000,
+				gravity: "bottom",
+				position: "right",
+				style: {
+					background: "#f63e3e",
+				},
+			}).showToast();
 			console.error("Server error:", error);
 		}
 	}
@@ -152,18 +200,33 @@ if (form) {
 
 		const formData = new FormData(event.target as HTMLFormElement);
 
+		const button = document.querySelector(".btn-enviar-email");
+
+		
+
 		// Obtener la respuesta del CAPTCHA
 		const turnstileResponse = window.turnstile?.getResponse();
 
 		// Asegurarse de que el token de Turnstile esté presente
 		if (!turnstileResponse) {
-			alert("Por favor, completa el CAPTCHA.");
+			Toastify({
+				text: "Por favor, completa el CAPTCHA.",
+				duration: 3000,
+				gravity: "bottom",
+				position: "right",
+				style: {
+					background: "#f63e3e",
+				},
+			}).showToast();
+			
 			return;
 		}
-
+		if (button) {
+			button.classList.toggle("active");			
+		}
 		// Añadir el token de Turnstile al FormData
 		formData.append("cf-turnstile-response", turnstileResponse);
-
+	
 		try {
 			const response = await fetch("http://localhost:8000/verify-captcha/", {
 				method: "POST",
@@ -178,11 +241,30 @@ if (form) {
 				validar_votante();
 				// Luego lo redirecciono a votar.html ahi se ejecuta voto()
 			} else {
-				alert(result.error || "CAPTCHA inválido.");
+				Toastify({
+					text: "CAPTCHA inválido.",
+					duration: 3000,
+					gravity: "bottom",
+					position: "right",
+					style: {
+						background: "#f63e3e",
+					},
+				}).showToast();
+				
 			}
 		} catch (error) {
 			console.error("Error al verificar el CAPTCHA:", error);
-			alert("Ocurrió un error. Por favor, inténtalo nuevamente.");
+			Toastify({
+				text: "Ocurrió un error. Por favor, inténtalo nuevamente.",
+				duration: 3000,
+				gravity: "bottom",
+				position: "right",
+				style: {
+					background: "#f63e3e",
+				},
+			}).showToast();
+			
+		
 		}
 	});
 }

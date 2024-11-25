@@ -4,13 +4,15 @@
 	--text-200: #343434;
 	--text-300: #f9f9f9;
 	--text-400: #fff;
-	--blue: #497fff,
+	--blue: #497fff;
+	--mulish: "Mulish", sans-serif;
+	--cursiva: "Dancing Script", cursive;
 }
 
 /* modifico la scrollbar */
 ::-webkit-scrollbar {
 	width: 10px;
-	
+
 }
 
 /* Track */
@@ -33,9 +35,9 @@ body {
 	background-color: var(--bg);
 	display: grid;
 	grid-template-rows: auto 1fr auto;
-	font-family: "Mulish", sans-serif;
-
-	/* font-family: "Dancing Script", cursive; */
+	font-family: var(--mulish);
+	
+	/* font-family: var(--cursiva); */
 }
 
 .sidebar {
@@ -183,7 +185,7 @@ footer {
 }
 
 .cursiva {
-	font-family: "Dancing Script", cursive;
+	font-family: var(--cursiva);
 }
 
 .ubicacion {
@@ -727,7 +729,7 @@ footer {
 }
 
 .container-title-evento p {
-	font-family: "Dancing Script", cursive;
+	font-family: var(--cursiva);
 	text-align: center;
 	font-size: clamp(1rem, -0.429rem + 3.81vw, 3rem);
 }
@@ -1018,6 +1020,16 @@ footer {
 	width: fit-content;
 	margin-top: 10px;
 	transition: all .1s ease;
+	border: 1px solid #111111;
+	transition: 0.4s ease;
+}
+.btn-votar:hover {
+	border: 1px solid var(--bg-2);
+	background-color: transparent;
+}
+
+.btn-votar:active {
+	transform: scale(0.9);
 }
 
 .white {
@@ -1158,15 +1170,18 @@ form {
   transition: transform 0.3s ease-in-out;
 }
 
-.btn-enviar-email:hover .svg-wrapper {
+.btn-enviar-email:hover .svg-wrapper ,
+.btn-enviar-email.active .svg-wrapper {
   animation: fly-1 0.6s ease-in-out infinite alternate;
 }
 
-.btn-enviar-email:hover svg {
+.btn-enviar-email:hover svg,
+.btn-enviar-email.active svg {
   transform: translateX(1.2em) rotate(45deg) scale(1.1);
 }
 
-.btn-enviar-email:hover span {
+.btn-enviar-email:hover span,
+.btn-enviar-email.active span{
   transform: translateX(5em);
 }
 
