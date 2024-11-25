@@ -69,7 +69,6 @@ export default function Escultores() {
     const [globalFilter, setGlobalFilter] = useState("");
     const url = "http://localhost:8000/api";
 
-
     useEffect(() => {
         async function fetch_escultores() {
             type EscultorResponse = {
@@ -213,4 +212,3 @@ export default function Escultores() {
         </div>
     );
 }
-

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Btn from "../components/btn";
 import Search from "../components/search";
 import Menu from "./menu/Menu";
@@ -15,28 +15,29 @@ import {
 import Acciones from "../components/acciones";
 import DateFilter from "../components/dateFilter";
 
-declare module "@tanstack/react-table" {
-  //add fuzzy filter to the filterFns
-  interface FilterFns {
-    fuzzy: FilterFn<unknown>;
-  }
-  interface FilterMeta {
-    itemRank: RankingInfo;
-  }
-}
+type EsculturaAPI = {
+  id: number;
+  escultor_id: number;
+  nombre: string;
+  descripcion: string;
+  fecha_creacion: string;
+  qr: string | null;
+};
 
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value);
+type Escultor = {
+  id: number;
+  nombre: string;
+  apellido: string;
+  pais_id: number;
+};
 
-  // Store the itemRank info
-  addMeta({ itemRank });
-
-  // Return if the item should be filtered in/out
-  return itemRank.passed;
+type Pais = {
+  id: number;
+  nombre: string;
 };
 
 type Escultura = {
+  id: number;
   imagen: string;
   nombre: string;
   escultor: string;
@@ -44,44 +45,26 @@ type Escultura = {
   descripcion: string;
 };
 
-const defaultData: Escultura[] = [
-  {
-    imagen: "../Camera.png",
-    nombre: "Esperanza",
-    escultor: "Pepe",
-    nacionalidad: "Argentina",
-    descripcion: "Binela 2025 con temática de madera",
-  },
-  {
-    imagen: "../Camera.png",
-    nombre: "Deseo",
-    escultor: "Pepito",
-    nacionalidad: "Argentina",
-    descripcion: "Binela 2025 con temática de madera",
-  },
-];
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  const itemRank = rankItem(row.getValue(columnId), value);
+  addMeta({ itemRank });
+  return itemRank.passed;
+};
 
 const columnHelper = createColumnHelper<Escultura>();
 
 const columns = [
-  //columnHelper.accessor("imagen", {
-  //  header: () => "Imagen",
-  //  cell: (info) => info.renderValue(),
-  //  footer: (info) => info.column.id,
-  //}),
   columnHelper.accessor("imagen", {
     header: () => "Imagen",
     cell: (info) => (
       <img
         src={info.getValue()}
         alt={info.row.original.nombre}
-        //style={{ width: "80px", height: "80px", objectFit: "cover", borderRadius: "8px" }}
         className="imagen"
       />
     ),
     footer: (info) => info.column.id,
   }),
-
   columnHelper.accessor("nombre", {
     header: () => "Nombre",
     cell: (info) => info.renderValue(),
@@ -98,7 +81,7 @@ const columns = [
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("descripcion", {
-    header: () => "Decripción",
+    header: () => "Descripción",
     cell: (info) => info.renderValue(),
     footer: (info) => info.column.id,
   }),
@@ -110,21 +93,73 @@ const columns = [
 ];
 
 export default function Esculturas() {
-  const [data, _setData] = useState(() => [...defaultData]);
+  const [data, setData] = useState<Escultura[]>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const url = "http://localhost:8000/api";
+
+  useEffect(() => {
+    async function fetchEsculturas() {
+      try {
+        const esculturasResponse = await fetch(`${url}/esculturas/`);
+        const escultoresResponse = await fetch(`${url}/escultores/`);
+        const paisesResponse = await fetch(`${url}/paises/`);
+
+        if (
+          esculturasResponse.status !== 200 ||
+          escultoresResponse.status !== 200 ||
+          paisesResponse.status !== 200
+        ) {
+          console.error("Error al obtener datos desde el backend");
+          return;
+        }
+
+        const esculturas: EsculturaAPI[] = await esculturasResponse.json();
+        const escultores: Escultor[] = await escultoresResponse.json();
+        const paises: Pais[] = await paisesResponse.json();
+
+        const escultorMap = new Map(
+          escultores.map((escultor) => [
+            escultor.id,
+            { nombre: `${escultor.nombre} ${escultor.apellido}`, pais_id: escultor.pais_id },
+          ])
+        );
+        const paisMap = new Map(paises.map((pais) => [pais.id, pais.nombre]));
+
+        const transformedData: Escultura[] = esculturas.map((escultura) => {
+          const escultor = escultorMap.get(escultura.escultor_id);
+          const nacionalidad = escultor ? paisMap.get(escultor.pais_id) || "Nacionalidad desconocida" : "Desconocido";
+
+          return {
+            id: escultura.id,
+            imagen: "../Camera.png", // Imagen por defecto
+            nombre: escultura.nombre,
+            escultor: escultor ? escultor.nombre : "Desconocido",
+            nacionalidad: nacionalidad,
+            descripcion: escultura.descripcion,
+          };
+        });
+
+        setData(transformedData);
+      } catch (error) {
+        console.error("Error al procesar los datos", error);
+      }
+    }
+
+    fetchEsculturas();
+  }, []);
 
   const table = useReactTable({
     data,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter,
     },
     state: {
       globalFilter,
     },
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
-    getFilteredRowModel: getFilteredRowModel(), //client side filtering
+    globalFilterFn: "fuzzy",
+    getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -177,7 +212,6 @@ export default function Esculturas() {
                   </tr>
                 ))}
               </tbody>
-
               <tfoot>
                 <tr>
                   <td colSpan={8} className="pagination">

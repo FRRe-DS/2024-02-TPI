@@ -3,7 +3,6 @@ import "./crearEscultura.css";
 import "dayjs/locale/es";
 import Search from "../components/search";
 
-
 interface NuevaEsculturaPopupProps {
   isOpen: boolean;
   onClose: () => void;
@@ -18,6 +17,8 @@ export default function NuevaEsculturaPopup({ isOpen, onClose }: NuevaEsculturaP
     descripcion: "",
   });
 
+  const [globalFilter, setGlobalFilter] = useState("");
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setEventData({ ...eventData, [name]: value });
@@ -27,9 +28,6 @@ export default function NuevaEsculturaPopup({ isOpen, onClose }: NuevaEsculturaP
     console.log("Datos del evento:");
     onClose();
   };
-
-  const [data, _setData] = useState(() => [...defaultData]);
-  const [globalFilter, setGlobalFilter] = useState("");
 
   if (!isOpen) return null;
 
@@ -92,4 +90,3 @@ export default function NuevaEsculturaPopup({ isOpen, onClose }: NuevaEsculturaP
     </>
   );
 }
-
