@@ -3,7 +3,7 @@ import Btn from "../components/btn";
 import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
-import { RankingInfo, rankItem } from "@tanstack/match-sorter-utils";
+import { rankItem } from "@tanstack/match-sorter-utils";
 import {
   createColumnHelper,
   flexRender,
@@ -45,6 +45,14 @@ type Escultura = {
   descripcion: string;
 };
 
+function limitarPalabras(texto: string, max: number): string {
+  const palabra = texto.split(" ");
+  if (palabra.length > max) {
+    return palabra.slice(0, max).join(" ") + "...";
+  }
+  return texto;
+}
+
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
   addMeta({ itemRank });
@@ -57,11 +65,13 @@ const columns = [
   columnHelper.accessor("imagen", {
     header: () => "Imagen",
     cell: (info) => (
-      <img
-        src={info.getValue()}
-        alt={info.row.original.nombre}
-        className="imagen"
-      />
+      <div style={{ width: "80px", height: "80px", overflow: "hidden" }}>
+        <img
+          src={info.getValue()}
+          alt={info.row.original.nombre}
+          className="imagen"
+        />
+      </div>
     ),
     footer: (info) => info.column.id,
   }),
@@ -82,7 +92,9 @@ const columns = [
   }),
   columnHelper.accessor("descripcion", {
     header: () => "Descripción",
-    cell: (info) => info.renderValue(),
+    cell: (info) => (
+      <span title={info.getValue()}>{limitarPalabras(info.getValue(), 6)}</span>
+    ),
     footer: (info) => info.column.id,
   }),
   columnHelper.display({

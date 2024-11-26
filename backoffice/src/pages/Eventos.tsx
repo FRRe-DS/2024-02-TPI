@@ -56,6 +56,14 @@ type Tematica = {
   descripcion: string;
 };
 
+function limitarPalabras(texto: string, max: number): string {
+  const palabra = texto.split(" ");
+  if (palabra.length > max) {
+    return palabra.slice(0, max).join(" ") + "...";
+  }
+  return texto;
+}
+
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   const itemRank = rankItem(row.getValue(columnId), value);
   addMeta({ itemRank });
@@ -92,7 +100,9 @@ const columns = [
   }),
   columnHelper.accessor("descripcion", {
     header: () => "Descripción",
-    cell: (info) => info.renderValue(),
+    cell: (info) => (
+      <span title={info.getValue()}>{limitarPalabras(info.getValue(), 8)}</span>
+    ),
     footer: (info) => info.column.id,
   }),
   columnHelper.display({
