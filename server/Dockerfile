@@ -3,7 +3,7 @@ FROM ghcr.io/astral-sh/uv:python3.12-bookworm-slim AS builder
 
 ENV UV_COMPILE_BYTECODE=1 UV_LINK_MODE=copy
 
-RUN apt-get update && apt-get install -y libpq-dev gcc
+RUN apt-get update && apt-get install -y libpq-dev gcc --no-install-recommends
 
 WORKDIR /app
 
@@ -13,15 +13,15 @@ RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-install-project --no-dev
 
 
-ADD . /app
+# ADD . /app
 
-# COPY ./pyproject.toml /app
-# COPY ./uv.lock /app
+COPY ./pyproject.toml /app
+COPY ./uv.lock /app
 
-# COPY ./src/manage.py /app/manage.py
-# COPY ./src/gunicorn.conf.py /app/gunicorn.conf.py
-# COPY ./src/backend /app/backend
-# COPY ./src/app /app/app
+COPY ./src/manage.py /app/manage.py
+COPY ./src/gunicorn.conf.py /app/gunicorn.conf.py
+COPY ./src/backend /app/backend
+COPY ./src/app /app/app
 
 
 RUN --mount=type=cache,target=/root/.cache/uv \
@@ -31,15 +31,19 @@ FROM python:3.12-slim-bookworm
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y libpq-dev && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update && apt-get install -y libpq-dev --no-install-recommends && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y libpq5 --no-install-recommends && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder --chown=app:app /app /app
 
-ENV PATH="/app/.venv/bin:$PATH"
-ENV DJANGO_ENV="prod"
+RUN groupadd -r app && useradd -r -g app app
+USER app
 
+ENV PATH="/app/.venv/bin:$PATH" \
+    DJANGO_ENV="prod" \
+    PYTHONUNBUFFERED=1
 
-ADD ./src /app
+# ADD ./src /app
 
 EXPOSE 80
 CMD ["sh", "-c", "gunicorn -b 0.0.0.0:80 -c ./gunicorn.conf.py backend.wsgi:application"]
