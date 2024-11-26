@@ -351,59 +351,81 @@ INSERT INTO "app_evento" (nombre, fecha_inicio, fecha_fin, descripcion, lugar_id
 VALUES ('Exhibiciones de Realidad Virtual', '2024-11-01', '2024-11-07', 'Demostraciones interactivas de tecnología de realidad virtual, con experiencias inmersivas para los asistentes.', 10, 'img/eventos/ExhibicionesDeRealidadVirtual.webp', 13, True);
 
 -- APP ESCULTORES
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('sarita.collado@example.org', 'Escultora especializada en figuras abstractas con un enfoque en formas geométricas y colores vivos.', 77, '2004-10-11', 'Sarita', 'Collado');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('sarita.collado@example.org', 'Escultora especializada en figuras abstractas con un enfoque en formas geométricas y colores vivos.', 77, '2004-10-11', 'Sarita', 'Collado', 'img/perfiles/sarita.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('juan.nebot@example.net', 'Reconocido por sus esculturas en mármol, reflejando la cultura mediterránea.', 42, '1993-04-27', 'Juan Carlos', 'Nebot');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('juan.nebot@example.net', 'Reconocido por sus esculturas en mármol, reflejando la cultura mediterránea.', 13, '1993-04-27', 'Juan Carlos', 'Nebot', 'img/perfiles/juanCarlos.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('casandra.isern@example.org', 'Artista contemporánea que trabaja con materiales reciclados para crear piezas innovadoras.', 156, '1988-09-19', 'Casandra', 'Isern');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('casandra.isern@example.org', 'Artista contemporánea que trabaja con materiales reciclados para crear piezas innovadoras.', 129, '1988-09-19', 'Casandra', 'Isern', 'img/perfiles/casandra.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('xavier.comas@example.org', 'Especialista en esculturas minimalistas que exploran el equilibrio y la simplicidad.', 223, '2006-01-22', 'Xavier', 'Comas');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('xavier.comas@example.org', 'Especialista en esculturas minimalistas que exploran el equilibrio y la simplicidad.', 184, '2006-01-22', 'Xavier', 'Comas', 'img/perfiles/xavier.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('duilio.roda@example.com', 'Famoso por sus esculturas monumentales en espacios públicos que resaltan la identidad cultural local.', 216, '1999-12-22', 'Duilio', 'Roda');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('duilio.roda@example.com', 'Famoso por sus esculturas monumentales en espacios públicos que resaltan la identidad cultural local.', 216, '1999-12-22', 'Duilio', 'Roda', 'img/perfiles/dulio.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('maricruz.blazquez@example.com', 'Creadora de esculturas figurativas con un estilo detallado y emocional.', 116, '1999-02-24', 'Maricruz', 'Blázquez');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('maricruz.blazquez@example.com', 'Creadora de esculturas figurativas con un estilo detallado y emocional.', 75, '1999-02-24', 'Maricruz', 'Blázquez', 'img/perfiles/maricruz.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('buenaventura.lerma@example.org', 'Conocido por su trabajo en bronce, sus obras reflejan la naturaleza humana y sus emociones.', 154, '1988-03-05', 'Buenaventura', 'Lerma');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('buenaventura.lerma@example.org', 'Conocido por su trabajo en bronce, sus obras reflejan la naturaleza humana y sus emociones.', 154, '1988-03-05', 'Buenaventura', 'Lerma', 'img/perfiles/buenaventura.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('fernando.sierra@example.com', 'Escultor emergente con un enfoque en materiales orgánicos como madera y piedra.', 5, '2005-09-15', 'Fernando', 'Sierra');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('fernando.sierra@example.com', 'Escultor emergente con un enfoque en materiales orgánicos como madera y piedra.', 232, '2005-09-15', 'Fernando', 'Sierra', 'img/perfiles/fernando.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('florentino.espinosa@example.com', 'Artista autodidacta que utiliza técnicas mixtas para crear esculturas con movimiento.', 35, '1981-02-22', 'Florentino', 'Espinosa');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('florentino.espinosa@example.com', 'Artista autodidacta que utiliza técnicas mixtas para crear esculturas con movimiento.', 29, '1981-02-22', 'Florentino', 'Espinosa', 'img/perfiles/florentino.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('roberta.galvan@example.org', 'Sus esculturas en cerámica exploran temas de feminidad y naturaleza.', 31, '1990-11-12', 'Roberta', 'Galván');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('roberta.galvan@example.org', 'Sus esculturas en cerámica exploran temas de feminidad y naturaleza.', 172, '1990-11-12', 'Roberta', 'Galván', 'img/perfiles/roberta.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('rodolfo.gimeno@example.net', 'Escultor especializado en obras de gran escala para instalaciones urbanas.', 79, '2006-01-24', 'Rodolfo', 'Gimeno');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('rodolfo.gimeno@example.net', 'Escultor especializado en obras de gran escala para instalaciones urbanas.', 146, '2006-01-24', 'Rodolfo', 'Gimeno', 'img/perfiles/rodolfo.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('noelia.nunez@example.com', 'Escultora joven conocida por su habilidad para transformar materiales industriales en arte.', 175, '1997-03-01', 'Noelia', 'Núñez');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('noelia.nunez@example.com', 'Escultora joven conocida por su habilidad para transformar materiales industriales en arte.', 173, '1997-03-01', 'Noelia', 'Núñez', 'img/perfiles/noelia.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('tito.rocha@example.org', 'Su obra combina elementos históricos con técnicas modernas, creando piezas únicas.', 233, '1984-06-29', 'Tito', 'Rocha');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('tito.rocha@example.org', 'Su obra combina elementos históricos con técnicas modernas, creando piezas únicas.', 46, '1984-06-29', 'Tito', 'Rocha', 'img/perfiles/tito.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('clotilde.valenzuela@example.org', 'Escultora abstracta que experimenta con materiales reciclados para promover la sostenibilidad.', 8, '2003-09-11', 'Clotilde', 'Valenzuela');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('clotilde.valenzuela@example.org', 'Escultora abstracta que experimenta con materiales reciclados para promover la sostenibilidad.', 13, '2003-09-11', 'Clotilde', 'Valenzuela', 'img/perfiles/clotilde.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('cayetana.porta@example.org', 'Sus esculturas de vidrio destacan por su delicadeza y atención al detalle.', 144, '1986-06-29', 'Cayetana', 'Porta');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('cayetana.porta@example.org', 'Sus esculturas de vidrio destacan por su delicadeza y atención al detalle.', 73, '1986-06-29', 'Cayetana', 'Porta', 'img/perfiles/cayetana.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('socorro.armengol@example.com', 'Conocida por sus esculturas que integran tecnología y arte, explorando el movimiento y la luz.', 58, '1995-06-17', 'Socorro', 'Armengol');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('socorro.armengol@example.com', 'Conocida por sus esculturas que integran tecnología y arte, explorando el movimiento y la luz.', 58, '1995-06-17', 'Socorro', 'Armengol', 'img/perfiles/socorro.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('lidia.perez@example.net', 'Artista multidisciplinaria con un enfoque en esculturas interactivas.', 112, '1991-04-23', 'Lidia', 'Pérez');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('lidia.perez@example.net', 'Artista multidisciplinaria con un enfoque en esculturas interactivas.', 112, '1991-04-23', 'Lidia', 'Pérez', 'img/perfiles/lidia.webp');
 
-INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido) 
-VALUES ('ramiro.lopez@example.org', 'Escultor innovador que trabaja con técnicas digitales para crear piezas futuristas.', 98, '1989-08-14', 'Ramiro', 'López');
+INSERT INTO "app_escultor" (correo, bibliografia, pais_id, fecha_nacimiento, nombre, apellido, foto) 
+VALUES ('ramiro.lopez@example.org', 'Escultor innovador que trabaja con técnicas digitales para crear piezas futuristas.', 98, '1989-08-14', 'Ramiro', 'López', 'img/perfiles/ramiro.webp');
+
+
+-- ESCULTOR EVENTO
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (1,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (2,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (3,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (4,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (5,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (6,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (7,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (8,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (9,1);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (10,2);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (11,2);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (12,2);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (13,2);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (14,2);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (15,2);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (16,2);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (17,2);
+INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES (18,2);
+
 
 
 INSERT INTO "auth_user" (
