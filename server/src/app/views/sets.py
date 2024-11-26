@@ -2,7 +2,7 @@ from background_task.models import CompletedTask
 from background_task.tasks import Task
 from django.http import JsonResponse
 from rest_framework import authentication, permissions, status, viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
@@ -47,8 +47,7 @@ def background_task_ejemplo(request: Request) -> JsonResponse:
 
 @api_view(["GET"])
 def check_django_task_status(request):
-    """
-    Example view to check the status of tasks.
+    """ Example view to check the status of tasks.
     """
     # Query pending tasks
     pending_tasks = Task.objects.all()
@@ -66,6 +65,23 @@ def check_django_task_status(request):
 
     return JsonResponse({"pending_tasks": pending, "completed_tasks": completed})
 
+    # esta es la forma de obtener el token de un admin
+    # se obtiene haciendo un post con el username y password del usuario a la rutaBase/get_token/
+    # es decir api/adminsis/get_token/
+@api_view(["POST"])
+@permission_classes([permissions.AllowAny])
+def get_token(request): 
+
+    userAdmin = get_object_or_404(User, username=request.data["username"])
+
+    if not userAdmin.check_password(request.data["password"]):
+        return Response(
+            {"error": "contra incorrecta"}, status=status.HTTP_400_BAD_REQUEST
+        )
+
+    token, created = Token.objects.get_or_create(user=userAdmin)
+
+    return Response({"token": token.key}, status=status.HTTP_200_OK)
 
 class VotanteViewSet(viewsets.ModelViewSet):
     """
@@ -99,6 +115,7 @@ class VotanteViewSet(viewsets.ModelViewSet):
 
     queryset = Votante.objects.all()
     serializer_class = VotanteSerializer
+    filterset_fields = ["id", "correo"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -146,7 +163,7 @@ class EventoViewSet(viewsets.ModelViewSet):
 
     queryset = Evento.objects.all()
     serializer_class = EventoSerializer
-    filterset_fields = ["tematica_id"]
+    filterset_fields = ["nombre", "lugar_id", "tematica_id", "fecha_inicio"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -192,6 +209,7 @@ class EsculturaViewSet(viewsets.ModelViewSet):
 
     queryset = Escultura.objects.all()
     serializer_class = EsculturaSerializer
+    filterset_fields = ["id", "nombre", "escultor_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -239,7 +257,7 @@ class EscultorViewSet(viewsets.ModelViewSet):
 
     queryset = Escultor.objects.all()
     serializer_class = EscultorSerializer
-    filterset_fields = ["nombre"]
+    filterset_fields = ["id", "nombre", "pais_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -284,7 +302,15 @@ class ImagenViewSet(viewsets.ModelViewSet):
 
     queryset = Imagen.objects.all()
     serializer_class = ImagenSerializer
+    filterset_fields = ["id", "escultura_id"]
 
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 class PaisViewSet(viewsets.ModelViewSet):
     """
@@ -318,6 +344,7 @@ class PaisViewSet(viewsets.ModelViewSet):
 
     queryset = Pais.objects.all()
     serializer_class = PaisSerializer
+    filterset_fields = ["id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -331,48 +358,14 @@ class PaisViewSet(viewsets.ModelViewSet):
 class AdminSisViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = AdminSisSerializer
+    filterset_fields = ["id", "username", "email"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-
-    def get_permissions(self):
-        if self.request.method == "POST":
-            return [permissions.AllowAny()]
-        return [permission() for permission in self.permission_classes]
-
-    # basicamente es el metodo post
-    # pero a este lo sobreescribo para que genere el token de cada nuevo admin
-    def create(self, request, *args, **kwargs):
-        serializer = AdminSisSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-
-            userAdmin = User.objects.get(username=serializer.data["username"])
-            userAdmin.set_password(serializer.data["password"])
-            userAdmin.save()
-
-            token = Token.objects.create(user=userAdmin)
-
-            return Response({"token": token.key}, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # esta es la forma de obtener el token de un admin
-    # se obtiene haciendo un post con el username y password del usuario a la rutaBase/get_token/
-    # es decir api/adminsis/get_token/
-    @action(detail=False, methods=["post"], permission_classes=[permissions.AllowAny])
-    def get_token(self, request):
-        userAdmin = get_object_or_404(User, username=request.data["username"])
-
-        if not userAdmin.check_password(request.data["password"]):
-            return Response(
-                {"error": "contra incorrecta"}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        token, created = Token.objects.get_or_create(user=userAdmin)
-
-        return Response({"token": token.key}, status=status.HTTP_200_OK)
+    
+    def create(self, request):
+        response = {'message': 'No se puede hacer post a este endpoint'}
+        return Response(response, status=status.HTTP_403_FORBIDDEN)
 
 
 class TematicaViewSet(viewsets.ModelViewSet):
@@ -408,6 +401,7 @@ class TematicaViewSet(viewsets.ModelViewSet):
 
     queryset = Tematica.objects.all()
     serializer_class = TematicaSerializer
+    filterset_fields = ["id", "nombre"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -451,6 +445,7 @@ class LugarViewSet(viewsets.ModelViewSet):
 
     queryset = Lugar.objects.all()
     serializer_class = LugarSerializer
+    filterset_fields = ["id", "nombre"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
