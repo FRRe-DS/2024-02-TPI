@@ -47,8 +47,7 @@ def background_task_ejemplo(request: Request) -> JsonResponse:
 
 @api_view(["GET"])
 def check_django_task_status(request):
-    """ Example view to check the status of tasks.
-    """
+    """Example view to check the status of tasks."""
     # Query pending tasks
     pending_tasks = Task.objects.all()
 
@@ -68,10 +67,11 @@ def check_django_task_status(request):
     # esta es la forma de obtener el token de un admin
     # se obtiene haciendo un post con el username y password del usuario a la rutaBase/get_token/
     # es decir api/adminsis/get_token/
+
+
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
-def get_token(request): 
-
+def get_token(request):
     userAdmin = get_object_or_404(User, username=request.data["username"])
 
     if not userAdmin.check_password(request.data["password"]):
@@ -82,6 +82,7 @@ def get_token(request):
     token, created = Token.objects.get_or_create(user=userAdmin)
 
     return Response({"token": token.key}, status=status.HTTP_200_OK)
+
 
 class VotanteViewSet(viewsets.ModelViewSet):
     """
@@ -350,9 +351,9 @@ class AdminSisViewSet(viewsets.ModelViewSet):
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def create(self, request):
-        response = {'message': 'No se puede hacer post a este endpoint'}
+        response = {"message": "No se puede hacer post a este endpoint"}
         return Response(response, status=status.HTTP_403_FORBIDDEN)
 
 

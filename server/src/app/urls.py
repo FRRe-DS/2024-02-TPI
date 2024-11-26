@@ -12,7 +12,7 @@ from app.views.sets import (
     TematicaViewSet,
     background_task_ejemplo,
     check_django_task_status,
-    get_token
+    get_token,
 )
 from app.views.health_check import health_check
 from app.views.votacion import estado_votacion, generarQR, VotoEscultorViewSet

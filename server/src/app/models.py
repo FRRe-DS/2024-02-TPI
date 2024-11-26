@@ -167,6 +167,7 @@ class Evento(models.Model):
     tematica_id = models.ForeignKey(
         Tematica, on_delete=models.CASCADE, db_column="tematica_id"
     )
+    finalizado = models.BooleanField(default=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.foto:
