@@ -178,7 +178,8 @@ async function loadEscultores(url: string) {
 								src="${foto}"
 								loading="lazy"
 								alt="${NyA}"
-								class="escultor-img" />
+								class="escultor-img" 
+								onerror="this.src='images/fondo.jpg'; this.onerror=null;"/>
 						<div class="wrap-card">
 							 <a href="detalle_escultor.html?id=${escultor.id}">Ver más</a>
 							<div class="nombre-origen">

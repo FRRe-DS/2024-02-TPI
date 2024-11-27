@@ -797,6 +797,8 @@ footer {
 	transition: transform 0.3s ease;
 	overflow: hidden;
 	position: relative;
+
+
 }
 
 .card-img-evento {
@@ -807,6 +809,7 @@ footer {
 	height: 100%;
 	object-fit: cover;
 	transition: transform 1s ease;
+	background-color: #252525;
 }
 
 .event-card:hover .card-img-evento {
@@ -860,6 +863,16 @@ footer {
 	transition: 0.5s ease;
 	user-select: none;
 	z-index: 10;
+	transition: 0.4s ease;
+}
+
+.btn-secundarioV3:hover{
+	background-color: #111111;
+	border-color: #111111;
+}
+
+.btn-secundarioV3:active{
+	transform: scale(0.9);
 }
 
 /* ---seccion detalle_evento--- */
@@ -1214,8 +1227,6 @@ form {
 	gap: 15px;
 	text-align: center;
 }
-
-
 
 .notificarMail p{
 	color: var(--text-200);
