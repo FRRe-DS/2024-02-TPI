@@ -8,7 +8,7 @@ logging.basicConfig(
 )
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-INSERT_SQL_FILE = os.path.join(BASE_DIR, "insert_superuser.sql")
+INSERT_SQL_FILE = os.path.join(BASE_DIR, "insert_data_real.sql")
 
 DB_HOST = "localhost"
 DB_PORT = 5432
@@ -62,7 +62,7 @@ if __name__ == "__main__":
         conn.close()
 
         logging.info(
-            "La base de datos está vacía. Insertando el usuario admin... listo!"
+            "La base de datos está vacía. Insertando los datos reales... listo!"
         )
     else:
-        logging.info("La base de datos ya contiene un usuario admin!")
+        logging.info("La base de datos ya contiene datos!")

@@ -53,8 +53,6 @@ else:
         MEDIA_URL,
     )
 
-print(ALLOWED_HOSTS)
-
 __all__ = [
     "LANGUAGE_CODE",
     "LOGGING",
