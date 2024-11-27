@@ -18,6 +18,7 @@ from .base import (
     INSTALLED_APPS,
 )
 
+
 DJANGO_ENV = config("DJANGO_ENV")
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
