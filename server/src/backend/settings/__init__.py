@@ -34,15 +34,7 @@ if DJANGO_ENV == "prod":
         CSRF_TRUSTED_ORIGINS,
         # SESSION_COOKIE_SECURE,
     )
-elif DJANGO_ENV == "testing":
-    from .testing import (
-        DATABASES,
-        DEBUG,
-        ALLOWED_HOSTS,
-        SECRET_KEY,
-        BASE_DIR,
-    )
-else:
+elif DJANGO_ENV == "dev":
     from .development import (
         DATABASES,
         DEBUG,
@@ -52,8 +44,6 @@ else:
         STORAGES,
         MEDIA_URL,
     )
-
-print(ALLOWED_HOSTS)
 
 __all__ = [
     "LANGUAGE_CODE",

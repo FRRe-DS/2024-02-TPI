@@ -103,7 +103,7 @@ class Escultura(models.Model):
         Escultor, on_delete=models.CASCADE, db_column="escultor_id"
     )
     nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(blank=False, null=False)
+    descripcion = models.CharField(blank=False, null=False, max_length=254)
     fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
 
     class Meta:
