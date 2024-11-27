@@ -104,8 +104,8 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 CORS_ALLOW_HEADERS = [
-    'content-type',
-    'x-csrftoken',
+    "content-type",
+    "x-csrftoken",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -153,10 +153,12 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.ScopedRateThrottle"],
     "DEFAULT_THROTTLE_RATES": {"qr": "5/hour"},
-    "DEFAULT_RENDERER_CLASSES": (
-        ["rest_framework.renderers.JSONRenderer"] if DJANGO_ENV == "prod" else 
-        ["rest_framework.renderers.BrowsableAPIRenderer"]
-    ),
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"]
+    if DJANGO_ENV == "prod"
+    else [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
 }
 
 LANGUAGE_CODE = "es"
