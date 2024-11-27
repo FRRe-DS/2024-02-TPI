@@ -34,7 +34,15 @@ if DJANGO_ENV == "prod":
         CSRF_TRUSTED_ORIGINS,
         # SESSION_COOKIE_SECURE,
     )
-elif DJANGO_ENV == "dev":
+elif DJANGO_ENV == "testing":
+    from .testing import (
+        DATABASES,
+        DEBUG,
+        ALLOWED_HOSTS,
+        SECRET_KEY,
+        BASE_DIR,
+    )
+else:
     from .development import (
         DATABASES,
         DEBUG,
