@@ -18,6 +18,7 @@ from .base import (
     INSTALLED_APPS,
 )
 
+
 DJANGO_ENV = config("DJANGO_ENV")
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -30,9 +31,9 @@ if DJANGO_ENV == "prod":
         BASE_DIR,
         STORAGES,
         MEDIA_URL,
-        # CSRF_COOKIE_SECURE,
+        CSRF_COOKIE_SECURE,
         CSRF_TRUSTED_ORIGINS,
-        # SESSION_COOKIE_SECURE,
+        SESSION_COOKIE_SECURE,
     )
 elif DJANGO_ENV == "testing":
     from .testing import (
@@ -77,7 +78,7 @@ __all__ = [
     "ALLOWED_HOSTS",
     "STORAGES",
     "MEDIA_URL",
-    # "CSRF_COOKIE_SECURE",
+    "CSRF_COOKIE_SECURE",
     "CSRF_TRUSTED_ORIGINS",
-    # "SESSION_COOKIE_SECURE",
+    "SESSION_COOKIE_SECURE",
 ]

@@ -48,7 +48,7 @@ Se debe consultar desde `/api/` y en cada uno de los recursos listados a continu
 
 ## Autenticación por Token
 
-Para autenticarse y obtener un token, envía una solicitud `POST` al endpoint `/api/adminsis/get_token/` con el `username` y `password` en el cuerpo de la solicitud y luego este devolverá el token.
+Para autenticarse y obtener un token, envía una solicitud `POST` al endpoint `get_token/` con el `username` y `password` en el cuerpo de la solicitud y luego este devolverá el token.
 
 ### Usuario Administrador por Defecto
 

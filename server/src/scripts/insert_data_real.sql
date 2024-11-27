@@ -1,3 +1,18 @@
+
+-- APP LUGAR
+INSERT INTO "app_lugar" (nombre, descripcion) VALUES 
+('Zona Automotrices', 'Espacio destinado a la exposición y venta de vehículos y productos relacionados con la industria automotriz, incluyendo repuestos y accesorios.'),
+('Zona Artesanos', 'Área donde se exhiben y comercializan productos hechos a mano, como artesanías en madera, cerámica, textiles y otros materiales.'),
+('Zona Emprendedores', 'Sector destinado a pequeñas empresas y startups para promocionar y vender sus productos o servicios innovadores.'),
+('Zona Cancha de basket', 'Espacio deportivo equipado para la práctica de básquetbol, disponible tanto para partidos oficiales como para actividades recreativas.'),
+('Zona Cancha de voley', 'Área habilitada para el juego de vóleibol, diseñada con las medidas reglamentarias y equipada para torneos o prácticas.'),
+('Zona Gastronomías', 'Lugar dedicado a la venta de comidas y bebidas, con stands y food trucks que ofrecen una variedad de opciones culinarias.'),
+('Zona Pymes', 'Espacio de exposición para pequeñas y medianas empresas, donde pueden presentar sus productos, servicios y proyectos.'),
+('Zona Prensa', 'Área reservada para periodistas y medios de comunicación, equipada con mesas, puntos de conexión y acceso a información del evento.'),
+('Zona Pista de atletismo', 'Circuito diseñado para actividades atléticas como carreras y competencias, con superficie reglamentaria y señalización adecuada.'),
+('Zona Puestos de Salud', 'Sector dedicado a la atención médica básica, con puestos de primeros auxilios y personal capacitado para emergencias.');
+
+
 -- PAIS
 INSERT INTO "app_pais" (nombre, iso) VALUES
 ('Afganistán','AF'),
@@ -240,20 +255,6 @@ INSERT INTO "app_pais" (nombre, iso) VALUES
 ('Yibuti','DJ'),
 ('Zambia','ZM'),
 ('Zimbabue','ZW');
-
--- APP LUGAR
-INSERT INTO "app_lugar" (nombre, descripcion) VALUES 
-('Zona Automotrices', 'Espacio destinado a la exposición y venta de vehículos y productos relacionados con la industria automotriz, incluyendo repuestos y accesorios.'),
-('Zona Artesanos', 'Área donde se exhiben y comercializan productos hechos a mano, como artesanías en madera, cerámica, textiles y otros materiales.'),
-('Zona Emprendedores', 'Sector destinado a pequeñas empresas y startups para promocionar y vender sus productos o servicios innovadores.'),
-('Zona Cancha de basket', 'Espacio deportivo equipado para la práctica de básquetbol, disponible tanto para partidos oficiales como para actividades recreativas.'),
-('Zona Cancha de voley', 'Área habilitada para el juego de vóleibol, diseñada con las medidas reglamentarias y equipada para torneos o prácticas.'),
-('Zona Gastronomías', 'Lugar dedicado a la venta de comidas y bebidas, con stands y food trucks que ofrecen una variedad de opciones culinarias.'),
-('Zona Pymes', 'Espacio de exposición para pequeñas y medianas empresas, donde pueden presentar sus productos, servicios y proyectos.'),
-('Zona Prensa', 'Área reservada para periodistas y medios de comunicación, equipada con mesas, puntos de conexión y acceso a información del evento.'),
-('Zona Pista de atletismo', 'Circuito diseñado para actividades atléticas como carreras y competencias, con superficie reglamentaria y señalización adecuada.'),
-('Zona Puestos de Salud', 'Sector dedicado a la atención médica básica, con puestos de primeros auxilios y personal capacitado para emergencias.');
-
 
 -- APP TEMATICA
 INSERT INTO "app_tematica" (nombre, descripcion) VALUES
