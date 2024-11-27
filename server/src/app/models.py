@@ -103,9 +103,8 @@ class Escultura(models.Model):
         Escultor, on_delete=models.CASCADE, db_column="escultor_id"
     )
     nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(max_length=300, blank=False, null=False)
+    descripcion = models.CharField(blank=False, null=False)
     fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
-    qr = models.FileField(upload_to="qr/", blank=True, null=True)
 
     class Meta:
         verbose_name = "Escultura"
@@ -133,7 +132,6 @@ class Imagen(models.Model):
         Escultura, on_delete=models.CASCADE, db_column="escultura_id"
     )
     imagen = models.ImageField(upload_to="img/esculturas/", blank=True, null=True)
-    descripcion = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.imagen:
@@ -145,7 +143,13 @@ class Imagen(models.Model):
         verbose_name_plural = "Imagenes"
 
     def __str__(self):
-        return self.id + "," + self.escultura_id
+        return (
+            str(self.id)
+            + ", "
+            + str(self.escultura_id)
+            + " --> hecho por --> "
+            + str(self.escultura_id.escultor_id)
+        )
 
 
 class Tematica(models.Model):
@@ -250,12 +254,11 @@ class EscultorEvento(models.Model):
     )
 
     class Meta:
-        verbose_name = "Escultor Evento" 
+        verbose_name = "Escultor Evento"
         verbose_name_plural = "Escultor Evento"
 
     def __str__(self):
         return str(self.escultor_id) + " ---> " + str(self.evento_id)
-
 
 
 class VotoEscultor(models.Model):

@@ -15,9 +15,6 @@ runtasks:
     uv run ./src/manage.py process_tasks
 
 cargardb: 
-    uv run ./src/scripts/iniciar_db.py
-
-cargarinfodb: 
     uv run ./src/scripts/cargar_info.py
 
 test: check
