@@ -38,35 +38,66 @@
   <body>
     <div id="header"></div>
     <main>
+      
+      
       <section class="container-title">
         <div class="container-title-evento"> 
-          <h1 id="nombre-evento"></h1>
-          <p id="fecha-evento"></p>
+          <h1 id="nombre-evento">Nombre del event</h1>
         </div>
        
         <div id="left2"></div>
         <div id="right2"></div>
       </section>
+
       <div class="wrapped2">
+        <div class="center" id="loading-indicator">
+          <div  class="loading-wave">
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          </div>
+        </div>
+        
+
         <div class="section-certamen pad-bottom-36">
-          <section class=" detalle-evento">
-          <div class="h2-mas-p ">
-            <div>
-              <h2 id="nombre-evento-h2"></h2>
-              <div class="divider-sm"></div>
-            </div>
-            <div class="info-certamen">
-              <p class="text-pretty" id="descripcion-evento">
-              </p>
-              <h3 id="lugar-evento"></h3>
-              <p id="lugar-descripcion"></p>
+          <section class="detalle-evento">
+            <div class="h2-mas-p">
+              <div class="gap-20">
+                <div>
+                  <h1 id="nombre-escultor" class="titulo"></h1>
+                <div class="divider-sm"></div>
+                </div>
+                <div>  
+                  <h3 id="pais" class="cursiva subtitulo"></h3>
+                  <p class="text-pretty" id="descripcion-escultor">
+
+                </div>
+              
+                </p>
+              </div>
+              <div class="gap-20">
+                <div>
+                   <h2  class="subtitulo">Proyecto</h2>
+                <div class="divider-sm"></div>
+                </div>
+                <div> <h3 id="nombre-escultura" class="cursiva subtitulo"></h3>
+                <p class="text-pretty" id="descripcion-escultura"></p></div>
+               
+              </div>
+            </div>   
+            <div class="imagen-evento"> 
+              <img id="imagen-evento"> 
             </div>
             
-          </div>   
-          <div class="imagen-evento"> 
-            <img id="imagen-evento"> </div>
-         
-        </section>    
+          </section> 
+          <section class="galeria-progreso-escultor">
+            <div>  
+              <h2 class="subtitulo">Galería de imagenes</h2>
+              <div class="divider-sm"></div>
+            </div>
+            <div class="galeria"></div>
+          </section>   
         </div>
     
       </div>

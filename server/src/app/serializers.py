@@ -31,22 +31,28 @@ class EventoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class ImagenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Imagen
+        fields = "__all__"
+
+
 class EsculturaSerializer(serializers.ModelSerializer):
+    imagenes = ImagenSerializer(many=True, read_only=True)
+
     class Meta:
         model = Escultura
         fields = "__all__"
 
 
 class EscultorSerializer(serializers.ModelSerializer):
+    esculturas = EsculturaSerializer(many=True, read_only=True)
+    nombre_completo = serializers.CharField(source='__str__', read_only=True)
+
     class Meta:
         model = Escultor
         fields = "__all__"
 
-
-class ImagenSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Imagen
-        fields = "__all__"
 
 
 class PaisSerializer(serializers.ModelSerializer):

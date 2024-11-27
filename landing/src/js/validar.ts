@@ -1,4 +1,3 @@
-import { formatearNombre, urlFotoEscultor } from "./certamen";
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 
@@ -30,7 +29,7 @@ export async function getNombreEscultor(id: string) {
 		const res = await fetch(`${url}${id}`);
 		const escultor = await res.json();
 
-		console.log(escultor);
+	
 		const nombreEscultor = document.getElementById(
 			"nombre-escultor",
 		) as HTMLHeadingElement;
@@ -38,9 +37,9 @@ export async function getNombreEscultor(id: string) {
 			"img_escultor",
 		) as HTMLImageElement;
 
-		const nombre = formatearNombre(escultor.nombre, escultor.apellido);
+		const nombre = escultor.nombre_completo
 		nombreEscultor.textContent = nombre;
-		const foto = urlFotoEscultor(escultor.foto);
+		const foto = escultor.foto;
 		fotoEscultor.src = foto;
 		fotoEscultor.alt = nombre;
 		fotoEscultor.title = nombre;

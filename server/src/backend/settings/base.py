@@ -2,7 +2,6 @@ from decouple import config
 
 DJANGO_ENV = config("DJANGO_ENV", default="dev")
 
-
 DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
 EMAIL_APP_KEY = config("EMAIL_APP_KEY", default="")
 CLOUDFLARE_TURNSTILE_SECRET_KEY = config("CLOUDFLARE_TURNSTILE_SECRET_KEY")
@@ -106,6 +105,11 @@ CORS_ALLOWED_ORIGINS = [
     "https://elrincondelinge.org",
 ]
 
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "x-csrftoken",
+]
+
 ROOT_URLCONF = "backend.urls"
 
 TEMPLATES = [
@@ -151,6 +155,12 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.ScopedRateThrottle"],
     "DEFAULT_THROTTLE_RATES": {"qr": "5/hour"},
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"]
+    if DJANGO_ENV == "prod"
+    else [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
 }
 
 LANGUAGE_CODE = "es"

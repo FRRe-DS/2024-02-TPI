@@ -395,9 +395,7 @@ class TematicaAPITest(BaseAPITest):
         self.assertTrue(Tematica.objects.filter(nombre="Nueva Tematica").exists())
 
     def test_post_tematica_unauthenticated_401_UNAUTHORIZED(self):
-        self.client.force_authenticate(
-            user=None
-        )  # elimina la autentificion forzadamente
+        self.client.force_authenticate(user=None)
         data = {"nombre": "Tematica no autenticada"}
         response = self.client.post(self.base_url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -465,7 +463,7 @@ class EventoAPITest(BaseAPITest):
         self.assertTrue(Evento.objects.filter(nombre="Nuevo Evento").exists())
 
     def test_post_evento_unauthenticated_401_UNAUTHORIZED(self):
-        self.client.force_authenticate(user=None)  # Elimina autenticación
+        self.client.force_authenticate(user=None)
         data = {
             "nombre": "Evento sin autenticación",
             "lugar_id": self.lugar.pk,
@@ -573,7 +571,6 @@ class EsculturaAPITest(BaseAPITest):
             escultor_id=escultor,
             descripcion="Descripción de la escultura de prueba",
             fecha_creacion="2024-01-01",
-            qr=None,
         )
 
     def test_get_esculturas_list_200_OK(self):
@@ -638,7 +635,6 @@ class EsculturaAPITest(BaseAPITest):
             "descripcion": "Descripción de la escultura de prueba",
             "fecha_creacion": "2024-01-01",
             "escultor_id": expected_data,
-            "qr": None,
         }
         response = self.client.post(self.base_url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
@@ -662,7 +658,6 @@ class EsculturaAPITest(BaseAPITest):
             "descripcion": "Descripción de la escultura de prueba",
             "fecha_creacion": "2024-01-01",
             "escultor_id": escultor.id,
-            "qr": None,
         }
 
         response = self.client.put(

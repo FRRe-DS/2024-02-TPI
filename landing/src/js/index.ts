@@ -26,7 +26,7 @@ async function loadEventos(url: string) {
 			if (card) {
 				card.innerHTML = `
 				 <a class="mosaico-a" href="${evento[index].id === 1 ? "certamen.html" : `detalle_evento.html?id=${evento[index].id}`}">
-					<img class="card-img-evento" loading="lazy" src="${evento[index].foto}" alt="${evento[index].nombre}" onerror="this.src='images/fondo.jpg'; this.onerror=null;">
+					<img class="card-img-evento" loading="lazy" src="${evento[index].foto}" alt="${evento[index].nombre}" onerror="this.src='https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg'; this.onerror=null;">
           <div class="descripcion-evento">
             <h3>${evento[index].nombre}</h3>
             <div>

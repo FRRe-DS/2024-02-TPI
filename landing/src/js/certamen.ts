@@ -2,7 +2,7 @@ import Toastify from "toastify-js";
 import 'toastify-js/src/toastify.css';
 import { loadHTML } from "../app";
 
-console.log(__API_URL__);
+
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
 const URL_PAIS = `${__API_URL__}/api/paises/`;
 const URL_TEMATICA = `${__API_URL__}/api/tematica/`;
@@ -25,7 +25,7 @@ async function inicializar() {
 }
 
 // ------ Get pais del escultor ------
-async function loadPais(url: string, idPais: number) {
+export async function loadPais(url: string, idPais: number) {
 	try {
 		const res = await fetch(`${url}${idPais}`);
 		const pais = await res.json();
@@ -57,27 +57,6 @@ async function loadTematica(URL: string, id: string) {
 	} catch (error) {
 		console.log(`Error al carga la tematica: ${error}`);
 	}
-}
-
-// ------ Get url de la foto del escultor ------
-export function urlFotoEscultor(url: string) {
-	if (url.includes("perfiles")) {
-		// Cuando la imagen la cargamos desde la bd:
-		return url;
-	}
-
-	const foto_url = url.slice(url.lastIndexOf("/") + 1);
-	return `https://drive.google.com/thumbnail?id=${foto_url}`;
-}
-
-// ------ Formatear correctamente el nombre ------
-export function formatearNombre(nombre: string, apellido: string): string {
-	const nom = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
-	const ape =
-		apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase();
-
-	const nombreFormateado = `${nom} ${ape}`;
-	return nombreFormateado;
 }
 
 function Voto(correo: string, escultor_id: string) {
@@ -168,9 +147,9 @@ async function loadEscultores(url: string) {
 				const article = document.createElement("article");
 
 				article.classList.add("card-escultor");
-				const foto = urlFotoEscultor(escultor.foto);
+				const foto = escultor.foto;
 				const pais = await loadPais(URL_PAIS, escultor.pais_id);
-				const NyA = formatearNombre(escultor.nombre, escultor.apellido);
+				const NyA = escultor.nombre_completo;
 
 				article.innerHTML = `
 						
@@ -228,11 +207,8 @@ async function loadEscultores(url: string) {
 							"nombre-escultor",
 						) as HTMLHeadElement;
 
-						nombreEscultor.textContent = formatearNombre(
-							escultores[Number(id) - 1].nombre,
-							escultores[Number(id) - 1].apellido,
-						);
-
+						nombreEscultor.textContent = 
+							escultores[Number(id) - 1].nombre_completo
 						const formPopUp = document.createElement("form");
 
 						formPopUp.id = `votoForm-${id}`;
