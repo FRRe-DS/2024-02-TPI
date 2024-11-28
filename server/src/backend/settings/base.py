@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django.contrib.admindocs",
     "background_task",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -153,12 +154,20 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.ScopedRateThrottle"],
     "DEFAULT_THROTTLE_RATES": {"qr": "5/hour"},
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"]
     if DJANGO_ENV == "prod"
     else [
         "rest_framework.renderers.JSONRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "TPI Bienal API",
+    "DESCRIPTION": "REST API construida para servir al sitio web de la Bienal para el Trabajo Práctico Integrador",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 LANGUAGE_CODE = "es"
