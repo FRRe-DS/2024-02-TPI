@@ -13,5 +13,7 @@ if (params.escultor_id){
 }
 
 
-
-loadHTML("header.html", "header", "");
+if (window.location.pathname.includes("error.html")) {
+  loadHTML("header.html", "header", "");
+  loadHTML("footer.html", "footer", "");
+}

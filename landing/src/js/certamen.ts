@@ -2,20 +2,18 @@ import Toastify from "toastify-js";
 import 'toastify-js/src/toastify.css';
 import { loadHTML } from "../app";
 
-console.log(__API_URL__);
+
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
-const URL_PAIS = `${__API_URL__}/api/paises/`;
-const URL_TEMATICA = `${__API_URL__}/api/tematica/`;
 const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
 
 async function inicializar() {
 	try {
-		const tematicaId = await loadInfoCertamen(URL_EVENTOS, "1");
-		const tematicaObjeto = await loadTematica(URL_TEMATICA, tematicaId);
+		const res = await fetch(`${URL_EVENTOS}1`);
+		const evento = await res.json();
 
 		const tematica = document.getElementById("tematica") as HTMLSpanElement;
-		if (tematica && tematicaObjeto) {
-			tematica.textContent = tematicaObjeto.nombre;
+		if (tematica) {
+			tematica.textContent = evento.tematica.nombre;
 		}
 
 		await loadEscultores(URL_ESCULTORES);
@@ -23,71 +21,14 @@ async function inicializar() {
 		console.error("Error inicializando la página:", error);
 	}
 }
-
-// ------ Get pais del escultor ------
-async function loadPais(url: string, idPais: number) {
-	try {
-		const res = await fetch(`${url}${idPais}`);
-		const pais = await res.json();
-
-		return pais;
-	} catch (error) {
-		console.log(`Error al carga los paises: ${error}`);
-	}
-}
-
-// ------ Get tematica del certamen ------
-
-async function loadInfoCertamen(URL: string, id: string) {
-	try {
-		const res = await fetch(`${URL}${id}`);
-		const evento = await res.json();
-
-		return evento.tematica_id;
-	} catch (error) {
-		console.log(`Error al carga el evento: ${error}`);
-	}
-}
-async function loadTematica(URL: string, id: string) {
-	try {
-		const res = await fetch(`${URL}${id}`);
-		const tematica = await res.json();
-
-		return tematica;
-	} catch (error) {
-		console.log(`Error al carga la tematica: ${error}`);
-	}
-}
-
-// ------ Get url de la foto del escultor ------
-export function urlFotoEscultor(url: string) {
-	if (url.includes("perfiles")) {
-		// Cuando la imagen la cargamos desde la bd:
-		return url;
-	}
-
-	const foto_url = url.slice(url.lastIndexOf("/") + 1);
-	return `https://drive.google.com/thumbnail?id=${foto_url}`;
-}
-
-// ------ Formatear correctamente el nombre ------
-export function formatearNombre(nombre: string, apellido: string): string {
-	const nom = nombre.charAt(0).toUpperCase() + nombre.slice(1).toLowerCase();
-	const ape =
-		apellido.charAt(0).toUpperCase() + apellido.slice(1).toLowerCase();
-
-	const nombreFormateado = `${nom} ${ape}`;
-	return nombreFormateado;
-}
-
-function Voto(correo: string, escultor_id: string) {
+export function Voto(correo: string, escultor_id: string) {
 	document
 		.getElementById(`votoForm-${escultor_id}`)
 		?.addEventListener("submit", async (e) => {
 			e.preventDefault();
 
 			const formElement = e.target as HTMLFormElement;
-			 const button = formElement.querySelector(".btn-votarV2") as HTMLButtonElement;
+			const button = formElement.querySelector('button[type="submit"]') as HTMLButtonElement;
 			
 
 
@@ -168,9 +109,10 @@ async function loadEscultores(url: string) {
 				const article = document.createElement("article");
 
 				article.classList.add("card-escultor");
-				const foto = urlFotoEscultor(escultor.foto);
-				const pais = await loadPais(URL_PAIS, escultor.pais_id);
-				const NyA = formatearNombre(escultor.nombre, escultor.apellido);
+				const foto = escultor.foto;
+				const pais = escultor.pais.nombre;
+			
+				const NyA = escultor.nombre_completo;
 
 				article.innerHTML = `
 						
@@ -186,7 +128,7 @@ async function loadEscultores(url: string) {
 									<div class="space">
 									<h3 id="nombre-escultor" >${NyA}</h3>
 									</div>
-									<p class="cursiva">${pais.nombre} </p>
+									<p class="cursiva">${pais} </p>
 									<button class="btn-votar" data-id="${escultor.id}">
 									
 									Votar
@@ -228,11 +170,8 @@ async function loadEscultores(url: string) {
 							"nombre-escultor",
 						) as HTMLHeadElement;
 
-						nombreEscultor.textContent = formatearNombre(
-							escultores[Number(id) - 1].nombre,
-							escultores[Number(id) - 1].apellido,
-						);
-
+						nombreEscultor.textContent = 
+							escultores[Number(id) - 1].nombre_completo
 						const formPopUp = document.createElement("form");
 
 						formPopUp.id = `votoForm-${id}`;
@@ -285,7 +224,8 @@ async function loadEscultores(url: string) {
 	}
 }
 
-
-loadHTML("header.html", "header", "certamen");
-
-inicializar();
+if (window.location.pathname.includes("certamen.html")) {
+	loadHTML("header.html", "header", "certamen");
+	loadHTML("footer.html", "footer", "certamen");
+	inicializar();
+}

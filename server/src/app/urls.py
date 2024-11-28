@@ -52,6 +52,7 @@ router.register("api/lugar", LugarViewSet, "lugares")
 router.register("api/voto_escultor", VotoEscultorViewSet, "voto_escultor")
 router.register("api/escultor_evento", EscultorEventoViewSet, "escultor_evento")
 
+
 urlpatterns = [
     path("", include(router.urls)),
     path("api/health_check/", health_check, name="health_check"),
