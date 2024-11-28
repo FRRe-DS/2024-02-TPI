@@ -1,3 +1,4 @@
+import logging
 from background_task.models import CompletedTask
 from background_task.tasks import Task
 from django.http import JsonResponse
@@ -31,11 +32,18 @@ from app.serializers import (
     PaisSerializer,
 )
 
+from drf_spectacular.utils import extend_schema
 
+
+@extend_schema(
+    summary="Start Background Task",
+    description="Comienza una tarea de fondo usando la librería 'django-background-tasks' para demostrar la integración.",
+    responses={200: {"description": "Task started!"}},
+)
 @api_view(["GET"])
 def background_task_ejemplo(request: Request) -> JsonResponse:
     """
-    Ejemplo temporal para chequear que la integración entre celery y Django funcione correctamente.
+    Comienza una tarea de fondo usando la librería "django-background-tasks>" para demostrar la integración.
     """
 
     from ..tasks import count_votantes
@@ -45,13 +53,35 @@ def background_task_ejemplo(request: Request) -> JsonResponse:
     return JsonResponse({"status": "Task started!"})
 
 
+@extend_schema(
+    summary="Check Task Status",
+    description="Devuelve el status de tareas pendientes o completadas.",
+    responses={
+        200: {
+            "description": "Task statuses",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "pending_tasks": [
+                            {"task_name": "Task1", "run_at": "2024-11-28T12:00:00Z"}
+                        ],
+                        "completed_tasks": [
+                            {
+                                "task_name": "Task2",
+                                "completed_at": "2024-11-28T13:00:00Z",
+                            }
+                        ],
+                    }
+                }
+            },
+        }
+    },
+)
 @api_view(["GET"])
-def check_django_task_status(request):
-    """Example view to check the status of tasks."""
-    # Query pending tasks
+def check_django_task_status(_request):
+    """Devuelve el status de tareas pendientes o completadas."""
     pending_tasks = Task.objects.all()
 
-    # Query completed tasks (if necessary)
     completed_tasks = CompletedTask.objects.all()
 
     pending = [
@@ -64,24 +94,60 @@ def check_django_task_status(request):
 
     return JsonResponse({"pending_tasks": pending, "completed_tasks": completed})
 
-    # esta es la forma de obtener el token de un admin
-    # se obtiene haciendo un post con el username y password del usuario a la rutaBase/get_token/
-    # es decir api/adminsis/get_token/
 
-
+@extend_schema(
+    summary="Obtener Token de Administrador",
+    description="Genera o recupera un token de autenticación para un usuario administrador.",
+    request={
+        "application/json": {
+            "example": {"username": "admin", "password": "contraseñaSegura"}
+        }
+    },
+    responses={
+        200: {
+            "description": "Token generado exitosamente",
+            "content": {
+                "application/json": {"example": {"token": "abc123xyz", "created": True}}
+            },
+        },
+        400: {
+            "description": "Credenciales inválidas",
+            "content": {
+                "application/json": {"example": {"error": "contraseña incorrecta"}}
+            },
+        },
+        404: {
+            "description": "Usuario no encontrado",
+            "content": {"application/json": {"example": {"detail": "No encontrado."}}},
+        },
+    },
+)
 @api_view(["POST"])
 @permission_classes([permissions.AllowAny])
 def get_token(request):
-    userAdmin = get_object_or_404(User, username=request.data["username"])
+    """
+    Obtiene un token de autenticación para un usuario administrador.
+    """
+    userAdmin = get_object_or_404(User, username=request.data.get("username"))
 
-    if not userAdmin.check_password(request.data["password"]):
+    if not userAdmin.check_password(request.data.get("password")):
         return Response(
-            {"error": "contra incorrecta"}, status=status.HTTP_400_BAD_REQUEST
+            {"error": "contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST
         )
 
     token, created = Token.objects.get_or_create(user=userAdmin)
 
-    return Response({"token": token.key}, status=status.HTTP_200_OK)
+    if created:
+        logging.info(f"Token creado: {token.key} para el usuario: {userAdmin.username}")
+    else:
+        logging.info(
+            f"Token recuperado: {token.key} para el usuario: {userAdmin.username}"
+        )
+
+    return Response(
+        {"token": token.key, "created": created},
+        status=status.HTTP_200_OK,
+    )
 
 
 class VotanteViewSet(viewsets.ModelViewSet):

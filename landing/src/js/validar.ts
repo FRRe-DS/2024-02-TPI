@@ -17,8 +17,8 @@ function getUrlParams(): Record<string, string> {
 	return searchConfig;
 }
 
-const TIME_LIMIT_MINS = 0.5;
-// const TIME_LIMIT_MINS = 10.0;
+// const TIME_LIMIT_MINS = 0.5;
+const TIME_LIMIT_MINS = 10.0;
 
 function validar_qr() {
 	const params = getUrlParams();

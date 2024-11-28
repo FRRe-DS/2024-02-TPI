@@ -1,5 +1,10 @@
 from rest_framework import routers
 from django.urls import include, path
+from drf_spectacular.views import (
+    SpectacularAPIView,
+    SpectacularRedocView,
+    SpectacularSwaggerView,
+)
 from app.views.sets import (
     VotanteViewSet,
     LugarViewSet,
@@ -45,15 +50,28 @@ router.register("api/voto_escultor", VotoEscultorViewSet, "voto_escultor")
 
 urlpatterns = [
     path("", include(router.urls)),
-    path("health_check/", health_check, name="health_check"),
-    path("generar_qr/", generarQR.as_view(), name="generar_qr"),
-    path("get_token/", get_token, name="token"),
-    path("estado_votacion/", estado_votacion, name="estado_votacion"),
-    path("test_background/", background_task_ejemplo, name="background_task_ejemplo"),
+    path("api/health_check/", health_check, name="health_check"),
+    path("api/generar_qr/", generarQR.as_view(), name="generar_qr"),
+    path("api/get_token/", get_token, name="token"),
+    path("api/estado_votacion/", estado_votacion, name="estado_votacion"),
     path(
-        "tasks_status/",
+        "api/test_background/", background_task_ejemplo, name="background_task_ejemplo"
+    ),
+    path(
+        "api/tasks_status/",
         check_django_task_status,
         name="check_task_status",
+    ),
+    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path(
+        "api/schema/swagger-ui/",
+        SpectacularSwaggerView.as_view(url_name="schema"),
+        name="swagger-ui",
+    ),
+    path(
+        "api/schema/redoc/",
+        SpectacularRedocView.as_view(url_name="schema"),
+        name="redoc",
     ),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
 ]
