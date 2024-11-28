@@ -9,15 +9,26 @@ const URL_escultor_evento = `${__API_URL__}/api/escultor_evento/`;
 const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
 
 
-
+const email = localStorage.getItem("userEmail");
 const params = getUrlParams();
 
+const form = document.querySelector(".formulario-voto") as HTMLElement;
+
+const btnVotar = document.querySelector("#btnVotar") as HTMLLinkElement;
+btnVotar.href = `./validar.html?id=${params.id}`
+
+if (email) {
+	btnVotar.style.display = "none"
+}else{
+	form.style.display = "none"
+}
 
 async function inicializar() {
 	const loadingIndicator = document.getElementById("loading-indicator")!;
   const mainContent = document.querySelector(".section-certamen") as HTMLElement;
 	const dividers = document.querySelectorAll(".divider-sm");
 	const galeria = document.querySelector(".galeria") as HTMLElement;
+	
 
 	try {
 		loadingIndicator.style.display = "flex";
@@ -35,9 +46,11 @@ async function inicializar() {
 		const res4 = await fetch(`${URL_EVENTOS}${escultor_evento.evento_id}`)
 		const evento = await res4.json()
 
+	
+
 		// console.log(escultor)
 
-		const nombreEscultor = document.querySelector("#nombre-escultor") as HTMLHeadingElement;
+		const nombreEscultor = document.querySelectorAll("#nombre-escultor");
 		const descripcionEscultor = document.querySelector("#descripcion-escultor") as HTMLParagraphElement;
 
     const descripcionEscultura = document.querySelector("#descripcion-escultura") as HTMLParagraphElement;
@@ -52,7 +65,10 @@ async function inicializar() {
 
 		nombreEvento.textContent = evento.nombre
 
-		nombreEscultor.textContent = escultor.nombre_completo
+		for (const nombre of nombreEscultor) {
+			nombre.textContent = escultor.nombre_completo
+		}
+		
 		
 		pais.textContent = (await loadPais(URL_PAIS, escultor.pais_id)).nombre
 
@@ -84,6 +100,8 @@ async function inicializar() {
 			galeria.appendChild(article);
 		}
 	
+		
+
 	} catch (error) {
 		console.error("Error inicializando la página:", error);
 	} finally {
@@ -92,7 +110,8 @@ async function inicializar() {
 		dividers.forEach((divider) => {
 			(divider as HTMLElement).style.display = "block"; 
 		});
-  }
+
+	}
 }
 
 inicializar() 

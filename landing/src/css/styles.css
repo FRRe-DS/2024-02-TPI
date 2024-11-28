@@ -473,6 +473,10 @@ footer {
 	user-select: none;
 }
 
+.pad-inline{
+	padding: 10px 64px;
+}
+
 .btn-secundarioV2:hover,
 .btn-secundarioV2:focus {
 	color: #ffffff;
@@ -1151,6 +1155,13 @@ footer {
 	align-items: center;
 	text-align: center;
 	padding: 3rem clamp(3rem, 2.286rem + 1.905vw, 4rem);
+	
+}
+
+.recuadro{
+	border-radius: 40px;
+	border: 1px solid var(--bg-2);
+
 }
 
 .formulario-voto h1 {
@@ -1506,15 +1517,19 @@ form {
   border-radius: 8px;
   padding: 8px 24px;
   color: #fff;
-  border: 1px solid #fff;
+  border: 1px solid #497fff;
   transition: all 0.3s;
   cursor: pointer;
 
 }
 
+.parrafo-gris{
+	color: var(--text-300) !important;
+}
+
 .btn-votarV2:hover {
   color: #497fff;
-  background-color: var(--bg-2);
+  background-color: transparent;
   border: 1px solid #497fff;
 }
 
