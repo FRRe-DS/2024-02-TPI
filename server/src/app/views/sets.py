@@ -18,6 +18,7 @@ from app.models import (
     Pais,
     Escultura,
     Evento,
+    EscultorEvento,
 )
 from app.serializers import (
     VotanteSerializer,
@@ -29,6 +30,7 @@ from app.serializers import (
     TematicaSerializer,
     AdminSisSerializer,
     PaisSerializer,
+    EscultorEventoSerializer,
 )
 
 
@@ -362,6 +364,47 @@ class PaisViewSet(viewsets.ModelViewSet):
     queryset = Pais.objects.all()
     serializer_class = PaisSerializer
     filterset_fields = ["id"]
+
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
+
+
+class EscultorEventoViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos EscultorEvento.
+
+    Provee operaciones CRUD para la relación entre Escultores y Eventos.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      - list: GET /api/escultoreseventos/
+      - create: POST /api/escultoreseventos/
+      - retrieve: GET /api/escultoreseventos/{id}/
+      - update: PUT /api/escultoreseventos/{id}/
+      - partial_update: PATCH /api/escultoreseventos/{id}/
+      - destroy: DELETE /api/escultoreseventos/{id}/
+
+    Campos de búsqueda:
+        - id
+        - escultor_id
+        - evento_id
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+    """
+
+    queryset = EscultorEvento.objects.all()
+    serializer_class = EscultorEventoSerializer
+    filterset_fields = ["id", "escultor_id", "evento_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
