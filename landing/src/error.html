@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet" />
+
+    <!-- font awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <!-- google icons -->
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/styles.css" />
+
+    <title>Bienal del Chaco</title>
+
+    <script type="module" src="./app.ts"></script>
+    <script type="module" src="./utils.ts"></script>
+    <script type="module" src="./js/error.ts"></script>
+    
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
+
+  </head>
+  <body>
+    <div id="header"></div>
+    <main>
+      <section class="hero-section">
+        <section id="up"></section>
+        <section id="down"></section>
+        <section id="left"></section>
+        <section id="right"></section>
+        <div class="pantalla-completa">
+          <article class="error-container">
+            <div  class="error">             
+              
+              <dotlottie-player src="https://lottie.host/d6200585-04fd-466b-b8d4-98ff68cceed4/rRH6nP55GB.lottie" background="transparent" speed="1" style="width: 150px; height: 150px" loop autoplay></dotlottie-player>
+             
+              <strong><p>El link de verificación ha expirado</p></strong>
+              <a id="volverAValidar">Volver a enviar el correo</a>
+            </div>
+           
+            
+          </article>
+         
+        </div>
+      </section>
+    </main>
+
+  </body>
+</html>

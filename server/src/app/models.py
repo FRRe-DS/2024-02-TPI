@@ -67,8 +67,6 @@ class Escultor(models.Model):
     pais_id = models.ForeignKey(Pais, on_delete=models.CASCADE, db_column="pais_id")
     correo = models.EmailField(null=False, blank=False, unique=True)
     fecha_nacimiento = models.DateField(blank=True, null=True)
-    # TODO: (Lautaro) Si quisieramos trabajar usando un Object Storage como S3 o R2 para guardar las imágenes,
-    # este campo tendría que ser un URLField.
     foto = models.ImageField(upload_to="img/perfiles/", blank=True, null=True)
     bibliografia = models.CharField(max_length=400, blank=False, null=False)
 
@@ -100,7 +98,10 @@ class Escultura(models.Model):
 
     id = models.AutoField(primary_key=True)
     escultor_id = models.ForeignKey(
-        Escultor, on_delete=models.CASCADE, db_column="escultor_id"
+        Escultor,
+        on_delete=models.CASCADE,
+        db_column="escultor_id",
+        related_name="esculturas",
     )
     nombre = models.CharField(max_length=100, blank=False, null=False)
     descripcion = models.CharField(blank=False, null=False)
@@ -129,7 +130,10 @@ class Imagen(models.Model):
     id = models.AutoField(primary_key=True)
     fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
     escultura_id = models.ForeignKey(
-        Escultura, on_delete=models.CASCADE, db_column="escultura_id"
+        Escultura,
+        on_delete=models.CASCADE,
+        db_column="escultura_id",
+        related_name="imagenes",
     )
     imagen = models.ImageField(upload_to="img/esculturas/", blank=True, null=True)
 
@@ -208,6 +212,7 @@ class Evento(models.Model):
         fecha_fin (DateField): Fecha de fin del evento.
         descripcion (CharField): Descripción del evento, requerida.
         tematica_id (ForeignKey): Relación con la temática del evento.
+        foto (fileField): Almacena una unica foto del evento.
     """
 
     id = models.AutoField(primary_key=True)

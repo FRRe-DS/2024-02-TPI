@@ -4,11 +4,15 @@
 	--text-200: #343434;
 	--text-300: #f9f9f9;
 	--text-400: #fff;
+	--blue: #497fff;
+	--mulish: "Mulish", sans-serif;
+	--cursiva: "Dancing Script", cursive;
 }
 
 /* modifico la scrollbar */
 ::-webkit-scrollbar {
 	width: 10px;
+
 }
 
 /* Track */
@@ -31,10 +35,11 @@ body {
 	background-color: var(--bg);
 	display: grid;
 	grid-template-rows: auto 1fr auto;
-	font-family: "Mulish", sans-serif;
-
-	/* font-family: "Dancing Script", cursive; */
+	font-family: var(--mulish);
+	
+	/* font-family: var(--cursiva); */
 }
+
 
 .sidebar {
 	position: fixed;
@@ -145,16 +150,17 @@ header div button {
 }
 
 footer {
-	padding-bottom: 20px;
 	width: 100%;
 }
 
 .footer-end {
 	width: 100%;
-	padding-inline: 4rem;
+	padding: 1rem 4rem ;
 	display: inline-flex;
 	flex-wrap: wrap-reverse;
 	justify-content: space-between;
+	align-items: center;
+	height: 100%;
 }
 
 .icons-size {
@@ -181,7 +187,7 @@ footer {
 }
 
 .cursiva {
-	font-family: "Dancing Script", cursive;
+	font-family: var(--cursiva);
 }
 
 .ubicacion {
@@ -431,6 +437,11 @@ footer {
 	width: 100%;
 }
 
+.gap-20{
+	display: grid;
+	gap: 20px;
+}
+
 .gap-2rem {
 	display: flex;
 	flex-direction: column;
@@ -460,6 +471,10 @@ footer {
 	border: 1px solid #ffffffe8;
 	transition: 0.5s ease;
 	user-select: none;
+}
+
+.pad-inline{
+	padding: 10px 64px;
 }
 
 .btn-secundarioV2:hover,
@@ -725,7 +740,7 @@ footer {
 }
 
 .container-title-evento p {
-	font-family: "Dancing Script", cursive;
+	font-family: var(--cursiva);
 	text-align: center;
 	font-size: clamp(1rem, -0.429rem + 3.81vw, 3rem);
 }
@@ -760,11 +775,17 @@ footer {
 	animation: left 45s 0.5s infinite;
 }
 
-.wrapped2 {
+.wrapped2, center{
 	width: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.center{
+	padding-top: 48px;
+	height: 100%;
+
 }
 
 .events-gallery {
@@ -784,7 +805,7 @@ footer {
 	border-radius: 20px;
 	width: 100%;
 	height: 450px;
-	background-color: #008cff;
+
 	text-align: center;
 	padding: 24px 16px;
 	gap: 1.5rem;
@@ -793,6 +814,8 @@ footer {
 	transition: transform 0.3s ease;
 	overflow: hidden;
 	position: relative;
+
+
 }
 
 .card-img-evento {
@@ -803,6 +826,7 @@ footer {
 	height: 100%;
 	object-fit: cover;
 	transition: transform 1s ease;
+	background-color: #252525;
 }
 
 .event-card:hover .card-img-evento {
@@ -831,8 +855,8 @@ footer {
 }
 
 .card-content h2 {
-	font-size: clamp(1.5rem, 0.786rem + 1.905vw, 2.5rem);
-	font-weight: 400;
+	font-size: clamp(1.5rem, 1.143rem + 0.952vw, 2rem);
+	font-weight: 700;
 }
 
 .card-content div {
@@ -856,6 +880,16 @@ footer {
 	transition: 0.5s ease;
 	user-select: none;
 	z-index: 10;
+	transition: 0.4s ease;
+}
+
+.btn-secundarioV3:hover{
+	background-color: #111111;
+	border-color: #111111;
+}
+
+.btn-secundarioV3:active{
+	transform: scale(0.9);
 }
 
 /* ---seccion detalle_evento--- */
@@ -886,6 +920,7 @@ footer {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	gap: 2rem;
 }
 
 .pad-bottom-36 {
@@ -904,12 +939,15 @@ footer {
 	font-size: clamp(1.5rem, 1.143rem + 0.952vw, 2rem);
 }
 
+
+
 .divider-sm {
 	border-radius: 50px;
 	height: 2px;
 	background-color: var(--bg-2);
 	width: 50px;
 	margin-top: 10px;
+	display: none;
 }
 
 .info-certamen {
@@ -922,6 +960,7 @@ footer {
 	place-items: center;
 	grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
 	gap: 3rem;
+	padding-bottom: 36px;
 }
 
 .card-escultor {
@@ -1015,6 +1054,16 @@ footer {
 	width: fit-content;
 	margin-top: 10px;
 	transition: all .1s ease;
+	border: 1px solid #111111;
+	transition: 0.4s ease;
+}
+.btn-votar:hover {
+	border: 1px solid var(--bg-2);
+	background-color: transparent;
+}
+
+.btn-votar:active {
+	transform: scale(0.9);
 }
 
 .white {
@@ -1075,9 +1124,10 @@ footer {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
 }
 
-.container-votar {
+.container-votar, .error-container {
 	display: grid;
 	grid-template-columns: 60% 40%;
 	width: 100%;
@@ -1091,6 +1141,12 @@ footer {
 	overflow: hidden;
 }
 
+.error-container{
+	display: block;
+	padding: 32px;
+	width: auto;
+}
+
 .formulario-voto {
 	display: flex;
 	flex-direction: column;
@@ -1099,6 +1155,13 @@ footer {
 	align-items: center;
 	text-align: center;
 	padding: 3rem clamp(3rem, 2.286rem + 1.905vw, 4rem);
+	
+}
+
+.recuadro{
+	border-radius: 40px;
+	border: 1px solid var(--bg-2);
+
 }
 
 .formulario-voto h1 {
@@ -1125,22 +1188,90 @@ form {
 	width: 100%;
 }
 
+/* From Uiverse.io by adamgiebl */ 
 .btn-enviar-email {
-	font-weight: 700;
-	color: #497fff;
-	display: inline-flex;
-	gap: 5px;
-	justify-content: center;
-	align-items: center;
+  font-family: inherit;
+  font-size: 20px;
+  background: #497fff;
+  color: white;
+  padding: 10px 24px;
+  padding-left: 0.9em;
+  display: flex;
+  align-items: center;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: all 0.2s;
+  cursor: pointer;
 }
 
-.btn-enviar-email i {
-	font-size: 16px;
+.btn-enviar-email span {
+  display: block;
+  margin-left: 0.3em;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-enviar-email svg {
+  display: block;
+  transform-origin: center center;
+  transition: transform 0.3s ease-in-out;
+}
+
+.btn-enviar-email:hover .svg-wrapper ,
+.btn-enviar-email.active .svg-wrapper {
+  animation: fly-1 0.6s ease-in-out infinite alternate;
+}
+
+.btn-enviar-email:hover svg,
+.btn-enviar-email.active svg {
+  transform: translateX(1.2em) rotate(45deg) scale(1.1);
+}
+
+.btn-enviar-email:hover span,
+.btn-enviar-email.active span{
+  transform: translateX(5em);
+}
+
+
+.btn-enviar-email:active {
+  transform: scale(0.95);
+}
+
+@keyframes fly-1 {
+  from {
+    transform: translateY(0.1em);
+  }
+
+  to {
+    transform: translateY(-0.1em);
+  }
+}
+
+.notificarMail, .error{
+	display: none;
+	width: 100%;
+	justify-content: center;	
+	align-items: center;
+	flex-direction: column;
+	gap: 15px;
+	text-align: center;
+}
+
+.notificarMail p{
+	color: var(--text-200);
+}
+
+.error{
+	display: flex;
+	
+}
+
+#volverAValidar{
+	color: #497fff;
 }
 
 .formulario-voto p {
 	color: var(--text-200);
-	margin-bottom: 1.5rem;
 }
 
 .container-votar img {
@@ -1204,6 +1335,33 @@ form {
 	70% {
 		right: 1300px;
 	}
+}
+
+.galeria-progreso-escultor{
+	width: 100%;
+	display: grid;
+	gap: 20px;
+}
+
+.galeria{
+	display: grid;
+	grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+	gap: 16px;
+
+}
+
+.galeria article img{
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: 20px;
+}
+
+.titulo{
+	font-size: clamp(2rem, 1.643rem + 0.952vw, 2.5rem);
+}
+.subtitulo {
+	font-size: clamp(1.5rem, 1.143rem + 0.952vw, 2rem);
 }
 
 @media (max-width: 1100px) {
@@ -1353,24 +1511,94 @@ form {
 	cursor: pointer;
 }
 
+
+
 .btn-votarV2 {
-	background-color: #497fff;
-	border-radius: 8px;
-	padding: 8px 16px;
-	color: #fff;
-	border: 1px solid #fff;
-	transition: all 0.3s;
+  background-color: #497fff;
+  border-radius: 8px;
+  padding: 8px 24px;
+  color: #fff;
+  border: 1px solid #497fff;
+  transition: all 0.3s;
+  cursor: pointer;
+
+}
+
+.parrafo-gris{
+	color: var(--text-300) !important;
 }
 
 .btn-votarV2:hover {
-	color: #497fff;
-	background-color: var(--bg-2);
-	border: 1px solid #497fff;
+  color: #497fff;
+  background-color: transparent;
+  border: 1px solid #497fff;
 }
 
-.btn-votarV2:active {
-	transform: scale(0.9);
+/* Estado activado */
+.btn-votarV2.active {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  padding: 0;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--blue);
+  color: #fff;
+	position: relative;
 }
+
+.succesOperation{
+	position: absolute;
+}
+
+/* loader */
+.loading-wave {
+  width: 300px;
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  margin: auto;
+
+}
+
+.loading-bar {
+  width: 20px;
+  height: 10px;
+  margin: 0 5px;
+  background-color: #3498db;
+  border-radius: 5px;
+  animation: loading-wave-animation 1s ease-in-out infinite;
+}
+
+.loading-bar:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.loading-bar:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.loading-bar:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+@keyframes loading-wave-animation {
+  0% {
+    height: 10px;
+  }
+
+  50% {
+    height: 50px;
+  }
+
+  100% {
+    height: 10px;
+  }
+}
+
 
 @media (max-width: 850px) {
 	.detalle-evento {

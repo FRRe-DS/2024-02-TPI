@@ -22,6 +22,8 @@ from app.views.sets import (
 )
 from app.views.health_check import health_check
 from app.views.votacion import estado_votacion, generarQR, VotoEscultorViewSet
+from app.views.verify_captcha import VerifyCaptchaView
+from app.views.validar_votante import crear_votante, validar_votante
 
 router = routers.DefaultRouter()
 
@@ -50,6 +52,7 @@ router.register("api/lugar", LugarViewSet, "lugares")
 router.register("api/voto_escultor", VotoEscultorViewSet, "voto_escultor")
 router.register("api/escultor_evento", EscultorEventoViewSet, "escultor_evento")
 
+
 urlpatterns = [
     path("", include(router.urls)),
     path("api/health_check/", health_check, name="health_check"),
@@ -76,4 +79,7 @@ urlpatterns = [
         name="redoc",
     ),
     path("admin/doc/", include("django.contrib.admindocs.urls")),
+    path("verify-captcha/", VerifyCaptchaView.as_view(), name="verify-captcha"),
+    path("validar_votante/", validar_votante, name="validar_votante"),
+    path("crear_votante/", crear_votante, name="crear_votante"),
 ]

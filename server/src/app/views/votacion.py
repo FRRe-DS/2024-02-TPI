@@ -1,7 +1,5 @@
 import datetime
 import logging
-import smtplib
-from email.message import EmailMessage
 from io import BytesIO
 
 import urllib.parse
@@ -10,11 +8,14 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 import qrcode
 import ulid
-from django.db.models import ObjectDoesNotExist, Sum
+from django.db.models import Sum
 from django.db.models.base import Coalesce
 from django.http.response import HttpResponse
-from rest_framework import authentication, permissions, serializers, status, viewsets
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework import authentication, permissions, status, viewsets
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view
+from rest_framework import serializers
+from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -133,10 +134,6 @@ class generarQR(APIView):
         return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
 
 
-# @api_view(["GET"])
-# def generar_qr(request: Request) -> HttpResponse:
-
-
 class VotoEscultorViewSet(viewsets.ModelViewSet):
     queryset = VotoEscultor.objects.all()
     serializer_class = VotoEscultorSerializer
@@ -145,32 +142,27 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_permissions(self):
-        if self.request.method == "POST":
-            return [permissions.AllowAny()]
+        # Esta linea la uso para poder ver si se efectua o no un voto
+        # if self.request.method in ["GET", "POST"]:
+        if self.request.method in "POST":
+            return [AllowAny()]
         return [permission() for permission in self.permission_classes]
 
-    def create(self, request: Request):
-        correo_votante = str(request.query_params.get("correo_votante"))
+    def create(self, request):
+        correo_votante = str(request.data.get("correo_votante"))
 
         if not correo_votante:
             return Response(
                 {"error": "El correo del votante es obligatorio."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        votante: Votante
         try:
             votante = Votante.objects.get(correo=correo_votante)
-        except ObjectDoesNotExist:
-            logging.info(
-                "Este votante no se encuentra registrado hasta la fecha. Enviando correo electrónico para verificar su registro."
-            )
-            mandar_email(correo_votante)
+        except Votante.DoesNotExist:
+            logging.error(f"Votante con correo {correo_votante} no encontrado.")
             return Response(
-                {
-                    "status": "Se ha enviado un email de verificación a la dirección indicada"
-                },
-                status=status.HTTP_202_ACCEPTED,
+                {"error": "Votante no encontrado en la base de datos."},
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         request.data["votante_id"] = votante.id
@@ -179,50 +171,26 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
         if serialized_data.is_valid():
             serialized_data.save()
             return Response(
-                {"status": "voto registrado"}, status=status.HTTP_201_CREATED
+                {"status": "Voto registrado"},
+                status=status.HTTP_201_CREATED,
             )
         else:
             errors = serialized_data.errors
             if isinstance(errors, dict) and "non_field_errors" in errors:
                 error_message = errors["non_field_errors"][0]
-                error = f"Usted ya ha votado a este escultor. err: {error_message}"
+                error = f"Usted ya ha votado a este escultor. Error: {error_message}"
                 logging.error(error)
                 return Response(
                     {"error": error},
                     status=status.HTTP_403_FORBIDDEN,
                 )
 
-            error = f"Ocurrió un error al serializar los datos. err: {errors}"
+            error = f"Ocurrió un error al serializar los datos. Error: {errors}"
             logging.error(error)
             return Response(
-                {
-                    "error": error,
-                },
+                {"error": error},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-
-def mandar_email(destinatario: str) -> Response:
-    """
-    Endpoint para enviar un mail usando la API REST de Resend.
-    """
-
-    remitente = settings.DEFAULT_FROM_EMAIL
-    print(remitente)
-
-    email = EmailMessage()
-    email["From"] = remitente
-    email["To"] = destinatario
-    email["Subject"] = "Confirmación de correo electrónico"
-    email.set_content("<strong> Funciona! </strong>")
-
-    smtp = smtplib.SMTP_SSL("smtp.gmail.com")
-    smtp.login(remitente, settings.EMAIL_APP_KEY)
-    smtp.sendmail(remitente, destinatario, email.as_string())
-    smtp.quit()
-
-    print(email.as_string())
-    return Response(status=status.HTTP_200_OK)
 
 
 class EscultorRankingSerializer(serializers.Serializer):

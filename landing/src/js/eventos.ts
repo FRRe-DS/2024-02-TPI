@@ -16,7 +16,11 @@ async function loadEventos(url: string) {
 				card.classList.add("event-card");
 
 				card.innerHTML = `
-            <img class="card-img-evento" loading="lazy" src="${evento.foto}" alt="${evento.nombre}">
+            <img class="card-img-evento" 
+						loading="lazy" 
+						src="${evento.foto}" 
+						alt="${evento.nombre}"
+						onerror="this.src='./images/fondo.jpg'; this.onerror=null;">>
             <div class="card-content">
               <h2>${evento.nombre}</h2>
               <div>
@@ -34,6 +38,9 @@ async function loadEventos(url: string) {
 	}
 }
 
-// ------------
-loadHTML("header.html", "header", "eventos");
-loadEventos(URL_EVENTOS);
+if (window.location.pathname.includes("eventos.html")) {
+	loadHTML("header.html", "header", "eventos");
+	loadHTML("footer.html", "footer", "eventos");
+	loadEventos(URL_EVENTOS);
+}
+

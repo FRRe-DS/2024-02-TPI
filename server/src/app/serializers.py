@@ -20,7 +20,40 @@ class VotanteSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EscultorEventoSerializer(serializers.ModelSerializer):
+class TematicaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tematica
+        fields = "__all__"
+
+
+class LugarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lugar
+        fields = "__all__"
+
+
+class EventoWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evento
+        fields = "__all__"
+
+class EventoReadSerializer(serializers.ModelSerializer):
+    tematica = TematicaSerializer(source="tematica_id")
+    lugar = LugarSerializer(source="lugar_id")
+
+    class Meta:
+        model = Evento
+        fields = "__all__"
+
+
+class EscultorEventoReadSerializer(serializers.ModelSerializer):
+    evento = EventoWriteSerializer(source="evento_id")
+
+    class Meta:
+        model = EscultorEvento
+        fields = "__all__"
+
+class EscultorEventoWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = EscultorEvento
         fields = "__all__"
@@ -32,27 +65,17 @@ class VotoEscultorSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EventoSerializer(serializers.ModelSerializer):
+class ImagenSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Evento
+        model = Imagen
         fields = "__all__"
 
 
 class EsculturaSerializer(serializers.ModelSerializer):
+    imagenes = ImagenSerializer(many=True, read_only=True)
+
     class Meta:
         model = Escultura
-        fields = "__all__"
-
-
-class EscultorSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Escultor
-        fields = "__all__"
-
-
-class ImagenSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Imagen
         fields = "__all__"
 
 
@@ -62,21 +85,25 @@ class PaisSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class EscultorReadSerializer(serializers.ModelSerializer):
+    pais = PaisSerializer(source="pais_id")
+    esculturas = EsculturaSerializer(many=True, read_only=True)
+    nombre_completo = serializers.CharField(source="__str__", read_only=True)
+    eventos = EscultorEventoWriteSerializer(source="escultorevento_set", many=True)
+
+    class Meta:
+        model = Escultor
+        fields = "__all__"
+
+class EscultorWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Escultor
+        fields = "__all__"
+
+
 # Aca usamos el modelo que brinda django para la autenticaciones
 # Esta piola igual ya que encripta las password cuando las guarda y las desencripta cuando las trae
 class AdminSisSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email", "password"]
-
-
-class TematicaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tematica
-        fields = "__all__"
-
-
-class LugarSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lugar
-        fields = "__all__"
