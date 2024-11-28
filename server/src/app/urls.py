@@ -10,6 +10,7 @@ from app.views.sets import (
     PaisViewSet,
     AdminSisViewSet,
     TematicaViewSet,
+    EscultorEventoViewSet,
     background_task_ejemplo,
     check_django_task_status,
     get_token,
@@ -42,6 +43,7 @@ router.register("api/adminsis", AdminSisViewSet, "adminsis")
 router.register("api/tematica", TematicaViewSet, "tematicas")
 router.register("api/lugar", LugarViewSet, "lugares")
 router.register("api/voto_escultor", VotoEscultorViewSet, "voto_escultor")
+router.register("api/escultor_evento", EscultorEventoViewSet, "escultor_evento")
 
 urlpatterns = [
     path("", include(router.urls)),

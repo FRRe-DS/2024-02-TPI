@@ -290,7 +290,7 @@ INSERT INTO "app_evento" (nombre, fecha_inicio, fecha_fin, descripcion, lugar_id
 ('Actividades para Niños', '2024-11-01', '2024-11-07', 'Zona interactiva con juegos, talleres y actividades recreativas diseñadas especialmente para los más pequeños.', 5, 'img/eventos/ActividadesParaNiños.webp', 7, True),
 ('Artistas Invitados Internacionales', '2024-11-01', '2024-11-07', 'Participación especial de artistas de renombre mundial que compartirán su trabajo y experiencias.', 7, 'img/eventos/ArtistasInvitadosInternacionales.webp', 1, True),
 ('Feria de Artesanía y Productos Locales', '2024-11-01', '2024-11-07', 'Exhibición y venta de artesanías, alimentos y productos elaborados por productores locales.', 2, 'img/eventos/FeriaDeArtesania.webp', 11, True),
-('Performance en Vivo', '2024-11-01', '2024-11-07', 'Espectáculos teatrales y de danza contemporánea, realizados por compañías y artistas independientes.', 10,' img/eventos/PerformanceEnVivo.webp', 13, True),
+('Performance en Vivo', '2024-11-01', '2024-11-07', 'Espectáculos teatrales y de danza contemporánea, realizados por compañías y artistas independientes.', 10,'img/eventos/PerformanceEnVivo.webp', 13, True),
 ('Festival Gastronómico', '2024-11-01', '2024-11-07', 'Encuentro culinario donde los asistentes podrán degustar una amplia variedad de platillos de diferentes culturas.', 10, 'img/eventos/FestivalGastronomico.webp', 4, True),
 ('Exhibiciones de Realidad Virtual', '2024-11-01', '2024-11-07', 'Demostraciones interactivas de tecnología de realidad virtual, con experiencias inmersivas para los asistentes.', 10, 'img/eventos/ExhibicionesDeRealidadVirtual.webp', 13, True);
 
