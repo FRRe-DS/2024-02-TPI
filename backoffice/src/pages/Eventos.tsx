@@ -108,8 +108,7 @@ const columns = [
   columnHelper.display({
     id: "acciones",
     header: "Acciones",
-    cell: (props) => <Acciones row={props.row} />,
-  }),
+    cell: (props) => <Acciones row={props.row} tipo="evento" />,  }),
 ];
 
 export default function Eventos() {

@@ -100,8 +100,7 @@ const columns = [
   columnHelper.display({
     id: "acciones",
     header: "Acciones",
-    cell: (props) => <Acciones row={props.row} />,
-  }),
+    cell: (props) => <Acciones row={props.row} tipo="escultura" />,  }),
 ];
 
 export default function Esculturas() {
