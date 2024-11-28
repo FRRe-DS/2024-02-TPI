@@ -226,5 +226,6 @@ async function loadEscultores(url: string) {
 
 if (window.location.pathname.includes("certamen.html")) {
 	loadHTML("header.html", "header", "certamen");
+	loadHTML("footer.html", "footer", "certamen");
 	inicializar();
 }

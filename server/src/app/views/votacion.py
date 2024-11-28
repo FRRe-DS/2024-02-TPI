@@ -58,7 +58,7 @@ class generarQR(APIView):
 
         id = ulid.from_timestamp(datetime.datetime.now())
 
-        query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
+        query_params = f"escultor_id={escultor_id}&ulid={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
 
         if settings.DJANGO_ENV == "prod":
             voto_url = (

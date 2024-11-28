@@ -7,8 +7,16 @@ export function setPaginaActual(pagina: string) {
 		`${paginas[indice]}-tag`,
 	) as HTMLElement;
 
+	const paginaActualFooter = document.getElementById(
+		`${paginas[indice]}-tag-footer`,
+	) as HTMLElement;
+
 	if (paginaActual) {
 		paginaActual.classList.add("paginaActual");
+	}
+	if (paginaActualFooter){
+		paginaActualFooter.classList.remove("material-icons-outlined")
+		paginaActualFooter.classList.add("material-icons")
 	}
 }
 

@@ -35,9 +35,8 @@ async function inicializar() {
 
 		console.log(escultor)
 
-		
 		const escultura = escultor.esculturas[0]
-		const evento = escultor.eventos[0]
+		const evento = escultor.eventos[0].evento
 
 		const nombreEscultor = document.querySelectorAll("#nombre-escultor");
 		const descripcionEscultor = document.querySelector("#descripcion-escultor") as HTMLParagraphElement;
@@ -200,4 +199,5 @@ if (form) {
 if (window.location.pathname.includes("detalle_escultor.html")) {
 	inicializar() 
 	loadHTML("header.html", "header", "certamen");
+	loadHTML("footer.html", "footer", "certamen");
 }

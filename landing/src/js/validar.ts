@@ -2,16 +2,6 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 import { loadHTML } from '../app';
 
-function extractTimeStampFromULID(input: string): Date {
-	const ulid_timestamp_str = input.slice(0, 10);
-	const base32Chars = "0123456789ABCDEFGHJKMNPQRSTVWXYZ";
-	let timestamp = 0;
-	for (let i = 0; i < ulid_timestamp_str.length; i++) {
-		timestamp = timestamp * 32 + base32Chars.indexOf(ulid_timestamp_str[i]);
-	}
-	return new Date(timestamp);
-}
-
 export function getUrlParams(): Record<string, string> {
 	const params = new URLSearchParams(window.location.search);
 	const searchConfig: Record<string, string> = {};
@@ -20,9 +10,6 @@ export function getUrlParams(): Record<string, string> {
 	}
 	return searchConfig;
 }
-
-// const TIME_LIMIT_MINS = 0.5;
-const TIME_LIMIT_MINS = 10.0;
 
 export async function getNombreEscultor(id: string) {
 	const url = "http://localhost:8000/api/escultores/";
@@ -46,44 +33,6 @@ export async function getNombreEscultor(id: string) {
 		fotoEscultor.title = nombre;
 	} catch (error) {
 		console.log(`Error al cargar el escultor: ${error}`);
-	}
-}
-
-function validar_qr(params: Record<string, string>) {
-	const ulid_id = params.id;
-	console.log(params)
-
-	if (!ulid_id) {
-		console.warn("No se encuentra el ulid id");
-		return;
-	}
-
-	const timestamp = extractTimeStampFromULID(ulid_id);
-	const now = new Date();
-	const spanned = Math.abs(timestamp.getTime() - now.getTime()) / (1000 * 60);
-
-	if (spanned < TIME_LIMIT_MINS) {
-		console.log("Es válido!");
-		console.log(spanned);
-	} else {
-
-		// TODO: Hacer que se muestre una pantalla de error como tengo en votar.html cuando ya se voto a un escultor
-		console.error(`Es inválido!, el qr tiene un timestamp de ${timestamp}`);
-		Toastify({
-			text: "El qr ha caducado!",
-			duration: 100000,
-			gravity: "bottom",
-			position: "right",
-			style: {
-				background: "#f63e3e",
-			},
-		}).showToast();
-
-		setTimeout(() => {
-			window.location.href = "./certamen.html";
-		}, 3000);
-
-		
 	}
 }
 
@@ -285,6 +234,6 @@ if (volverAValidar){
 
 if (window.location.pathname.includes("validar.html")) {
 	loadHTML("header.html", "header", "");
+	loadHTML("footer.html", "footer", "");
 	getNombreEscultor(params.id);
-// validar_qr(params);
 }

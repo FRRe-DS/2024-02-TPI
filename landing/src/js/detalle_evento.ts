@@ -55,5 +55,6 @@ if (window.location.pathname.includes("detalle_evento.html")) {
   const id = params.get("id") as string;
 
   loadHTML("header.html", "header", "eventos");
+  loadHTML("footer.html", "footer", "eventos");
   loadEvento(URL_EVENTOS, id);
 }

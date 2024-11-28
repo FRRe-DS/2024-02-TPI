@@ -47,5 +47,6 @@ async function loadEventos(url: string) {
 
 if (window.location.pathname.includes("")) {
 	loadHTML("header.html", "header", "inicio");
+	loadHTML("footer.html", "footer", "inicio");
 	loadEventos(URL_EVENTOS);
 }

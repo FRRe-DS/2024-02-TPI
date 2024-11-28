@@ -34,4 +34,3 @@ export function loadHTML(
 		.catch((error) => console.error(error));
 }
 
-loadHTML("footer.html", "footer", "");
