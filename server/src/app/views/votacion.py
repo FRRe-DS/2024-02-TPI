@@ -178,10 +178,13 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
             errors = serialized_data.errors
             if isinstance(errors, dict) and "non_field_errors" in errors:
                 error_message = errors["non_field_errors"][0]
-                error = f"Usted ya ha votado a este escultor. Error: {error_message}"
+                datos_voto = VotoEscultor.objects.get(votante_id=votante.id)
+                puntaje = datos_voto.puntaje
+                error = f"Usted ya ha votado a este escultor con el puntaje {puntaje}. Error: {error_message}"
                 logging.error(error)
+
                 return Response(
-                    {"error": error},
+                    {"error": error, "puntaje": puntaje},
                     status=status.HTTP_403_FORBIDDEN,
                 )
 
