@@ -19,6 +19,7 @@ from .base import (
     CLOUDFLARE_TURNSTILE_SECRET_KEY,
 )
 
+
 DJANGO_ENV = config("DJANGO_ENV")
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
@@ -53,8 +54,6 @@ else:
         STORAGES,
         MEDIA_URL,
     )
-
-print(ALLOWED_HOSTS)
 
 __all__ = [
     "LANGUAGE_CODE",

@@ -2,7 +2,6 @@ from decouple import config
 
 DJANGO_ENV = config("DJANGO_ENV", default="dev")
 
-
 DEFAULT_FROM_EMAIL = "bienaltpi@gmail.com"
 EMAIL_APP_KEY = config("EMAIL_APP_KEY", default="")
 CLOUDFLARE_TURNSTILE_SECRET_KEY = config("CLOUDFLARE_TURNSTILE_SECRET_KEY")
@@ -83,6 +82,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "django.contrib.admindocs",
     "background_task",
+    "drf_spectacular",
 ]
 
 MIDDLEWARE = [
@@ -104,6 +104,11 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:5173",
     "https://e395fb21.2024-02-tpi-cloudflare-shared.pages.dev",
     "https://elrincondelinge.org",
+]
+
+CORS_ALLOW_HEADERS = [
+    "content-type",
+    "x-csrftoken",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -151,6 +156,20 @@ REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
     "DEFAULT_THROTTLE_CLASSES": ["rest_framework.throttling.ScopedRateThrottle"],
     "DEFAULT_THROTTLE_RATES": {"qr": "5/hour"},
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"]
+    if DJANGO_ENV == "prod"
+    else [
+        "rest_framework.renderers.JSONRenderer",
+        "rest_framework.renderers.BrowsableAPIRenderer",
+    ],
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "TPI Bienal API",
+    "DESCRIPTION": "REST API construida para servir al sitio web de la Bienal para el Trabajo Práctico Integrador",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 LANGUAGE_CODE = "es"

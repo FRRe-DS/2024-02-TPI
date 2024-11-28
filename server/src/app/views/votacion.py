@@ -2,6 +2,10 @@ import datetime
 import logging
 from io import BytesIO
 
+import urllib.parse
+
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 import qrcode
 import ulid
 from django.db.models import Sum
@@ -10,6 +14,8 @@ from django.http.response import HttpResponse
 from rest_framework import authentication, permissions, status, viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view
+from rest_framework import serializers
+from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -20,6 +26,44 @@ from app.utils import PositiveInt
 from django.conf import settings
 
 
+@extend_schema(
+    summary="Generar QR",
+    description="Genera un código QR para un escultor especificado por su `escultor_id`. El QR contiene una URL con parámetros relevantes.",
+    parameters=[
+        OpenApiParameter(
+            name="escultor_id",
+            description="ID del escultor para el cual generar el QR.",
+            required=True,
+            type=OpenApiTypes.INT,
+        )
+    ],
+    responses={
+        200: {
+            "description": "QR Code image in PNG format",
+            "content": {"image/png": {}},
+        },
+        400: {
+            "description": "Error de validación",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": "Debe ingresar por query parameters el id del escultor"
+                    }
+                }
+            },
+        },
+        404: {
+            "description": "Escultor no encontrado",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": "El id del escultor no existe en la base de datos"
+                    }
+                }
+            },
+        },
+    },
+)
 class generarQR(APIView):
     if settings.DJANGO_ENV != "testing":
         throttle_scope = "qr"
@@ -58,7 +102,9 @@ class generarQR(APIView):
 
         id = ulid.from_timestamp(datetime.datetime.now())
 
-        query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
+        nombre_escultor = f"{escultor.nombre} {escultor.apellido}"
+        encoded_nombre_escultor = urllib.parse.quote(nombre_escultor)
+        query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={encoded_nombre_escultor}"
 
         if settings.DJANGO_ENV == "prod":
             voto_url = (
@@ -86,10 +132,6 @@ class generarQR(APIView):
 
         logging.info(f"Generando QR para escultor_id: {escultor_id}... listo! ")
         return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
-
-
-# @api_view(["GET"])
-# def generar_qr(request: Request) -> HttpResponse:
 
 
 class VotoEscultorViewSet(viewsets.ModelViewSet):
@@ -151,9 +193,24 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
             )
 
 
+class EscultorRankingSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    nombre = serializers.CharField()
+    apellido = serializers.CharField()
+    total_puntaje = serializers.IntegerField()
+
+
+@extend_schema(
+    summary="Estado Votacion Endpoint",
+    description="Consulta el estado del servidor y devuelve 204 si está funcionando.",
+    responses={200: EscultorRankingSerializer(many=True)},
+)
 @api_view(["GET"])
-# @permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def estado_votacion(_request: Request) -> Response:
+    """
+    Muestra el estado de la votacion y devuelve un JSON con los datos.
+    """
     ranking = (
         Escultor.objects.annotate(
             total_puntaje=Coalesce(Sum("votoescultor__puntaje"), 0)

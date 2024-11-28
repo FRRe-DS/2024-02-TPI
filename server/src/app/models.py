@@ -16,6 +16,13 @@ class Votante(models.Model):
     id = models.AutoField(primary_key=True)
     correo = models.EmailField(null=False, blank=False, unique=True)
 
+    class Meta:
+        verbose_name = "Votante"
+        verbose_name_plural = "Votantes"
+
+    def __str__(self):
+        return self.correo
+
 
 class Pais(models.Model):
     """
@@ -30,6 +37,13 @@ class Pais(models.Model):
     id = models.AutoField(primary_key=True)
     iso = models.CharField(max_length=2, blank=False, null=False)
     nombre = models.CharField(max_length=100, blank=False, null=False)
+
+    class Meta:
+        verbose_name = "Pais"
+        verbose_name_plural = "Paises"
+
+    def __str__(self):
+        return self.nombre
 
 
 class Escultor(models.Model):
@@ -63,6 +77,13 @@ class Escultor(models.Model):
             self.foto = convertir_a_webp(self.foto)
         super(Escultor, self).save(*args, **kwargs)
 
+    class Meta:
+        verbose_name = "Escultor"
+        verbose_name_plural = "Escultores"
+
+    def __str__(self):
+        return self.apellido + ", " + self.nombre
+
 
 class Escultura(models.Model):
     """
@@ -82,9 +103,15 @@ class Escultura(models.Model):
         Escultor, on_delete=models.CASCADE, db_column="escultor_id"
     )
     nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(max_length=300, blank=False, null=False)
+    descripcion = models.CharField(blank=False, null=False)
     fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
-    qr = models.FileField(upload_to="qr/", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Escultura"
+        verbose_name_plural = "Esculturas"
+
+    def __str__(self):
+        return self.nombre
 
 
 class Imagen(models.Model):
@@ -105,12 +132,24 @@ class Imagen(models.Model):
         Escultura, on_delete=models.CASCADE, db_column="escultura_id"
     )
     imagen = models.ImageField(upload_to="img/esculturas/", blank=True, null=True)
-    descripcion = models.CharField(max_length=255, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.imagen:
             self.imagen = convertir_a_webp(self.imagen)
         super(Imagen, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Imagen"
+        verbose_name_plural = "Imagenes"
+
+    def __str__(self):
+        return (
+            str(self.id)
+            + ", "
+            + str(self.escultura_id)
+            + " --> hecho por --> "
+            + str(self.escultura_id.escultor_id)
+        )
 
 
 class Tematica(models.Model):
@@ -125,7 +164,14 @@ class Tematica(models.Model):
 
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(max_length=255, blank=True, null=True)
+    descripcion = models.CharField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Tematica"
+        verbose_name_plural = "Tematicas"
+
+    def __str__(self):
+        return self.nombre
 
 
 class Lugar(models.Model):
@@ -140,7 +186,14 @@ class Lugar(models.Model):
 
     id = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100, blank=False, null=False)
-    descripcion = models.CharField(max_length=255, blank=False, null=False)
+    descripcion = models.CharField(blank=False, null=False)
+
+    class Meta:
+        verbose_name = "Lugar"
+        verbose_name_plural = "Lugares"
+
+    def __str__(self):
+        return self.nombre
 
 
 class Evento(models.Model):
@@ -163,17 +216,24 @@ class Evento(models.Model):
     lugar_id = models.ForeignKey(Lugar, on_delete=models.CASCADE, db_column="lugar_id")
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField()
-    descripcion = models.CharField(max_length=255, blank=False, null=False)
+    descripcion = models.CharField(blank=False, null=False)
     foto = models.ImageField(upload_to="img/eventos/", blank=True, null=True)
     tematica_id = models.ForeignKey(
         Tematica, on_delete=models.CASCADE, db_column="tematica_id"
     )
-    foto = models.FileField(upload_to="eventos/", blank=True, null=True)
+    finalizado = models.BooleanField(default=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         if self.foto:
             self.foto = convertir_a_webp(self.foto)
         super(Evento, self).save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "Evento"
+        verbose_name_plural = "Eventos"
+
+    def __str__(self):
+        return self.nombre
 
 
 class EscultorEvento(models.Model):
@@ -193,6 +253,13 @@ class EscultorEvento(models.Model):
     evento_id = models.ForeignKey(
         Evento, on_delete=models.CASCADE, db_column="evento_id"
     )
+
+    class Meta:
+        verbose_name = "Escultor Evento"
+        verbose_name_plural = "Escultor Evento"
+
+    def __str__(self):
+        return str(self.escultor_id) + " ---> " + str(self.evento_id)
 
 
 class VotoEscultor(models.Model):
