@@ -1,18 +1,6 @@
 import { formatearFecha, loadHTML } from "../app";
 
 const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
-const URL_LUGAR = `${__API_URL__}/api/lugar/`;
-
-async function loadLugar(URL: string, id: string) {
-	try {
-		const res = await fetch(`${URL}${id}`);
-		const lugar = await res.json();
-
-		return lugar;
-	} catch (error) {
-		console.log(`Error al carga el lugar: ${error}`);
-	}
-}
 
 async function loadEvento(URL: string, id: string) {
   const loadingIndicator = document.getElementById("loading-indicator")!;
@@ -35,7 +23,7 @@ async function loadEvento(URL: string, id: string) {
     const lugarDescripcion = document.querySelector("#lugar-descripcion") as HTMLParagraphElement;
     const imagenEvento = document.querySelector("#imagen-evento") as HTMLImageElement;
 
-    const lugar = await loadLugar(URL_LUGAR, evento.lugar_id);
+    const lugar = evento.lugar;
 
     titulo.textContent = evento.nombre;
     titulo2.textContent = evento.nombre;
@@ -62,8 +50,10 @@ async function loadEvento(URL: string, id: string) {
   }
 }
 
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id") as string;
+if (window.location.pathname.includes("detalle_evento.html")) {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id") as string;
 
-loadHTML("header.html", "header", "eventos");
-loadEvento(URL_EVENTOS, id);
+  loadHTML("header.html", "header", "eventos");
+  loadEvento(URL_EVENTOS, id);
+}

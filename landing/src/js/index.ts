@@ -43,6 +43,8 @@ async function loadEventos(url: string) {
 	}
 }
 
-loadHTML("header.html", "header", "inicio");
 
-loadEventos(URL_EVENTOS);
+if (window.location.pathname.includes("index.html")) {
+	loadHTML("header.html", "header", "inicio");
+	loadEventos(URL_EVENTOS);
+}

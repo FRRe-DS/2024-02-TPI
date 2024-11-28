@@ -1,18 +1,14 @@
 import { loadHTML } from "../app";
-import { loadPais } from "./certamen";
 import { getUrlParams } from "./validar";
+import Toastify from 'toastify-js';
+import 'toastify-js/src/toastify.css';
 
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
-const URL_ESCULTURAS = `${__API_URL__}/api/esculturas/`;
-const URL_PAIS = `${__API_URL__}/api/paises/`;
-const URL_escultor_evento = `${__API_URL__}/api/escultor_evento/`;
-const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
-
 
 const email = localStorage.getItem("userEmail");
 const params = getUrlParams();
 
-const form = document.querySelector(".formulario-voto") as HTMLElement;
+const formContainer = document.querySelector(".formulario-voto") as HTMLElement;
 
 const btnVotar = document.querySelector("#btnVotar") as HTMLLinkElement;
 btnVotar.href = `./validar.html?id=${params.id}`
@@ -20,7 +16,7 @@ btnVotar.href = `./validar.html?id=${params.id}`
 if (email) {
 	btnVotar.style.display = "none"
 }else{
-	form.style.display = "none"
+	formContainer.style.display = "none"
 }
 
 async function inicializar() {
@@ -37,18 +33,11 @@ async function inicializar() {
 		const res = await fetch(`${URL_ESCULTORES}${params.id}`)
 		const escultor = await res.json()
 
-		const res2 = await fetch(`${URL_ESCULTURAS}${escultor.esculturas[0].id}`)
-		const escultura = await res2.json()
+		console.log(escultor)
 
-		const res3 = await fetch(`${URL_escultor_evento}${escultor.esculturas[0].id}`)
-		const escultor_evento = await res3.json()
-
-		const res4 = await fetch(`${URL_EVENTOS}${escultor_evento.evento_id}`)
-		const evento = await res4.json()
-
-	
-
-		// console.log(escultor)
+		
+		const escultura = escultor.esculturas[0]
+		const evento = escultor.eventos[0]
 
 		const nombreEscultor = document.querySelectorAll("#nombre-escultor");
 		const descripcionEscultor = document.querySelector("#descripcion-escultor") as HTMLParagraphElement;
@@ -69,8 +58,7 @@ async function inicializar() {
 			nombre.textContent = escultor.nombre_completo
 		}
 		
-		
-		pais.textContent = (await loadPais(URL_PAIS, escultor.pais_id)).nombre
+		pais.textContent = escultor.pais.nombre
 
 		descripcionEscultor.textContent = escultor.bibliografia
 		nombreEscultura.textContent = escultura.nombre
@@ -114,5 +102,102 @@ async function inicializar() {
 	}
 }
 
-inicializar() 
-loadHTML("header.html", "header", "certamen");
+const form = document.getElementById("ratingForm") as HTMLFormElement;
+if (form) {
+	form.addEventListener("submit", async (event) => {
+		event.preventDefault();
+
+		const formElement = event.target as HTMLFormElement | null;
+
+		const params = getUrlParams();
+		const correo = email;
+		const escultor_id = params.id;
+
+		if (formElement) {
+			const formData = new FormData(formElement);
+			const rating = formData.get("rating");
+
+			if (rating) {
+
+				try {
+					const response = await fetch(
+						"http://localhost:8000/api/voto_escultor/",
+						{
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
+							},
+							body: JSON.stringify({
+								puntaje: rating,
+								escultor_id: escultor_id,
+								correo_votante: correo,
+							}),
+						},
+					);
+
+					if (response.ok) {			
+						
+						const data = await response.json();
+						console.log("Rating enviado:", data);
+			
+						Toastify({
+							text: `¡Gracias por votar!`,
+							duration: 3000,
+							gravity: "bottom",
+							position: "right",
+							style: {
+								background: "#24c803",
+							},
+						}).showToast();
+						
+						setTimeout(() => {
+							window.location.href = "./certamen.html";
+						}, 3000);
+
+					} else {
+						Toastify({
+							text: "¡Error al enviar la calificación, usted ya voto a este escultor!",
+							duration: 3000,
+							gravity: "bottom",
+							position: "right",
+							style: {
+								background: "#f63e3e",
+							},
+						}).showToast();
+						setTimeout(() => {
+							window.location.href = "./certamen.html";
+						}, 3000);
+						
+					}
+				} catch (error) {
+					Toastify({
+						text: "¡Error al enviar la calificación, vuelva a intentarlo más tarde!",
+						duration: 3000,
+						gravity: "bottom",
+						position: "right",
+						style: {
+							background: "#f63e3e",
+						},
+					}).showToast();
+					console.error("Error al enviar rating:", error);
+				}
+			} else {
+				Toastify({
+					text: "Por favor, seleccione una calificación",
+					duration: 3000,
+					gravity: "bottom",
+					position: "right",
+					style: {
+						background: "#f63e3e",
+					},
+				}).showToast();
+			
+			}
+		}
+	});
+}
+
+if (window.location.pathname.includes("detalle_escultor.html")) {
+	inicializar() 
+	loadHTML("header.html", "header", "certamen");
+}

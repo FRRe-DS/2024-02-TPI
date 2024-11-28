@@ -679,14 +679,18 @@ class EsculturaAPITest(BaseAPITest):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertFalse(Escultura.objects.filter(pk=escultura.pk).exists())
 
-#____________________
+
+# ____________________
+
 
 class EscultorEventoAPITest(BaseAPITest):
     def setUp(self):
         super().setUp()
 
         self.base_url = reverse("escultor_evento-list")
-        self.detail_url = lambda pk: reverse("escultor_evento-detail", kwargs={"pk": pk})
+        self.detail_url = lambda pk: reverse(
+            "escultor_evento-detail", kwargs={"pk": pk}
+        )
 
         pais = Pais.objects.create(nombre="Argentina", iso="AR")
         self.lugar = Lugar.objects.create(nombre="Lugar de prueba")
@@ -734,7 +738,11 @@ class EscultorEventoAPITest(BaseAPITest):
         }
         response = self.client.post(self.base_url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertTrue(EscultorEvento.objects.filter(escultor_id=self.escultor, evento_id=self.evento).exists())
+        self.assertTrue(
+            EscultorEvento.objects.filter(
+                escultor_id=self.escultor, evento_id=self.evento
+            ).exists()
+        )
 
     def test_post_escultorevento_unauthenticated_401_UNAUTHORIZED(self):
         self.client.force_authenticate(user=None)
@@ -759,7 +767,9 @@ class EscultorEventoAPITest(BaseAPITest):
             "escultor_id": self.escultor.id,
             "evento_id": new_evento.id,
         }
-        response = self.client.put(self.detail_url(self.escultorevento.pk), data, format="json")
+        response = self.client.put(
+            self.detail_url(self.escultorevento.pk), data, format="json"
+        )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.escultorevento.refresh_from_db()
         self.assertEqual(self.escultorevento.evento_id, new_evento)
@@ -767,4 +777,6 @@ class EscultorEventoAPITest(BaseAPITest):
     def test_delete_escultorevento_204_NO_CONTENT(self):
         response = self.client.delete(self.detail_url(self.escultorevento.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertFalse(EscultorEvento.objects.filter(pk=self.escultorevento.pk).exists())
+        self.assertFalse(
+            EscultorEvento.objects.filter(pk=self.escultorevento.pk).exists()
+        )

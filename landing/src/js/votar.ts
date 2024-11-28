@@ -115,7 +115,8 @@ if (form) {
 	});
 }
 
-
-loadHTML("header.html", "header", "");
-const params = getUrlParams();
-getNombreEscultor(params.escultor_id)
+if (window.location.pathname.includes("votar.html")) {
+	loadHTML("header.html", "header", "");
+	const params = getUrlParams();
+	getNombreEscultor(params.escultor_id)
+}

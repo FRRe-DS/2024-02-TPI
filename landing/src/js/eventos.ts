@@ -38,7 +38,8 @@ async function loadEventos(url: string) {
 	}
 }
 
-// ------------
-loadHTML("header.html", "header", "eventos");
+if (window.location.pathname.includes("eventos.html")) {
+	loadHTML("header.html", "header", "eventos");
+	loadEventos(URL_EVENTOS);
+}
 
-loadEventos(URL_EVENTOS);

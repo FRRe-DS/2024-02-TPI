@@ -283,7 +283,8 @@ if (volverAValidar){
 	volverAValidar.href = `validar.html?id=${params.id}`
 }
 
-
-loadHTML("header.html", "header", "");
-getNombreEscultor(params.id);
+if (window.location.pathname.includes("validar.html")) {
+	loadHTML("header.html", "header", "");
+	getNombreEscultor(params.id);
 // validar_qr(params);
+}

@@ -98,7 +98,10 @@ class Escultura(models.Model):
 
     id = models.AutoField(primary_key=True)
     escultor_id = models.ForeignKey(
-        Escultor, on_delete=models.CASCADE, db_column="escultor_id", related_name="esculturas"
+        Escultor,
+        on_delete=models.CASCADE,
+        db_column="escultor_id",
+        related_name="esculturas",
     )
     nombre = models.CharField(max_length=100, blank=False, null=False)
     descripcion = models.CharField(blank=False, null=False)
@@ -127,7 +130,10 @@ class Imagen(models.Model):
     id = models.AutoField(primary_key=True)
     fecha_creacion = models.DateField(auto_now_add=True, blank=True, null=True)
     escultura_id = models.ForeignKey(
-        Escultura, on_delete=models.CASCADE, db_column="escultura_id", related_name="imagenes"
+        Escultura,
+        on_delete=models.CASCADE,
+        db_column="escultura_id",
+        related_name="imagenes",
     )
     imagen = models.ImageField(upload_to="img/esculturas/", blank=True, null=True)
 

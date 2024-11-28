@@ -20,7 +20,30 @@ class VotanteSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class TematicaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tematica
+        fields = "__all__"
+
+
+class LugarSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lugar
+        fields = "__all__"
+
+
+class EventoSerializer(serializers.ModelSerializer):
+    tematica = TematicaSerializer(source="tematica_id")
+    lugar = LugarSerializer(source="lugar_id")
+
+    class Meta:
+        model = Evento
+        fields = "__all__"
+
+
 class EscultorEventoSerializer(serializers.ModelSerializer):
+    evento = EventoSerializer(source="evento_id")
+
     class Meta:
         model = EscultorEvento
         fields = "__all__"
@@ -29,12 +52,6 @@ class EscultorEventoSerializer(serializers.ModelSerializer):
 class VotoEscultorSerializer(serializers.ModelSerializer):
     class Meta:
         model = VotoEscultor
-        fields = "__all__"
-
-
-class EventoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Evento
         fields = "__all__"
 
 
@@ -52,19 +69,20 @@ class EsculturaSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EscultorSerializer(serializers.ModelSerializer):
-    esculturas = EsculturaSerializer(many=True, read_only=True)
-    nombre_completo = serializers.CharField(source='__str__', read_only=True)
-
-    class Meta:
-        model = Escultor
-        fields = "__all__"
-
-
-
 class PaisSerializer(serializers.ModelSerializer):
     class Meta:
         model = Pais
+        fields = "__all__"
+
+
+class EscultorSerializer(serializers.ModelSerializer):
+    pais = PaisSerializer(source="pais_id")
+    esculturas = EsculturaSerializer(many=True, read_only=True)
+    nombre_completo = serializers.CharField(source="__str__", read_only=True)
+    eventos = EscultorEventoSerializer(source="escultorevento_set", many=True)
+
+    class Meta:
+        model = Escultor
         fields = "__all__"
 
 
@@ -74,15 +92,3 @@ class AdminSisSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["id", "username", "email", "password"]
-
-
-class TematicaSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Tematica
-        fields = "__all__"
-
-
-class LugarSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Lugar
-        fields = "__all__"
