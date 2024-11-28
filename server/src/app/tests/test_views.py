@@ -272,13 +272,11 @@ class EscultoresAPITest(BaseAPITest):
         # Como estas funciones solo difieren en la cabecera HTTP que es enviada a la url y no en la url en sí, decidí darle un nombre descriptivo.
         self.base_url = reverse("escultores-list")
 
-
         # INFO: (Lautaro) Esta funcion lambda tiene el proposito de generar dinamicamente endpoints como:
         # - <GET/PUT/DELETE> /votantes/<id>/
         self.detail_url = lambda pk: reverse("escultores-detail", kwargs={"pk": pk})
 
         pais = Pais.objects.create(nombre="Argentina")
-        
 
         self.escultor = Escultor.objects.create(
             nombre="Lautaro Acosta Quintana",
@@ -445,8 +443,9 @@ class EventoAPITest(BaseAPITest):
         self.base_url = reverse("eventos-list")
         self.detail_url = lambda pk: reverse("eventos-detail", kwargs={"pk": pk})
 
-
-        self.lugar = Lugar.objects.create(nombre="Lugar de prueba", descripcion="valor de prueba")
+        self.lugar = Lugar.objects.create(
+            nombre="Lugar de prueba", descripcion="valor de prueba"
+        )
         self.tematica = Tematica.objects.create(nombre="Temática de prueba")
 
         self.evento = Evento.objects.create(
@@ -510,7 +509,7 @@ class EventoAPITest(BaseAPITest):
         }
 
         response = self.client.put(self.detail_url(self.evento.pk), data, format="json")
-       
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.evento.refresh_from_db()
         self.assertEqual(self.evento.nombre, "Evento Actualizado")
@@ -712,7 +711,6 @@ class EscultorEventoAPITest(BaseAPITest):
         self.detail_url = lambda pk: reverse(
             "escultor_evento-detail", kwargs={"pk": pk}
         )
-
 
         pais = Pais.objects.create(nombre="Argentina", iso="AR")
         self.lugar = Lugar.objects.create(nombre="Lugar de prueba")
