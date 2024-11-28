@@ -4,8 +4,11 @@ import { getUrlParams } from "./validar";
 
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
 const URL_ESCULTURAS = `${__API_URL__}/api/esculturas/`;
-
 const URL_PAIS = `${__API_URL__}/api/paises/`;
+const URL_escultor_evento = `${__API_URL__}/api/escultor_evento/`;
+const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
+
+
 
 const params = getUrlParams();
 
@@ -26,6 +29,12 @@ async function inicializar() {
 		const res2 = await fetch(`${URL_ESCULTURAS}${escultor.esculturas[0].id}`)
 		const escultura = await res2.json()
 
+		const res3 = await fetch(`${URL_escultor_evento}${escultor.esculturas[0].id}`)
+		const escultor_evento = await res3.json()
+
+		const res4 = await fetch(`${URL_EVENTOS}${escultor_evento.evento_id}`)
+		const evento = await res4.json()
+
 		// console.log(escultor)
 
 		const nombreEscultor = document.querySelector("#nombre-escultor") as HTMLHeadingElement;
@@ -37,6 +46,11 @@ async function inicializar() {
     const imagenEvento = document.querySelector("#imagen-evento") as HTMLImageElement;
 
 		const pais = document.querySelector("#pais") as HTMLElement
+
+		const nombreEvento = document.querySelector("#nombre-evento") as HTMLElement;
+
+
+		nombreEvento.textContent = evento.nombre
 
 		nombreEscultor.textContent = escultor.nombre_completo
 		

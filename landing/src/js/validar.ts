@@ -1,5 +1,6 @@
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
+import { loadHTML } from '../app';
 
 function extractTimeStampFromULID(input: string): Date {
 	const ulid_timestamp_str = input.slice(0, 10);
@@ -50,6 +51,7 @@ export async function getNombreEscultor(id: string) {
 
 function validar_qr(params: Record<string, string>) {
 	const ulid_id = params.id;
+	console.log(params)
 
 	if (!ulid_id) {
 		console.warn("No se encuentra el ulid id");
@@ -64,10 +66,12 @@ function validar_qr(params: Record<string, string>) {
 		console.log("Es válido!");
 		console.log(spanned);
 	} else {
+
+		// TODO: Hacer que se muestre una pantalla de error como tengo en votar.html cuando ya se voto a un escultor
 		console.error(`Es inválido!, el qr tiene un timestamp de ${timestamp}`);
 		Toastify({
-			text: "Es inválido, el qr ha caducado!",
-			duration: 3000,
+			text: "El qr ha caducado!",
+			duration: 100000,
 			gravity: "bottom",
 			position: "right",
 			style: {
@@ -75,7 +79,11 @@ function validar_qr(params: Record<string, string>) {
 			},
 		}).showToast();
 
-		window.location.href = "./certamen.html";
+		setTimeout(() => {
+			window.location.href = "./certamen.html";
+		}, 3000);
+
+		
 	}
 }
 
@@ -276,7 +284,6 @@ if (volverAValidar){
 }
 
 
-
+loadHTML("header.html", "header", "");
 getNombreEscultor(params.id);
-
 // validar_qr(params);

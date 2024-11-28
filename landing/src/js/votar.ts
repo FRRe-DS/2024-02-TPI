@@ -1,6 +1,7 @@
 import { getNombreEscultor, getUrlParams } from "./validar";
 import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
+import { loadHTML } from "../app";
 
 
 const form = document.getElementById("ratingForm") as HTMLFormElement;
@@ -115,6 +116,6 @@ if (form) {
 }
 
 
-
+loadHTML("header.html", "header", "");
 const params = getUrlParams();
 getNombreEscultor(params.escultor_id)
