@@ -5,6 +5,7 @@ import 'toastify-js/src/toastify.css';
 
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
 
+
 const email = localStorage.getItem("userEmail");
 const params = getUrlParams();
 
@@ -196,8 +197,11 @@ if (form) {
 	});
 }
 
+
+
 if (window.location.pathname.includes("detalle_escultor.html")) {
 	inicializar() 
 	loadHTML("header.html", "header", "certamen");
 	loadHTML("footer.html", "footer", "certamen");
 }
+

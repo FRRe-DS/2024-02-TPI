@@ -3,8 +3,12 @@ import 'toastify-js/src/toastify.css';
 import { loadHTML } from "../app";
 
 
+
+
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
 const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
+
+
 
 async function inicializar() {
 	try {
@@ -142,10 +146,10 @@ async function loadEscultores(url: string) {
 
 			// Agarro todos los botones de votar, y despues hago un for each para agregrarles a todos un eventlistener y usar el event.target para obtener el id del escultor que esta en un data-id en cada voton
 			const botonesVotar = document.querySelectorAll(".btn-votar");
-			const overlay = document.querySelector(".overlay") as HTMLButtonElement;
+			const overlay = document.querySelector(".overlay") as HTMLElement;
 			const popupContainer = document.querySelector(
 							".popUp-container",
-						) as HTMLDivElement;
+						) as HTMLElement;
 
 			
 			const popup = document.querySelector(".popup") as HTMLElement;
@@ -224,8 +228,11 @@ async function loadEscultores(url: string) {
 	}
 }
 
+
 if (window.location.pathname.includes("certamen.html")) {
 	loadHTML("header.html", "header", "certamen");
 	loadHTML("footer.html", "footer", "certamen");
 	inicializar();
+
 }
+
