@@ -149,7 +149,7 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
     def create(self, request):
-        correo_votante = str(request.data.get("correo_votante"))
+        correo_votante = request.data.get("correo_votante")
 
         if not correo_votante:
             return Response(
@@ -223,3 +223,54 @@ def estado_votacion(_request: Request) -> Response:
     )
 
     return Response({"result": list(ranking)}, status=status.HTTP_200_OK)
+
+
+@extend_schema(
+    summary="Check Puntaje Endpoint",
+    description="Chequea el puntaje realizado por un votante",
+    responses={200: None},
+)
+@api_view(["GET"])
+def check_puntaje(request: Request) -> Response:
+    """ """
+    correo_votante = request.query_params.get("correo")
+    logging.info(f"Recibi este correo {correo_votante}")
+
+    if correo_votante is None:
+        return Response(
+            {"error": "El correo del votante es obligatorio."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    escultor_id = request.query_params.get("escultor_id")
+
+    if not escultor_id:
+        return Response(
+            {"error": "El id del escultor obligatorio."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    try:
+        votante = Votante.objects.get(correo=correo_votante)
+    except Votante.DoesNotExist:
+        logging.error(f"Votante con correo {correo_votante} no encontrado.")
+        return Response(
+            {"error": "Votante no encontrado en la base de datos."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    try:
+        datos = VotoEscultor.objects.get(escultor_id=escultor_id, votante_id=votante.id)
+    except Votante.DoesNotExist:
+        logging.error(
+            f"No existe voto regitrado para votante {votante.id} y escultor {escultor_id }"
+        )
+        return Response(
+            {"error": "VotoEscultor no encontrado en la base de datos."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    return Response(
+        {"puntaje": datos.puntaje},
+        status=status.HTTP_200_OK,
+    )

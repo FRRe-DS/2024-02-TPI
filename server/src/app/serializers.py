@@ -37,6 +37,7 @@ class EventoWriteSerializer(serializers.ModelSerializer):
         model = Evento
         fields = "__all__"
 
+
 class EventoReadSerializer(serializers.ModelSerializer):
     tematica = TematicaSerializer(source="tematica_id")
     lugar = LugarSerializer(source="lugar_id")
@@ -52,6 +53,7 @@ class EscultorEventoReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = EscultorEvento
         fields = "__all__"
+
 
 class EscultorEventoWriteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -94,6 +96,7 @@ class EscultorReadSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escultor
         fields = "__all__"
+
 
 class EscultorWriteSerializer(serializers.ModelSerializer):
     class Meta:
