@@ -10,6 +10,7 @@
 	},
 	"devDependencies": {
 		"@biomejs/biome": "1.9.4",
+		"@types/toastify-js": "^1.12.3",
 		"@vite-pwa/assets-generator": "^0.2.6",
 		"sharp": "^0.33.5",
 		"typescript": "~5.6.2",
