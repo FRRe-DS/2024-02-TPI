@@ -108,7 +108,7 @@ class generarQR(APIView):
 
         if settings.DJANGO_ENV == "prod":
             voto_url = (
-                f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
+                f"https://elrincondelinge.org/validar.html?{query_params}"
             )
         else:
             voto_url = f"http://localhost:5173/validar.html?{query_params}"
