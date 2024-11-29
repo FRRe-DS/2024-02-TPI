@@ -259,16 +259,16 @@ def check_puntaje(request: Request) -> Response:
 
     try:
         datos = VotoEscultor.objects.get(escultor_id=escultor_id, votante_id=votante.id)
-    except Votante.DoesNotExist:
+    except VotoEscultor.DoesNotExist:
         logging.error(
             f"No existe voto regitrado para votante {votante.id} y escultor {escultor_id }"
         )
         return Response(
-            {"error": "VotoEscultor no encontrado en la base de datos."},
-            status=status.HTTP_404_NOT_FOUND,
+            {"votado": False, "puntaje": None},
+            status=status.HTTP_200_OK,
         )
 
     return Response(
-        {"puntaje": datos.puntaje},
+        {"votado": True, "puntaje": datos.puntaje},
         status=status.HTTP_200_OK,
     )

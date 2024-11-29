@@ -4,6 +4,9 @@ import { loadHTML } from "../app";
 
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
 const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
+const check_puntaje = `${__API_URL__}/api/check_puntaje`;
+const email = localStorage.getItem("userEmail");
+const overlay = document.querySelector(".overlay") as HTMLDivElement;
 
 async function inicializar() {
 	try {
@@ -20,17 +23,15 @@ async function inicializar() {
 		console.error("Error inicializando la página:", error);
 	}
 }
-export function Voto(correo: string, escultor_id: string) {
+function Voto(correo: string, escultor_id: string) {
 	document
 		.getElementById(`votoForm-${escultor_id}`)
 		?.addEventListener("submit", async (e) => {
 			e.preventDefault();
 
 			const formElement = e.target as HTMLFormElement;
-			const button = formElement.querySelector(
-				'button[type="submit"]',
-			) as HTMLButtonElement;
-
+			const button = formElement.querySelector('button[type="submit"]') as HTMLButtonElement;
+			
 			if (formElement) {
 				const formData = new FormData(formElement);
 				const rating = formData.get("rating");
@@ -62,8 +63,22 @@ export function Voto(correo: string, escultor_id: string) {
 							}
 							const data = await response.json();
 							console.log("Rating enviado:", data);
+																				
+						
 
-							localStorage.setItem("userEmail", correo);
+							const contenedor = document.getElementById(`nombreOrigen-${escultor_id}`) 
+							const califContainerShow = document.createElement("div");
+							const btnVotarShow = document.querySelector(`.btn-votar[data-id="${escultor_id}"]`) as HTMLButtonElement;
+
+							califContainerShow.classList.add("calificacion");
+							
+							califContainerShow.innerHTML = `
+								<p>${rating}</p>
+								<i class="material-icons-outlined" id="certamen-tag-footer">&#xe838;</i>
+							`;
+							contenedor?.removeChild(btnVotarShow)
+							contenedor?.appendChild(califContainerShow)
+
 						} else {
 							Toastify({
 								text: "¡Error al enviar la calificación, usted ya voto a este escultor!",
@@ -79,7 +94,15 @@ export function Voto(correo: string, escultor_id: string) {
 						console.error("Error al enviar rating:", error);
 					}
 				} else {
-					alert("Por favor, selecciona una calificación.");
+					Toastify({
+						text: "Porfavor, seleccione un puntaje",
+						duration: 3000,
+						gravity: "bottom",
+						position: "right",
+						style: {
+							background: "#f63e3e",
+						},
+					}).showToast();
 				}
 			}
 		});
@@ -100,6 +123,19 @@ async function loadEscultores(url: string) {
 
 		if (contenedor_escultores) {
 			for (const escultor of escultores) {
+				let votado = false
+				let puntaje = 0
+				if (email){
+					try {
+						const response = await fetch(`${check_puntaje}?correo=${email}&escultor_id=${escultor.id}`) 		
+						const result = await response.json();
+						
+						votado = result.votado
+						puntaje = result.puntaje
+					}catch(error){console.log(`Error al chequear el mensaje: ${error}`)}		
+				}
+			
+
 				const article = document.createElement("article");
 
 				article.classList.add("card-escultor");
@@ -118,15 +154,18 @@ async function loadEscultores(url: string) {
 								onerror="this.src='images/fondo.jpg'; this.onerror=null;"/>
 						<div class="wrap-card">
 							 <a href="detalle_escultor.html?id=${escultor.id}">Ver más</a>
-							<div class="nombre-origen">
+							<div class="nombre-origen" id="nombreOrigen-${escultor.id}">
 									<div class="space">
 									<h3 id="nombre-escultor" >${NyA}</h3>
 									</div>
 									<p class="cursiva">${pais} </p>
-									<button class="btn-votar" data-id="${escultor.id}">
-									
-									Votar
-							</button>
+									 ${votado 
+										? `<div class="calificacion">
+												<p>${puntaje}</p>
+												<i class="material-icons-outlined" id="certamen-tag-footer">&#xe838;</i>
+												
+											</div>`
+										: `<button class="btn-votar" data-id="${escultor.id}">Votar</button>`}
 							</div>
 							
 						</div>
@@ -136,7 +175,7 @@ async function loadEscultores(url: string) {
 
 			// Agarro todos los botones de votar, y despues hago un for each para agregrarles a todos un eventlistener y usar el event.target para obtener el id del escultor que esta en un data-id en cada voton
 			const botonesVotar = document.querySelectorAll(".btn-votar");
-			const overlay = document.querySelector(".overlay") as HTMLElement;
+		
 			const popupContainer = document.querySelector(
 				".popUp-container",
 			) as HTMLElement;
@@ -154,7 +193,7 @@ async function loadEscultores(url: string) {
 					// con el id del escultor podemos usarlo para identificar al escultor
 					const id = btnTarget.getAttribute("data-id") ?? " ";
 
-					const email = localStorage.getItem("userEmail");
+				
 
 					if (email) {
 						overlay.style.display = "block";

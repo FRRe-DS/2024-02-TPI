@@ -91,7 +91,7 @@ class EscultorReadSerializer(serializers.ModelSerializer):
     pais = PaisSerializer(source="pais_id")
     esculturas = EsculturaSerializer(many=True, read_only=True)
     nombre_completo = serializers.CharField(source="__str__", read_only=True)
-    eventos = EscultorEventoWriteSerializer(source="escultorevento_set", many=True)
+    eventos = EscultorEventoReadSerializer(source="escultorevento_set", many=True)
 
     class Meta:
         model = Escultor

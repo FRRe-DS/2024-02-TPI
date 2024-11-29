@@ -230,6 +230,6 @@ if (volverAValidar) {
 
 if (window.location.pathname.includes("validar.html")) {
 	loadHTML("header.html", "header", "");
-	loadHTML("footer.html", "footer", "");
+	loadHTML("footer.html", "footer", "certamen");
 	getNombreEscultor(params.id);
 }
