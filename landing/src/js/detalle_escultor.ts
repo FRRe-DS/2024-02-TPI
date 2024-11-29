@@ -40,10 +40,10 @@ async function inicializar() {
 		const res = await fetch(`${URL_ESCULTORES}${params.id}`);
 		const escultor = await res.json();
 
-		console.log(escultor);
 
 		const escultura = escultor.esculturas[0]
-		const evento = escultor.eventos[0]
+		const evento = escultor.eventos[0].evento
+
 
 		const nombreEscultor = document.querySelectorAll("#nombre-escultor");
 		const descripcionEscultor = document.querySelector(
@@ -176,19 +176,18 @@ if (form) {
 						const data = await response.json();
 						console.log("Rating enviado:", data);
 
-						Toastify({
-							text: "¡Gracias por votar!",
-							duration: 3000,
-							gravity: "bottom",
-							position: "right",
-							style: {
-								background: "#24c803",
-							},
-						}).showToast();
-
-						setTimeout(() => {
-							window.location.href = "./certamen.html";
-						}, 3000);
+						showCalificacion.style.display = "grid"
+						showVotarForm.style.display = "none"
+						
+						for (let i = 0; i < Number(rating); i++) {
+							const icon = document.createElement('i');
+							icon.classList.add('material-icons-outlined');
+							icon.id = 'certamen-tag-footer';
+							icon.innerHTML = '&#xe838;';
+						
+							calificacion.appendChild(icon);
+						}
+				
 					} else {
 						Toastify({
 							text: "¡Error al enviar la calificación, usted ya voto a este escultor!",
