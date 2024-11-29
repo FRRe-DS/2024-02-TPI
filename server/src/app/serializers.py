@@ -48,7 +48,7 @@ class EventoReadSerializer(serializers.ModelSerializer):
 
 
 class EscultorEventoReadSerializer(serializers.ModelSerializer):
-    evento = EventoWriteSerializer(source="evento_id")
+    evento = EventoReadSerializer(source="evento_id")
 
     class Meta:
         model = EscultorEvento
