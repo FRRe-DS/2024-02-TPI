@@ -68,9 +68,15 @@ def validar_votante(request: Request) -> HttpResponse:
 
             logging.info(f"El usuario con el correo {correo} ya existe!")
 
-            return redirect(
-                f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
-            )
+
+            if settings.DJANGO_ENV == "prod":
+                return redirect (
+                    f"https://elrincondelinge.org/votar.html?correo={correo}&escultor_id={escultor_id}"
+                )
+            else:
+                return redirect(
+                    f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
+                )
 
         except Votante.DoesNotExist:
             mandar_email(correo, escultor_id)
@@ -107,17 +113,26 @@ def crear_votante(request: Request) -> HttpResponse:
         response = requests.post(url, json=data)
 
         if response.status_code == 201:
-            return redirect(
-                f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
-            )
+            if settings.DJANGO_ENV == "prod":
+                return redirect (
+                    f"https://elrincondelinge.org/votar.html?correo={correo}&escultor_id={escultor_id}"
+                )
+            else:
+                return redirect(
+                    f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
+                )
         else:
-            return redirect(
-                f"http://localhost:5173/error.html?&escultor_id={escultor_id}"
-            )
-            # return JsonResponse(
-            #     {"error": "Error al crear el votante."},
-            #     status=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            # )
+            if settings.DJANGO_ENV == "prod":
+                return redirect (
+                    f"https://elrincondelinge.org/error.html?&escultor_id={escultor_id}"
+                )
+            else:
+                return redirect(
+                    f"http://localhost:5173/error.html?&escultor_id={escultor_id}"
+                )
 
     except Exception:
-        return redirect("http://localhost:5173/certamen.html")
+            if settings.DJANGO_ENV == "prod":
+                return redirect("https://elrincondelinge.org/certamen.html")
+            else:
+                return redirect("http://localhost:5173/certamen.html")

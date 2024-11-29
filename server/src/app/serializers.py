@@ -32,7 +32,13 @@ class LugarSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EventoSerializer(serializers.ModelSerializer):
+class EventoWriteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evento
+        fields = "__all__"
+
+
+class EventoReadSerializer(serializers.ModelSerializer):
     tematica = TematicaSerializer(source="tematica_id")
     lugar = LugarSerializer(source="lugar_id")
 
@@ -41,9 +47,15 @@ class EventoSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EscultorEventoSerializer(serializers.ModelSerializer):
-    evento = EventoSerializer(source="evento_id")
+class EscultorEventoReadSerializer(serializers.ModelSerializer):
+    evento = EventoWriteSerializer(source="evento_id")
 
+    class Meta:
+        model = EscultorEvento
+        fields = "__all__"
+
+
+class EscultorEventoWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = EscultorEvento
         fields = "__all__"
@@ -75,12 +87,18 @@ class PaisSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class EscultorSerializer(serializers.ModelSerializer):
+class EscultorReadSerializer(serializers.ModelSerializer):
     pais = PaisSerializer(source="pais_id")
     esculturas = EsculturaSerializer(many=True, read_only=True)
     nombre_completo = serializers.CharField(source="__str__", read_only=True)
-    eventos = EscultorEventoSerializer(source="escultorevento_set", many=True)
+    eventos = EscultorEventoWriteSerializer(source="escultorevento_set", many=True)
 
+    class Meta:
+        model = Escultor
+        fields = "__all__"
+
+
+class EscultorWriteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Escultor
         fields = "__all__"

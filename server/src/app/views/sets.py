@@ -1,40 +1,43 @@
 import logging
+
 from background_task.models import CompletedTask
 from background_task.tasks import Task
+from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import authentication, permissions, status, viewsets
+from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
 
 from app.models import (
-    Votante,
-    Imagen,
-    Lugar,
-    Tematica,
     Escultor,
-    Pais,
+    EscultorEvento,
     Escultura,
     Evento,
-    EscultorEvento,
+    Imagen,
+    Lugar,
+    Pais,
+    Tematica,
+    Votante,
 )
 from app.serializers import (
-    VotanteSerializer,
-    EventoSerializer,
+    AdminSisSerializer,
+    EscultorWriteSerializer,
+    EscultorReadSerializer,
+    EscultorEventoWriteSerializer,
+    EscultorEventoReadSerializer,
     EsculturaSerializer,
-    EscultorSerializer,
+    EventoReadSerializer,
+    EventoWriteSerializer,
     ImagenSerializer,
     LugarSerializer,
-    TematicaSerializer,
-    AdminSisSerializer,
     PaisSerializer,
-    EscultorEventoSerializer,
+    TematicaSerializer,
+    VotanteSerializer,
 )
-
-from drf_spectacular.utils import extend_schema
 
 
 @extend_schema(
@@ -246,16 +249,19 @@ class EventoViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Evento.objects.all()
-    serializer_class = EventoSerializer
-    filterset_fields = ["nombre", "lugar_id", "tematica_id", "fecha_inicio"]
-
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ["nombre", "lugar_id", "tematica_id", "fecha_inicio"]
 
     def get_permissions(self):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return EventoReadSerializer
+        return EventoWriteSerializer
 
 
 class EsculturaViewSet(viewsets.ModelViewSet):
@@ -340,7 +346,6 @@ class EscultorViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Escultor.objects.all()
-    serializer_class = EscultorSerializer
     filterset_fields = ["id", "nombre", "pais_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
@@ -350,6 +355,11 @@ class EscultorViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return EscultorReadSerializer
+        return EscultorWriteSerializer
 
 
 class ImagenViewSet(viewsets.ModelViewSet):
@@ -469,7 +479,6 @@ class EscultorEventoViewSet(viewsets.ModelViewSet):
     """
 
     queryset = EscultorEvento.objects.all()
-    serializer_class = EscultorEventoSerializer
     filterset_fields = ["id", "escultor_id", "evento_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
@@ -479,6 +488,11 @@ class EscultorEventoViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return EscultorEventoReadSerializer
+        return EscultorEventoWriteSerializer
 
 
 class AdminSisViewSet(viewsets.ModelViewSet):

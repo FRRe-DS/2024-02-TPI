@@ -20,13 +20,14 @@ from app.models import (
 )
 from django.contrib.auth.models import User
 from app.serializers import (
-    EscultorSerializer,
+    EscultorWriteSerializer,
+    EscultorReadSerializer,
+    EscultorEventoReadSerializer,
     EsculturaSerializer,
     VotanteSerializer,
     TematicaSerializer,
-    EventoSerializer,
+    EventoReadSerializer,
     LugarSerializer,
-    EscultorEventoSerializer,
 )
 
 
@@ -277,7 +278,7 @@ class EscultoresAPITest(BaseAPITest):
 
         pais = Pais.objects.create(nombre="Argentina")
 
-        Escultor.objects.create(
+        self.escultor = Escultor.objects.create(
             nombre="Lautaro Acosta Quintana",
             pais_id=pais,
             correo="acostalautaro@ejemplo.com",
@@ -308,12 +309,31 @@ class EscultoresAPITest(BaseAPITest):
             bibliografia="...",
         )
 
+        self.escultura = Escultura.objects.create(
+            nombre="Escultura de Prueba",
+            escultor_id=self.escultor,
+            descripcion="Descripción de la escultura de prueba",
+            fecha_creacion="2024-01-01",
+        )
+
+        self.lugar = Lugar.objects.create(nombre="Lugar de prueba")
+        self.tematica = Tematica.objects.create(nombre="Temática de prueba")
+
+        self.evento = Evento.objects.create(
+            nombre="Evento Prueba",
+            lugar_id=self.lugar,
+            fecha_inicio="2024-10-09",
+            fecha_fin="2024-10-10",
+            descripcion="Descripción de prueba",
+            tematica_id=self.tematica,
+        )
+
     def test_get_escultores_data_200_OK(self):
         response = self.client.get(self.base_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 5)
 
-        expected_data = EscultorSerializer(Escultor.objects.all(), many=True).data
+        expected_data = EscultorReadSerializer(Escultor.objects.all(), many=True).data
         self.assertEqual(expected_data, response.data)
 
     def test_get_escultor_200_OK(self):
@@ -321,7 +341,7 @@ class EscultoresAPITest(BaseAPITest):
 
         response = self.client.get(self.detail_url(escultor.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        expected_data = EscultorSerializer(escultor).data
+        expected_data = EscultorReadSerializer(escultor).data
         self.assertEqual(expected_data, response.data)
 
     def test_add_escultor_201_CREATED(self):
@@ -336,7 +356,6 @@ class EscultoresAPITest(BaseAPITest):
         }
 
         response = self.client.post(self.base_url, escultor, format="json")
-
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["correo"], "Xxenzo_vallejosxX@xbox.com")
         self.assertTrue(
@@ -424,11 +443,11 @@ class EventoAPITest(BaseAPITest):
         self.base_url = reverse("eventos-list")
         self.detail_url = lambda pk: reverse("eventos-detail", kwargs={"pk": pk})
 
-        # crea los objetos de prueba que tienen FK,
-        self.lugar = Lugar.objects.create(nombre="Lugar de prueba")
+        self.lugar = Lugar.objects.create(
+            nombre="Lugar de prueba", descripcion="valor de prueba"
+        )
         self.tematica = Tematica.objects.create(nombre="Temática de prueba")
 
-        # datos de prueba
         self.evento = Evento.objects.create(
             nombre="Evento Prueba",
             lugar_id=self.lugar,
@@ -441,13 +460,13 @@ class EventoAPITest(BaseAPITest):
     def test_get_evento_list_200_OK(self):
         response = self.client.get(self.base_url)
         eventos = Evento.objects.all()
-        serializer = EventoSerializer(eventos, many=True)
+        serializer = EventoReadSerializer(eventos, many=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
 
     def test_get_evento_detail_200_OK(self):
         response = self.client.get(self.detail_url(self.evento.pk))
-        serializer = EventoSerializer(self.evento)
+        serializer = EventoReadSerializer(self.evento)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
 
@@ -455,10 +474,11 @@ class EventoAPITest(BaseAPITest):
         data = {
             "nombre": "Nuevo Evento",
             "lugar_id": self.lugar.pk,
-            "fecha_inicio": "2023-02-01",
-            "fecha_fin": "2023-02-02",
-            "descripcion": "Descripción del nuevo evento",
+            "fecha_inicio": "2023-01-01",
+            "fecha_fin": "2023-01-02",
+            "descripcion": "Descripción actualizada",
             "tematica_id": self.tematica.pk,
+            "finalizado": True,
         }
         response = self.client.post(self.base_url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -485,8 +505,11 @@ class EventoAPITest(BaseAPITest):
             "fecha_fin": "2023-01-02",
             "descripcion": "Descripción actualizada",
             "tematica_id": self.tematica.pk,
+            "finalizado": True,
         }
+
         response = self.client.put(self.detail_url(self.evento.pk), data, format="json")
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.evento.refresh_from_db()
         self.assertEqual(self.evento.nombre, "Evento Actualizado")
@@ -497,7 +520,7 @@ class EventoAPITest(BaseAPITest):
         self.assertFalse(Evento.objects.filter(pk=self.evento.pk).exists())
 
 
-class lugarAPITest(BaseAPITest):
+class LugarAPITest(BaseAPITest):
     def setUp(self):
         super().setUp()
 
@@ -631,7 +654,7 @@ class EsculturaAPITest(BaseAPITest):
             bibliografia="...",
         )
 
-        expected_data = EscultorSerializer(escultor).data
+        expected_data = EscultorWriteSerializer(escultor).data
         data = {
             "nombre": "Escultura de Prueba",
             "descripcion": "Descripción de la escultura de prueba",
@@ -680,9 +703,6 @@ class EsculturaAPITest(BaseAPITest):
         self.assertFalse(Escultura.objects.filter(pk=escultura.pk).exists())
 
 
-# ____________________
-
-
 class EscultorEventoAPITest(BaseAPITest):
     def setUp(self):
         super().setUp()
@@ -721,13 +741,13 @@ class EscultorEventoAPITest(BaseAPITest):
     def test_get_escultorevento_list_200_OK(self):
         response = self.client.get(self.base_url)
         escultoresevento = EscultorEvento.objects.all()
-        serializer = EscultorEventoSerializer(escultoresevento, many=True)
+        serializer = EscultorEventoReadSerializer(escultoresevento, many=True)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
 
     def test_get_escultorevento_detail_200_OK(self):
         response = self.client.get(self.detail_url(self.escultorevento.pk))
-        serializer = EscultorEventoSerializer(self.escultorevento)
+        serializer = EscultorEventoReadSerializer(self.escultorevento)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
 
@@ -737,6 +757,7 @@ class EscultorEventoAPITest(BaseAPITest):
             "evento_id": self.evento.id,
         }
         response = self.client.post(self.base_url, data, format="json")
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertTrue(
             EscultorEvento.objects.filter(
@@ -770,6 +791,7 @@ class EscultorEventoAPITest(BaseAPITest):
         response = self.client.put(
             self.detail_url(self.escultorevento.pk), data, format="json"
         )
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.escultorevento.refresh_from_db()
         self.assertEqual(self.escultorevento.evento_id, new_evento)
