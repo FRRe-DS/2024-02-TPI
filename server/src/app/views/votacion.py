@@ -107,9 +107,7 @@ class generarQR(APIView):
         query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={encoded_nombre_escultor}"
 
         if settings.DJANGO_ENV == "prod":
-            voto_url = (
-                f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
-            )
+            voto_url = f"https://elrincondelinge.org/validar.html?{query_params}"
         else:
             voto_url = f"http://localhost:5173/validar.html?{query_params}"
 
@@ -149,7 +147,7 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
     def create(self, request):
-        correo_votante = str(request.data.get("correo_votante"))
+        correo_votante = request.data.get("correo_votante")
 
         if not correo_votante:
             return Response(
@@ -178,10 +176,13 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
             errors = serialized_data.errors
             if isinstance(errors, dict) and "non_field_errors" in errors:
                 error_message = errors["non_field_errors"][0]
-                error = f"Usted ya ha votado a este escultor. Error: {error_message}"
+                datos_voto = VotoEscultor.objects.get(votante_id=votante.id)
+                puntaje = datos_voto.puntaje
+                error = f"Usted ya ha votado a este escultor con el puntaje {puntaje}. Error: {error_message}"
                 logging.error(error)
+
                 return Response(
-                    {"error": error},
+                    {"error": error, "puntaje": puntaje},
                     status=status.HTTP_403_FORBIDDEN,
                 )
 
@@ -220,3 +221,54 @@ def estado_votacion(_request: Request) -> Response:
     )
 
     return Response({"result": list(ranking)}, status=status.HTTP_200_OK)
+
+
+@extend_schema(
+    summary="Check Puntaje Endpoint",
+    description="Chequea el puntaje realizado por un votante",
+    responses={200: None},
+)
+@api_view(["GET"])
+def check_puntaje(request: Request) -> Response:
+    """ """
+    correo_votante = request.query_params.get("correo")
+    logging.info(f"Recibi este correo {correo_votante}")
+
+    if correo_votante is None:
+        return Response(
+            {"error": "El correo del votante es obligatorio."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    escultor_id = request.query_params.get("escultor_id")
+
+    if not escultor_id:
+        return Response(
+            {"error": "El id del escultor obligatorio."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    try:
+        votante = Votante.objects.get(correo=correo_votante)
+    except Votante.DoesNotExist:
+        logging.error(f"Votante con correo {correo_votante} no encontrado.")
+        return Response(
+            {"error": "Votante no encontrado en la base de datos."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    try:
+        datos = VotoEscultor.objects.get(escultor_id=escultor_id, votante_id=votante.id)
+    except VotoEscultor.DoesNotExist:
+        logging.error(
+            f"No existe voto regitrado para votante {votante.id} y escultor {escultor_id }"
+        )
+        return Response(
+            {"votado": False, "puntaje": None},
+            status=status.HTTP_200_OK, 
+        )
+
+    return Response(
+        {"votado": True, "puntaje": datos.puntaje},
+        status=status.HTTP_200_OK,
+    )

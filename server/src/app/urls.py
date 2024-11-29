@@ -21,7 +21,12 @@ from app.views.sets import (
     get_token,
 )
 from app.views.health_check import health_check
-from app.views.votacion import estado_votacion, generarQR, VotoEscultorViewSet
+from app.views.votacion import (
+    check_puntaje,
+    estado_votacion,
+    generarQR,
+    VotoEscultorViewSet,
+)
 from app.views.verify_captcha import VerifyCaptchaView
 from app.views.validar_votante import crear_votante, validar_votante
 
@@ -59,6 +64,7 @@ urlpatterns = [
     path("api/generar_qr/", generarQR.as_view(), name="generar_qr"),
     path("api/get_token/", get_token, name="token"),
     path("api/estado_votacion/", estado_votacion, name="estado_votacion"),
+    path("api/check_puntaje/", check_puntaje, name="check_puntaje"),
     path(
         "api/test_background/", background_task_ejemplo, name="background_task_ejemplo"
     ),

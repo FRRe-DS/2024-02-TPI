@@ -43,4 +43,3 @@ if (window.location.pathname.includes("eventos.html")) {
 	loadHTML("footer.html", "footer", "eventos");
 	loadEventos(URL_EVENTOS);
 }
-
