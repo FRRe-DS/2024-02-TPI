@@ -265,7 +265,7 @@ def check_puntaje(request: Request) -> Response:
         )
         return Response(
             {"votado": False, "puntaje": None},
-            status=status.HTTP_200_OK, 
+            status=status.HTTP_200_OK,
         )
 
     return Response(
