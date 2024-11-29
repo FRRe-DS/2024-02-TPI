@@ -13,8 +13,7 @@ logging.basicConfig(
     handlers=[
         RichHandler(
             rich_tracebacks=True, tracebacks_show_locals=True, log_time_format="[%X]"
-        ),
-        logging.FileHandler("importacion_base_datos.log", encoding="utf-8"),
+        )
     ],
 )
 

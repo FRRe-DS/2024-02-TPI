@@ -1,9 +1,6 @@
 import Toastify from "toastify-js";
-import 'toastify-js/src/toastify.css';
+import "toastify-js/src/toastify.css";
 import { loadHTML } from "../app";
-
-
-
 
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
 const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
@@ -38,7 +35,6 @@ function Voto(correo: string, escultor_id: string) {
 			if (formElement) {
 				const formData = new FormData(formElement);
 				const rating = formData.get("rating");
-				
 
 				if (rating) {
 					try {
@@ -60,11 +56,10 @@ function Voto(correo: string, escultor_id: string) {
 						if (response.ok) {
 							if (!button.classList.contains("active")) {
 								button.classList.add("active");
-								
-								button.textContent = ""
+
+								button.textContent = "";
 								button.innerHTML += `
-								 <dotlottie-player class="succesOperation" src="https://lottie.host/5e9375ca-af9f-4fff-8889-bba227a76782/yZOGBi0SfR.lottie" background="transparent" speed="1" style="width: 100px; height: 100px"  autoplay></dotlottie-player>`
-							
+								 <dotlottie-player class="succesOperation" src="https://lottie.host/5e9375ca-af9f-4fff-8889-bba227a76782/yZOGBi0SfR.lottie" background="transparent" speed="1" style="width: 100px; height: 100px"  autoplay></dotlottie-player>`;
 							}
 							const data = await response.json();
 							console.log("Rating enviado:", data);
@@ -94,7 +89,6 @@ function Voto(correo: string, escultor_id: string) {
 									background: "#f63e3e",
 								},
 							}).showToast();
-						
 						}
 					} catch (error) {
 						console.error("Error al enviar rating:", error);
@@ -147,7 +141,7 @@ async function loadEscultores(url: string) {
 				article.classList.add("card-escultor");
 				const foto = escultor.foto;
 				const pais = escultor.pais.nombre;
-			
+
 				const NyA = escultor.nombre_completo;
 
 				article.innerHTML = `
@@ -183,10 +177,9 @@ async function loadEscultores(url: string) {
 			const botonesVotar = document.querySelectorAll(".btn-votar");
 		
 			const popupContainer = document.querySelector(
-							".popUp-container",
-						) as HTMLElement;
+				".popUp-container",
+			) as HTMLElement;
 
-			
 			const popup = document.querySelector(".popup") as HTMLElement;
 			const cerrar_popup = document.querySelector(
 				".cerrar-popup",
@@ -209,8 +202,8 @@ async function loadEscultores(url: string) {
 							"nombre-escultor",
 						) as HTMLHeadElement;
 
-						nombreEscultor.textContent = 
-							escultores[Number(id) - 1].nombre_completo
+						nombreEscultor.textContent =
+							escultores[Number(id) - 1].nombre_completo;
 						const formPopUp = document.createElement("form");
 
 						formPopUp.id = `votoForm-${id}`;
@@ -263,11 +256,8 @@ async function loadEscultores(url: string) {
 	}
 }
 
-
 if (window.location.pathname.includes("certamen.html")) {
 	loadHTML("header.html", "header", "certamen");
 	loadHTML("footer.html", "footer", "certamen");
 	inicializar();
-
 }
-

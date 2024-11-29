@@ -1,9 +1,0 @@
-{
-	"dependencies": {
-		"gsap": "^3.12.5",
-		"toastify-js": "^1.12.0"
-	},
-	"devDependencies": {
-		"@types/toastify-js": "^1.12.3"
-	}
-}

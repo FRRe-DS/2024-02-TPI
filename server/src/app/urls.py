@@ -21,7 +21,12 @@ from app.views.sets import (
     get_token,
 )
 from app.views.health_check import health_check
-from app.views.votacion import check_puntaje, estado_votacion, generarQR, VotoEscultorViewSet
+from app.views.votacion import (
+    check_puntaje,
+    estado_votacion,
+    generarQR,
+    VotoEscultorViewSet,
+)
 from app.views.verify_captcha import VerifyCaptchaView
 from app.views.validar_votante import crear_votante, validar_votante
 

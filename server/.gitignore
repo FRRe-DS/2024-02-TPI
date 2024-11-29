@@ -4,3 +4,4 @@
 **/staticfiles
 /migrations
 .env
+/dev-dist

@@ -1,12 +1,10 @@
 import { getNombreEscultor, getUrlParams } from "./validar";
-import Toastify from 'toastify-js';
-import 'toastify-js/src/toastify.css';
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 import { loadHTML } from "../app";
-
 
 const form = document.getElementById("ratingForm") as HTMLFormElement;
 const button = document.querySelector(".btn-votarV2") as HTMLButtonElement;
-
 
 function extractTimeStampFromULID(input: string): Date {
 	const ulid_timestamp_str = input.slice(0, 10);
@@ -18,9 +16,7 @@ function extractTimeStampFromULID(input: string): Date {
 	return new Date(timestamp);
 }
 
-
 const TIME_LIMIT_MINS = 1.0;
-
 
 function validar_qr(params: Record<string, string>) {
 	const ulid_id = params.ulid;
@@ -38,7 +34,6 @@ function validar_qr(params: Record<string, string>) {
 		console.log("Es válido!");
 		console.log(spanned);
 	} else {
-
 		// TODO: Hacer que se muestre una pantalla de error como tengo en votar.html cuando ya se voto a un escultor
 		console.error(`Es inválido!, el qr tiene un timestamp de ${timestamp}`);
 		Toastify({
@@ -54,8 +49,6 @@ function validar_qr(params: Record<string, string>) {
 		setTimeout(() => {
 			window.location.href = "./certamen.html";
 		}, 3000);
-
-		
 	}
 }
 
@@ -71,14 +64,14 @@ if (form) {
 
 		if (!escultor_id || !correo) {
 			Toastify({
-        text: "Error inesperado, parámetros insuficientes",
-        duration: 3000,
-        gravity: "bottom",
-        position: "right",
-        style: {
-          background: "#f63e3e",
-        },
-      }).showToast();
+				text: "Error inesperado, parámetros insuficientes",
+				duration: 3000,
+				gravity: "bottom",
+				position: "right",
+				style: {
+					background: "#f63e3e",
+				},
+			}).showToast();
 
 			window.location.href = "./certamen.html";
 		}
@@ -88,7 +81,6 @@ if (form) {
 			const rating = formData.get("rating");
 
 			if (rating) {
-
 				try {
 					const response = await fetch(
 						"http://localhost:8000/api/voto_escultor/",
@@ -108,20 +100,18 @@ if (form) {
 					if (response.ok) {
 						if (!button.classList.contains("active")) {
 							button.classList.add("active");
-							
-							button.textContent = ""
+
+							button.textContent = "";
 							button.innerHTML += `
-							 <dotlottie-player class="succesOperation" src="https://lottie.host/5e9375ca-af9f-4fff-8889-bba227a76782/yZOGBi0SfR.lottie" background="transparent" speed="1" style="width: 100px; height: 100px"  autoplay></dotlottie-player>`
-						
+							 <dotlottie-player class="succesOperation" src="https://lottie.host/5e9375ca-af9f-4fff-8889-bba227a76782/yZOGBi0SfR.lottie" background="transparent" speed="1" style="width: 100px; height: 100px"  autoplay></dotlottie-player>`;
 						}
 						const data = await response.json();
 						console.log("Rating enviado:", data);
-			
+
 						localStorage.setItem("userEmail", correo);
 						setTimeout(() => {
 							window.location.href = "./certamen.html";
 						}, 3000);
-
 					} else {
 						Toastify({
 							text: "¡Error al enviar la calificación, usted ya voto a este escultor!",
@@ -159,7 +149,6 @@ if (form) {
 						background: "#f63e3e",
 					},
 				}).showToast();
-			
 			}
 		}
 	});
@@ -171,6 +160,5 @@ if (window.location.pathname.includes("votar.html")) {
 	const params = getUrlParams();
 
 	validar_qr(params);
-	getNombreEscultor(params.escultor_id)
-
+	getNombreEscultor(params.escultor_id);
 }
