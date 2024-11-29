@@ -18,6 +18,8 @@ from app.views.sets import (
     EscultorEventoViewSet,
     background_task_ejemplo,
     check_django_task_status,
+    escultores_por_evento,
+    eventos_por_anio,
     get_token,
 )
 from app.views.health_check import health_check
@@ -65,6 +67,8 @@ urlpatterns = [
     path("api/get_token/", get_token, name="token"),
     path("api/estado_votacion/", estado_votacion, name="estado_votacion"),
     path("api/check_puntaje/", check_puntaje, name="check_puntaje"),
+    path('api/eventos_por_anio/', eventos_por_anio, name='eventos_por_anio'),
+    path('api/escultores_por_evento/', escultores_por_evento, name='escultores_por_eventoo'),
     path(
         "api/test_background/", background_task_ejemplo, name="background_task_ejemplo"
     ),

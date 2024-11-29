@@ -87,14 +87,19 @@ if (window.location.pathname.includes("detalle_evento.html")) {
 }
 
 const icons = shareButton.querySelectorAll(".button__icon i");
+const buttontext = document.querySelector(".button__text") as HTMLElement
+
+buttontext.addEventListener("click",()=>{
+	shareButton.classList.add("active")
+})
 
 for (const icon of icons) {
 	const network = (icon as HTMLElement).title;
 
 	icon.addEventListener("click", (event) => {
 		event.stopPropagation();
+		shareButton.classList.remove("active")
 
-		console.log(`Compartir en ${network}`);
 
 		let shareUrl = "";
 		if (network === "twitter") {
@@ -106,6 +111,7 @@ for (const icon of icons) {
 		}
 
 		if (shareUrl) {
+			
 			window.open(shareUrl, "_blank");
 		}
 	});

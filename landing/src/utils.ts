@@ -64,3 +64,12 @@ for (const element of hiddenElements) {
 for (const image of hiddenImgElements) {
 	observer.observe(image);
 }
+
+
+const certamenNav = document.getElementById("certamen-tag") as HTMLElement
+const certamenSelection = document.querySelector(".certamenSelection") as HTMLElement
+if (certamenNav){
+  certamenNav.addEventListener("clcik", () => {
+    certamenSelection.classList.add("active")
+  })
+}
