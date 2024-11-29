@@ -107,9 +107,7 @@ class generarQR(APIView):
         query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={encoded_nombre_escultor}"
 
         if settings.DJANGO_ENV == "prod":
-            voto_url = (
-                f"https://elrincondelinge.org/validar.html?{query_params}"
-            )
+            voto_url = f"https://elrincondelinge.org/validar.html?{query_params}"
         else:
             voto_url = f"http://localhost:5173/validar.html?{query_params}"
 
@@ -267,7 +265,7 @@ def check_puntaje(request: Request) -> Response:
         )
         return Response(
             {"votado": False, "puntaje": None},
-            status=status.HTTP_200_OK, 
+            status=status.HTTP_200_OK,
         )
 
     return Response(

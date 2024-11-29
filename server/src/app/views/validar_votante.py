@@ -68,9 +68,8 @@ def validar_votante(request: Request) -> HttpResponse:
 
             logging.info(f"El usuario con el correo {correo} ya existe!")
 
-
             if settings.DJANGO_ENV == "prod":
-                return redirect (
+                return redirect(
                     f"https://elrincondelinge.org/votar.html?correo={correo}&escultor_id={escultor_id}"
                 )
             else:
@@ -114,7 +113,7 @@ def crear_votante(request: Request) -> HttpResponse:
 
         if response.status_code == 201:
             if settings.DJANGO_ENV == "prod":
-                return redirect (
+                return redirect(
                     f"https://elrincondelinge.org/votar.html?correo={correo}&escultor_id={escultor_id}"
                 )
             else:
@@ -123,7 +122,7 @@ def crear_votante(request: Request) -> HttpResponse:
                 )
         else:
             if settings.DJANGO_ENV == "prod":
-                return redirect (
+                return redirect(
                     f"https://elrincondelinge.org/error.html?&escultor_id={escultor_id}"
                 )
             else:
@@ -132,7 +131,7 @@ def crear_votante(request: Request) -> HttpResponse:
                 )
 
     except Exception:
-            if settings.DJANGO_ENV == "prod":
-                return redirect("https://elrincondelinge.org/certamen.html")
-            else:
-                return redirect("http://localhost:5173/certamen.html")
+        if settings.DJANGO_ENV == "prod":
+            return redirect("https://elrincondelinge.org/certamen.html")
+        else:
+            return redirect("http://localhost:5173/certamen.html")
