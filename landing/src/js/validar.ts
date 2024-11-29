@@ -1,6 +1,6 @@
-import Toastify from 'toastify-js';
-import 'toastify-js/src/toastify.css';
-import { loadHTML } from '../app';
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
+import { loadHTML } from "../app";
 
 export function getUrlParams(): Record<string, string> {
 	const params = new URLSearchParams(window.location.search);
@@ -17,7 +17,6 @@ export async function getNombreEscultor(id: string) {
 		const res = await fetch(`${url}${id}`);
 		const escultor = await res.json();
 
-	
 		const nombreEscultor = document.getElementById(
 			"nombre-escultor",
 		) as HTMLHeadingElement;
@@ -25,7 +24,7 @@ export async function getNombreEscultor(id: string) {
 			"img_escultor",
 		) as HTMLImageElement;
 
-		const nombre = escultor.nombre_completo
+		const nombre = escultor.nombre_completo;
 		nombreEscultor.textContent = nombre;
 		const foto = escultor.foto;
 		fotoEscultor.src = foto;
@@ -37,25 +36,25 @@ export async function getNombreEscultor(id: string) {
 }
 
 function notificarEmail() {
-
-	const formularioVoto = document.querySelector("#formulario-voto") as HTMLElement;
+	const formularioVoto = document.querySelector(
+		"#formulario-voto",
+	) as HTMLElement;
 	const imgEscultor = document.querySelector("#img_escultor") as HTMLElement;
 	const notificarMail = document.querySelector("#notificarMail") as HTMLElement;
-	const containerVotar = document.querySelector(".container-votar") as HTMLElement;
+	const containerVotar = document.querySelector(
+		".container-votar",
+	) as HTMLElement;
 
-	containerVotar.style.display ="block"
-	containerVotar.style.width ="auto"
-	containerVotar.style.paddingBlock ="32px 46px"
-	containerVotar.style.paddingInline ="32px"
+	containerVotar.style.display = "block";
+	containerVotar.style.width = "auto";
+	containerVotar.style.paddingBlock = "32px 46px";
+	containerVotar.style.paddingInline = "32px";
 
 	formularioVoto.style.display = "none";
-	
+
 	imgEscultor.style.display = "none";
 	notificarMail.style.display = "flex";
-	
-
-	}
-
+}
 
 async function validar_votante() {
 	const stored_email = localStorage.getItem("userEmail");
@@ -71,7 +70,7 @@ async function validar_votante() {
 				background: "#f63e3e",
 			},
 		}).showToast();
-		
+
 		window.location.href = "./certamen.html";
 	}
 
@@ -79,7 +78,7 @@ async function validar_votante() {
 		window.location.href = `./votar.html?correo=${stored_email}&escultor_id=${escultor_id}`;
 	} else {
 		const email = (document.getElementById("email") as HTMLInputElement)?.value;
-		
+
 		if (!email) {
 			Toastify({
 				text: "Error inesperado, el correo es nulo",
@@ -90,9 +89,9 @@ async function validar_votante() {
 					background: "#f63e3e",
 				},
 			}).showToast();
-			
+
 			window.location.href = "./certamen.html";
-		}	
+		}
 
 		try {
 			const response = await fetch(
@@ -111,8 +110,8 @@ async function validar_votante() {
 				window.location.href = response.url;
 			} else if (response.status === 201) {
 				// await response.json();
-				notificarEmail()
-				console.log("Envio exitoso")
+				notificarEmail();
+				console.log("Envio exitoso");
 			} else {
 				Toastify({
 					text: "Error al validar votante",
@@ -123,7 +122,7 @@ async function validar_votante() {
 						background: "#f63e3e",
 					},
 				}).showToast();
-				
+
 				console.error("Error al validar votante:", response.status);
 			}
 		} catch (error) {
@@ -158,8 +157,6 @@ if (form) {
 
 		const button = document.querySelector(".btn-enviar-email");
 
-		
-
 		// Obtener la respuesta del CAPTCHA
 		const turnstileResponse = window.turnstile?.getResponse();
 
@@ -174,15 +171,15 @@ if (form) {
 					background: "#f63e3e",
 				},
 			}).showToast();
-			
+
 			return;
 		}
 		if (button) {
-			button.classList.toggle("active");			
+			button.classList.toggle("active");
 		}
 		// Añadir el token de Turnstile al FormData
 		formData.append("cf-turnstile-response", turnstileResponse);
-	
+
 		try {
 			const response = await fetch("http://localhost:8000/verify-captcha/", {
 				method: "POST",
@@ -206,7 +203,6 @@ if (form) {
 						background: "#f63e3e",
 					},
 				}).showToast();
-				
 			}
 		} catch (error) {
 			console.error("Error al verificar el CAPTCHA:", error);
@@ -219,21 +215,21 @@ if (form) {
 					background: "#f63e3e",
 				},
 			}).showToast();
-			
-		
 		}
 	});
 }
 
-const volverAValidar = document.getElementById("volverAValidar") as HTMLLinkElement;
+const volverAValidar = document.getElementById(
+	"volverAValidar",
+) as HTMLLinkElement;
 const params = getUrlParams();
 
-if (volverAValidar){
-	volverAValidar.href = `validar.html?id=${params.id}`
+if (volverAValidar) {
+	volverAValidar.href = `validar.html?id=${params.id}`;
 }
 
 if (window.location.pathname.includes("validar.html")) {
 	loadHTML("header.html", "header", "");
-	loadHTML("footer.html", "footer", "");
+	loadHTML("footer.html", "footer", "certamen");
 	getNombreEscultor(params.id);
 }

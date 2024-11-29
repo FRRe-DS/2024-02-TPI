@@ -33,4 +33,3 @@ export function loadHTML(
 		})
 		.catch((error) => console.error(error));
 }
-
