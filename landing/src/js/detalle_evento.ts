@@ -1,6 +1,16 @@
 import { formatearFecha, loadHTML } from "../app";
+import { getUrlParams } from "./validar";
 
 const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
+
+
+const params = getUrlParams();
+
+const shareButton = document.querySelector(".share-button") as HTMLButtonElement;
+const urlToShare = `https://erincondelinge.org/detalle_evento.html?id=${params.id}`; 
+const messageToShare = '¡Miren ese increíble evento de la Bienal del Chaco!';
+
+
 
 async function loadEvento(URL: string, id: string) {
   const loadingIndicator = document.getElementById("loading-indicator")!;
@@ -58,3 +68,32 @@ if (window.location.pathname.includes("detalle_evento.html")) {
   loadHTML("footer.html", "footer", "eventos");
   loadEvento(URL_EVENTOS, id);
 }
+
+
+const icons = shareButton.querySelectorAll('.button__icon i');
+
+icons.forEach(icon => {
+  const network = (icon as HTMLElement).title; 
+
+  icon.addEventListener('click', (event) => {
+    event.stopPropagation(); 
+
+    console.log(`Compartir en ${network}`);
+    
+  
+    let shareUrl = '';
+    if (network === 'twitter') {
+      shareUrl = `https://twitter.com/intent/tweet?url=${urlToShare}&text=${messageToShare}`;
+    } else if (network === 'facebook') {
+      shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${urlToShare}`;
+    } else if (network === 'whatsapp') {
+      shareUrl = `https://wa.me/?text=${messageToShare}: ${urlToShare}`;
+    }
+
+    if (shareUrl) {
+      window.open(shareUrl, '_blank');
+    }
+  });
+});
+
+
