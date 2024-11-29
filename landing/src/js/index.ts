@@ -22,7 +22,6 @@ async function loadEventos(url: string) {
 
 		for (let index = 0; index < 7; index++) {
 			const card = document.getElementById(`card-${index}`);
-			
 
 			if (card) {
 				card.innerHTML = `
@@ -43,7 +42,6 @@ async function loadEventos(url: string) {
 		console.log(`Error al carga los eventos: ${error}`);
 	}
 }
-
 
 if (window.location.pathname.includes("")) {
 	loadHTML("header.html", "header", "inicio");

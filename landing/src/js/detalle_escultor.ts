@@ -1,10 +1,9 @@
 import { loadHTML } from "../app";
 import { getUrlParams } from "./validar";
-import Toastify from 'toastify-js';
-import 'toastify-js/src/toastify.css';
+import Toastify from "toastify-js";
+import "toastify-js/src/toastify.css";
 
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
-
 
 const email = localStorage.getItem("userEmail");
 const params = getUrlParams();
@@ -12,67 +11,82 @@ const params = getUrlParams();
 const formContainer = document.querySelector(".formulario-voto") as HTMLElement;
 
 const btnVotar = document.querySelector("#btnVotar") as HTMLLinkElement;
-btnVotar.href = `./validar.html?id=${params.id}`
+btnVotar.href = `./validar.html?id=${params.id}`;
 
 if (email) {
-	btnVotar.style.display = "none"
-}else{
-	formContainer.style.display = "none"
+	btnVotar.style.display = "none";
+} else {
+	formContainer.style.display = "none";
 }
 
 async function inicializar() {
-	const loadingIndicator = document.getElementById("loading-indicator")!;
-  const mainContent = document.querySelector(".section-certamen") as HTMLElement;
+	const loadingIndicator = document.getElementById("loading-indicator");
+
+	if (!loadingIndicator) {
+		throw Error("No se encuentra el elemento Loading indicator.");
+	}
+
+	const mainContent = document.querySelector(
+		".section-certamen",
+	) as HTMLElement;
 	const dividers = document.querySelectorAll(".divider-sm");
 	const galeria = document.querySelector(".galeria") as HTMLElement;
-	
 
 	try {
 		loadingIndicator.style.display = "flex";
-    mainContent.style.display = "none";
+		mainContent.style.display = "none";
 
-		const res = await fetch(`${URL_ESCULTORES}${params.id}`)
-		const escultor = await res.json()
+		const res = await fetch(`${URL_ESCULTORES}${params.id}`);
+		const escultor = await res.json();
 
-		console.log(escultor)
+		console.log(escultor);
 
-		const escultura = escultor.esculturas[0]
-		const evento = escultor.eventos[0].evento
+		const escultura = escultor.esculturas[0];
+		const evento = escultor.eventos[0].evento;
 
 		const nombreEscultor = document.querySelectorAll("#nombre-escultor");
-		const descripcionEscultor = document.querySelector("#descripcion-escultor") as HTMLParagraphElement;
+		const descripcionEscultor = document.querySelector(
+			"#descripcion-escultor",
+		) as HTMLParagraphElement;
 
-    const descripcionEscultura = document.querySelector("#descripcion-escultura") as HTMLParagraphElement;
-		const nombreEscultura = document.querySelector("#nombre-escultura") as HTMLHeadingElement;
-  
-    const imagenEvento = document.querySelector("#imagen-evento") as HTMLImageElement;
+		const descripcionEscultura = document.querySelector(
+			"#descripcion-escultura",
+		) as HTMLParagraphElement;
+		const nombreEscultura = document.querySelector(
+			"#nombre-escultura",
+		) as HTMLHeadingElement;
 
-		const pais = document.querySelector("#pais") as HTMLElement
+		const imagenEvento = document.querySelector(
+			"#imagen-evento",
+		) as HTMLImageElement;
 
-		const nombreEvento = document.querySelector("#nombre-evento") as HTMLElement;
+		const pais = document.querySelector("#pais") as HTMLElement;
 
+		const nombreEvento = document.querySelector(
+			"#nombre-evento",
+		) as HTMLElement;
 
-		nombreEvento.textContent = evento.nombre
+		nombreEvento.textContent = evento.nombre;
 
 		for (const nombre of nombreEscultor) {
-			nombre.textContent = escultor.nombre_completo
+			nombre.textContent = escultor.nombre_completo;
 		}
-		
-		pais.textContent = escultor.pais.nombre
 
-		descripcionEscultor.textContent = escultor.bibliografia
-		nombreEscultura.textContent = escultura.nombre
-		descripcionEscultura.textContent = escultura.descripcion
+		pais.textContent = escultor.pais.nombre;
 
-    imagenEvento.src = escultor.foto;
-    imagenEvento.loading = "lazy";
-    imagenEvento.title = escultor.nombre;
+		descripcionEscultor.textContent = escultor.bibliografia;
+		nombreEscultura.textContent = escultura.nombre;
+		descripcionEscultura.textContent = escultura.descripcion;
 
-  
-    imagenEvento.onerror = function () {
-      this.src = "https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg";
-      this.onerror = null;
-    };
+		imagenEvento.src = escultor.foto;
+		imagenEvento.loading = "lazy";
+		imagenEvento.title = escultor.nombre;
+
+		imagenEvento.onerror = function () {
+			this.src =
+				"https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg";
+			this.onerror = null;
+		};
 
 		for (const imagen of escultura.imagenes) {
 			const article = document.createElement("article");
@@ -87,18 +101,14 @@ async function inicializar() {
 					`;
 			galeria.appendChild(article);
 		}
-	
-		
-
 	} catch (error) {
 		console.error("Error inicializando la página:", error);
 	} finally {
-    loadingIndicator.style.display = "none";
-    mainContent.style.display = "flex";
-		dividers.forEach((divider) => {
-			(divider as HTMLElement).style.display = "block"; 
-		});
-
+		loadingIndicator.style.display = "none";
+		mainContent.style.display = "flex";
+		for (const divider of dividers) {
+			(divider as HTMLElement).style.display = "block";
+		}
 	}
 }
 
@@ -118,7 +128,6 @@ if (form) {
 			const rating = formData.get("rating");
 
 			if (rating) {
-
 				try {
 					const response = await fetch(
 						"http://localhost:8000/api/voto_escultor/",
@@ -135,13 +144,12 @@ if (form) {
 						},
 					);
 
-					if (response.ok) {			
-						
+					if (response.ok) {
 						const data = await response.json();
 						console.log("Rating enviado:", data);
-			
+
 						Toastify({
-							text: `¡Gracias por votar!`,
+							text: "¡Gracias por votar!",
 							duration: 3000,
 							gravity: "bottom",
 							position: "right",
@@ -149,11 +157,10 @@ if (form) {
 								background: "#24c803",
 							},
 						}).showToast();
-						
+
 						setTimeout(() => {
 							window.location.href = "./certamen.html";
 						}, 3000);
-
 					} else {
 						Toastify({
 							text: "¡Error al enviar la calificación, usted ya voto a este escultor!",
@@ -167,7 +174,6 @@ if (form) {
 						setTimeout(() => {
 							window.location.href = "./certamen.html";
 						}, 3000);
-						
 					}
 				} catch (error) {
 					Toastify({
@@ -191,17 +197,13 @@ if (form) {
 						background: "#f63e3e",
 					},
 				}).showToast();
-			
 			}
 		}
 	});
 }
 
-
-
 if (window.location.pathname.includes("detalle_escultor.html")) {
-	inicializar() 
+	inicializar();
 	loadHTML("header.html", "header", "certamen");
 	loadHTML("footer.html", "footer", "certamen");
 }
-
