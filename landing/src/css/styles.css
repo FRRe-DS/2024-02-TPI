@@ -1052,7 +1052,7 @@ footer {
 	color: var(--bg-2);
 }
 
-.btn-votar {
+.btn-votar, .calificacion{
 	color: var(--text-400);
 	display: inline-flex;
 	gap: 10px;
@@ -1075,6 +1075,42 @@ footer {
 
 .btn-votar:active {
 	transform: scale(0.9);
+}
+
+.calificacion{
+	padding: 8px 20px;
+	gap: 3px;
+}
+.calificacion-V2{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+}
+.calificacion-V2 p{
+	color: var(--text-400);
+	font-size: 24px;
+}
+
+#showCalificacion{
+	display: none;
+	
+}
+
+.calificacion-V2 i{
+	color: #ffcd29;
+}
+
+.calificacion p{
+	font-size: 20px;
+	width: 20px;
+	display: flex;
+	justify-content: center;
+}
+
+.calificacion i{
+	color: #ffcd29;
+	font-size: 20px;
 }
 
 .white {
@@ -1169,13 +1205,26 @@ footer {
 	
 }
 
-.recuadro{
+.recuadro, .recuadroV2{
 	border-radius: 40px;
 	border: 1px solid var(--bg-2);
-
 }
 
-.formulario-voto h1 {
+.recuadroV2{
+	padding: 1.5rem 2rem;
+	display: grid;
+	gap: 10px;
+}
+
+.recuadroV2 h3{
+	font-size: 1.5rem;
+}
+
+.recuadroV2 i{
+	font-size: 2rem;
+}
+
+.formulario-voto h1 , .formulario-voto h3{
 	font-size: 1.5rem;
 }
 

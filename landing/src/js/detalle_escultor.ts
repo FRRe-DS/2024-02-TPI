@@ -4,7 +4,7 @@ import Toastify from 'toastify-js';
 import 'toastify-js/src/toastify.css';
 
 const URL_ESCULTORES = `${__API_URL__}/api/escultores/`;
-
+const check_puntaje = `${__API_URL__}/api/check_puntaje`;
 
 const email = localStorage.getItem("userEmail");
 const params = getUrlParams();
@@ -37,7 +37,7 @@ async function inicializar() {
 		console.log(escultor)
 
 		const escultura = escultor.esculturas[0]
-		const evento = escultor.eventos[0].evento
+		const evento = escultor.eventos[0]
 
 		const nombreEscultor = document.querySelectorAll("#nombre-escultor");
 		const descripcionEscultor = document.querySelector("#descripcion-escultor") as HTMLParagraphElement;
@@ -77,8 +77,6 @@ async function inicializar() {
 		for (const imagen of escultura.imagenes) {
 			const article = document.createElement("article");
 
-			// article.classList.add("card-escultor");
-
 			article.innerHTML = `					
 					<img
 							src="${imagen.imagen}"
@@ -100,6 +98,34 @@ async function inicializar() {
 		});
 
 	}
+}
+
+
+const showCalificacion = document.getElementById("showCalificacion") as HTMLElement
+const showVotarForm = document.getElementById("showVotarForm") as HTMLElement
+const calificacion = document.getElementById("showPuntaje") as HTMLElement
+
+
+if (email){
+	try {
+		const response = await fetch(`${check_puntaje}?correo=${email}&escultor_id=${params.id}`) 		
+		const result = await response.json();
+
+		if (result.votado){
+			showCalificacion.style.display = "grid"
+			showVotarForm.style.display = "none"
+
+			for (let i = 0; i < result.puntaje; i++) {
+				const icon = document.createElement('i');
+				icon.classList.add('material-icons-outlined');
+				icon.id = 'certamen-tag-footer';
+				icon.innerHTML = '&#xe838;';
+			
+				calificacion.appendChild(icon);
+			}
+		}
+	
+	}catch(error){console.log(`Error al chequear el mensaje: ${error}`)}		
 }
 
 const form = document.getElementById("ratingForm") as HTMLFormElement;
@@ -196,7 +222,6 @@ if (form) {
 		}
 	});
 }
-
 
 
 if (window.location.pathname.includes("detalle_escultor.html")) {
