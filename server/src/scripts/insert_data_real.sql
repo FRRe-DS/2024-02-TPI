@@ -327,15 +327,15 @@ INSERT INTO "app_escultorevento" (escultor_id, evento_id) VALUES
 (7,1),
 (8,1),
 (9,1),
-(10,2),
-(11,2),
-(12,2),
-(13,2),
-(14,2),
-(15,2),
-(16,2),
-(17,2),
-(18,2);
+(10,16),
+(11,16),
+(12,16),
+(13,16),
+(14,16),
+(15,16),
+(16,16),
+(17,16),
+(18,16);
 
 -- app escultura
 INSERT INTO "app_escultura" (nombre, descripcion, escultor_id, fecha_creacion) VALUES 

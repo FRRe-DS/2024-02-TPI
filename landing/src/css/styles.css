@@ -82,6 +82,37 @@ header {
 	padding-inline: clamp(10px, 5vw, 4rem);
 }
 
+.certamenNav{
+	position: relative;
+}
+
+.certamenSelection{
+	position: absolute;
+	top: 130%;
+	left: 0;
+	z-index: 10;
+	background-color: #242424;
+	display: none;
+
+	padding-block: 16px;
+	border-radius: 8px;
+	width: fit-content;
+	text-wrap: nowrap;
+}
+
+.activePopup{
+	display: grid;
+}
+
+.certamenSelection  a{
+	padding: 5px 16px ;	
+}
+
+.certamenSelection a:hover{
+	background-color: #505050;
+	
+}
+
 .paginaActual {
 	position: relative;
 }
@@ -110,9 +141,8 @@ header {
 	top: -100%;
 }
 
-header img {
+.logo-bienal {
 	height: 60px;
-	min-width: fit-content;
 }
 
 header nav {
@@ -620,7 +650,7 @@ footer {
 }
 
 .comment {
-	background-image: url(../images/bienal_aerea.jpeg);
+	background-image: url(https://storage.cloud.google.com/bienaldelchaco/img/media/bienal_aerea.jpeg);
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -1451,7 +1481,7 @@ form {
 
 .share-button:hover .button__icon {
 	left: 0%;
-}
+} 
 
 .share-button.active .button__icon {
 	left: 0%;
@@ -1734,6 +1764,9 @@ form {
 }
 
 @media (max-width: 600px) {
+	.share-button{
+		width: 100%;
+	}
 	header nav {
 		display: none;
 	}
