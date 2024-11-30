@@ -102,7 +102,9 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-"https://674a58fdb97b1456fd6d50aa--superlative-beignet-bb7ce2.netlify.app"
+    "http://localhost:4321",
+    "http://127.0.0.1:4321",
+"https://stupendous-begonia-be137c.netlify.app",
     "https://elrincondelinge.org",
 ]
 
