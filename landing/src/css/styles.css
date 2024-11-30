@@ -91,24 +91,25 @@ header {
 	top: 130%;
 	left: 0;
 	z-index: 10;
-	background-color: var(--text-200);
+	background-color: #242424;
 	display: none;
 
 	padding-block: 16px;
-	border-radius: 16px;
+	border-radius: 8px;
 	width: fit-content;
 	text-wrap: nowrap;
 }
 
-
-.certamenSelection .active a{
+.activePopup{
 	display: grid;
-	padding: 5px 16px ;	
+}
 
+.certamenSelection  a{
+	padding: 5px 16px ;	
 }
 
 .certamenSelection a:hover{
-	background-color: #5b5b5b;
+	background-color: #505050;
 	
 }
 
