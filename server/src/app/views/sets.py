@@ -172,7 +172,7 @@ def eventos_por_anio(request: Request) -> Response:
 
     if not eventos.exists():
         return Response(
-            {"detail": f"No se encontraron eventos para el año {anio}."},
+            {"detail": f"No se encontraron eventos para el año actual"},
             status=status.HTTP_404_NOT_FOUND
         )
 
