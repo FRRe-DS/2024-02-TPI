@@ -141,9 +141,8 @@ header {
 	top: -100%;
 }
 
-header img {
+.logo-bienal {
 	height: 60px;
-	min-width: fit-content;
 }
 
 header nav {
@@ -651,7 +650,7 @@ footer {
 }
 
 .comment {
-	background-image: url(../images/bienal_aerea.jpeg);
+	background-image: url(https://storage.cloud.google.com/bienaldelchaco/img/media/bienal_aerea.jpeg);
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
