@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="manifest" href="manifest.json" /> -->
 
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,6 +33,7 @@
     <script type="module" src="./app.ts"></script>
     <script type="module" src="./utils.ts"></script>
     <script type="module" src="./js/certamen.ts"></script>
+    <script src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs" type="module"></script>
     
    
   </head>
@@ -51,10 +53,9 @@
             ganador del certamen
           </p>
         </div>
-       <!-- Aca va un form que lo inserto dinamicamente con js, asi cada escultor tiene su porpior formulario con su porpio id-->
+      
       </article> 
     </div>
-
     <div id="header"></div>
     <main>
       <section class="container-title">
@@ -80,6 +81,7 @@
               </p>
               <p><strong>Participantes: <span id="total-escultores"></span> escultores</strong></p>
               <p><strong>Tematica: <span id="tematica"></span></strong></p>
+            
             </div>
           </section>
           <section class="h2-mas-p">

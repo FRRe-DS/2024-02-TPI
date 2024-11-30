@@ -26,7 +26,7 @@ async function loadEventos(url: string) {
 			if (card) {
 				card.innerHTML = `
 				 <a class="mosaico-a" href="${evento[index].id === 1 ? "certamen.html" : `detalle_evento.html?id=${evento[index].id}`}">
-					<img class="card-img-evento" loading="lazy" src="${evento[index].foto}" alt="${evento[index].nombre}">
+					<img class="card-img-evento" loading="lazy" src="${evento[index].foto}" alt="${evento[index].nombre}" onerror="this.src='https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg'; this.onerror=null;">
           <div class="descripcion-evento">
             <h3>${evento[index].nombre}</h3>
             <div>
@@ -43,5 +43,8 @@ async function loadEventos(url: string) {
 	}
 }
 
-loadHTML("header.html", "header", "inicio");
-loadEventos(URL_EVENTOS);
+if (window.location.pathname.includes("")) {
+	loadHTML("header.html", "header", "inicio");
+	loadHTML("footer.html", "footer", "inicio");
+	loadEventos(URL_EVENTOS);
+}

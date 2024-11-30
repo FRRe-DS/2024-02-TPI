@@ -16,7 +16,9 @@ from .base import (
     CORS_ALLOWED_ORIGINS,
     MIDDLEWARE,
     INSTALLED_APPS,
+    CLOUDFLARE_TURNSTILE_SECRET_KEY,
 )
+
 
 DJANGO_ENV = config("DJANGO_ENV")
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
@@ -30,9 +32,9 @@ if DJANGO_ENV == "prod":
         BASE_DIR,
         STORAGES,
         MEDIA_URL,
-        # CSRF_COOKIE_SECURE,
+        CSRF_COOKIE_SECURE,
         CSRF_TRUSTED_ORIGINS,
-        # SESSION_COOKIE_SECURE,
+        SESSION_COOKIE_SECURE,
     )
 elif DJANGO_ENV == "testing":
     from .testing import (
@@ -52,8 +54,6 @@ else:
         STORAGES,
         MEDIA_URL,
     )
-
-print(ALLOWED_HOSTS)
 
 __all__ = [
     "LANGUAGE_CODE",
@@ -79,7 +79,8 @@ __all__ = [
     "ALLOWED_HOSTS",
     "STORAGES",
     "MEDIA_URL",
-    # "CSRF_COOKIE_SECURE",
+    "CSRF_COOKIE_SECURE",
     "CSRF_TRUSTED_ORIGINS",
-    # "SESSION_COOKIE_SECURE",
+    "SESSION_COOKIE_SECURE",
+    "CLOUDFLARE_TURNSTILE_SECRET_KEY",
 ]

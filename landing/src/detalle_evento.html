@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="manifest" href="manifest.json" /> -->
 
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -38,6 +39,9 @@
   <body>
     <div id="header"></div>
     <main>
+
+     
+   
       <section class="container-title">
         <div class="container-title-evento"> 
           <h1 id="nombre-evento"></h1>
@@ -47,7 +51,18 @@
         <div id="left2"></div>
         <div id="right2"></div>
       </section>
+
       <div class="wrapped2">
+        <div class="center" id="loading-indicator">
+          <div  class="loading-wave">
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          <div class="loading-bar"></div>
+          </div>
+        </div>
+        
+
         <div class="section-certamen pad-bottom-36">
           <section class=" detalle-evento">
           <div class="h2-mas-p ">
@@ -62,6 +77,19 @@
               <p id="lugar-descripcion"></p>
             </div>
             
+            <div class="share-button">
+              <span class="button__text">Compartir</span>
+              <span class="button__icon"
+                >
+                <i class="fa-brands fa-twitter icons-size-sm" title="twitter"></i>
+                <i class="fa-brands fa-facebook icons-size-sm" title="facebook"></i>
+                <i class="fa-brands fa-whatsapp icons-size-sm" title="whatsapp"></i>
+            
+              </span>
+            </div>
+            
+            
+           
           </div>   
           <div class="imagen-evento"> 
             <img id="imagen-evento"> </div>

@@ -1,41 +1,55 @@
+from datetime import date
+import logging
+
 from background_task.models import CompletedTask
 from background_task.tasks import Task
+from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import authentication, permissions, status, viewsets
-from rest_framework.decorators import action, api_view
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.request import Request
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
-from rest_framework.authtoken.models import Token
 
 from app.models import (
-    Votante,
-    Imagen,
-    Lugar,
-    Tematica,
     Escultor,
-    Pais,
+    EscultorEvento,
     Escultura,
     Evento,
+    Imagen,
+    Lugar,
+    Pais,
+    Tematica,
+    Votante,
 )
 from app.serializers import (
-    VotanteSerializer,
-    EventoSerializer,
+    AdminSisSerializer,
+    EscultorWriteSerializer,
+    EscultorReadSerializer,
+    EscultorEventoWriteSerializer,
+    EscultorEventoReadSerializer,
     EsculturaSerializer,
-    EscultorSerializer,
+    EventoReadSerializer,
+    EventoWriteSerializer,
     ImagenSerializer,
     LugarSerializer,
-    TematicaSerializer,
-    AdminSisSerializer,
     PaisSerializer,
+    TematicaSerializer,
+    VotanteSerializer,
 )
 
 
+@extend_schema(
+    summary="Start Background Task",
+    description="Comienza una tarea de fondo usando la librería 'django-background-tasks' para demostrar la integración.",
+    responses={200: {"description": "Task started!"}},
+)
 @api_view(["GET"])
 def background_task_ejemplo(request: Request) -> JsonResponse:
     """
-    Ejemplo temporal para chequear que la integración entre celery y Django funcione correctamente.
+    Comienza una tarea de fondo usando la librería "django-background-tasks>" para demostrar la integración.
     """
 
     from ..tasks import count_votantes
@@ -45,15 +59,35 @@ def background_task_ejemplo(request: Request) -> JsonResponse:
     return JsonResponse({"status": "Task started!"})
 
 
+@extend_schema(
+    summary="Check Task Status",
+    description="Devuelve el status de tareas pendientes o completadas.",
+    responses={
+        200: {
+            "description": "Task statuses",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "pending_tasks": [
+                            {"task_name": "Task1", "run_at": "2024-11-28T12:00:00Z"}
+                        ],
+                        "completed_tasks": [
+                            {
+                                "task_name": "Task2",
+                                "completed_at": "2024-11-28T13:00:00Z",
+                            }
+                        ],
+                    }
+                }
+            },
+        }
+    },
+)
 @api_view(["GET"])
-def check_django_task_status(request):
-    """
-    Example view to check the status of tasks.
-    """
-    # Query pending tasks
+def check_django_task_status(_request):
+    """Devuelve el status de tareas pendientes o completadas."""
     pending_tasks = Task.objects.all()
 
-    # Query completed tasks (if necessary)
     completed_tasks = CompletedTask.objects.all()
 
     pending = [
@@ -65,6 +99,109 @@ def check_django_task_status(request):
     ]
 
     return JsonResponse({"pending_tasks": pending, "completed_tasks": completed})
+
+
+@extend_schema(
+    summary="Obtener Token de Administrador",
+    description="Genera o recupera un token de autenticación para un usuario administrador.",
+    request={
+        "application/json": {
+            "example": {"username": "admin", "password": "contraseñaSegura"}
+        }
+    },
+    responses={
+        200: {
+            "description": "Token generado exitosamente",
+            "content": {
+                "application/json": {"example": {"token": "abc123xyz", "created": True}}
+            },
+        },
+        400: {
+            "description": "Credenciales inválidas",
+            "content": {
+                "application/json": {"example": {"error": "contraseña incorrecta"}}
+            },
+        },
+        404: {
+            "description": "Usuario no encontrado",
+            "content": {"application/json": {"example": {"detail": "No encontrado."}}},
+        },
+    },
+)
+@api_view(["POST"])
+@permission_classes([permissions.AllowAny])
+def get_token(request):
+    """
+    Obtiene un token de autenticación para un usuario administrador.
+    """
+    userAdmin = get_object_or_404(User, username=request.data.get("username"))
+
+    if not userAdmin.check_password(request.data.get("password")):
+        return Response(
+            {"error": "contraseña incorrecta"}, status=status.HTTP_400_BAD_REQUEST
+        )
+
+    token, created = Token.objects.get_or_create(user=userAdmin)
+
+    if created:
+        logging.info(f"Token creado: {token.key} para el usuario: {userAdmin.username}")
+    else:
+        logging.info(
+            f"Token recuperado: {token.key} para el usuario: {userAdmin.username}"
+        )
+
+    return Response(
+        {"token": token.key, "created": created},
+        status=status.HTTP_200_OK,
+    )
+
+
+@extend_schema(
+    summary="recuperar eventos filtrando por año",
+    description="Recupera eventos que ocurren en un año específico (basado en fecha_inicio).",
+    responses={200: None},
+)
+@api_view(["GET"])
+def eventos_por_anio(request: Request) -> Response:
+  
+    anio_actual = date.today().year
+    anios = [anio_actual, anio_actual + 1]
+
+    # Filtra eventos que tengan el año en la lista de años
+    eventos = Evento.objects.filter(fecha_inicio__year__in=anios)
+
+    if not eventos.exists():
+        return Response(
+            {"detail": "No se encontraron eventos para el año actual"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    serializer = EventoReadSerializer(eventos, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@extend_schema(
+    summary="Escultores por eventos",
+    description="recuperar escultores de un evento en particular",
+    responses={200: None},
+)
+@api_view(["GET"])
+def escultores_por_evento(request: Request) -> Response:
+    evento_id = request.query_params.get("evento_id")
+
+    escultores_evento = EscultorEvento.objects.filter(evento_id=evento_id)
+
+    if not escultores_evento.exists():
+        return Response(
+            {"detail": f"No se encontraron escultores para el evento con id {evento_id}."},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    escultores = Escultor.objects.filter(id__in=escultores_evento.values_list('escultor_id', flat=True))
+
+    serializer = EscultorReadSerializer(escultores, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class VotanteViewSet(viewsets.ModelViewSet):
@@ -99,6 +236,7 @@ class VotanteViewSet(viewsets.ModelViewSet):
 
     queryset = Votante.objects.all()
     serializer_class = VotanteSerializer
+    filterset_fields = ["id", "correo"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -106,7 +244,22 @@ class VotanteViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
+        elif self.request.method == "POST":
+            return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
+    def create(self, request, *args, **kwargs):
+        """
+        Crear un nuevo Votante y devolverlo.
+        """
+        serializer = self.get_serializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class EventoViewSet(viewsets.ModelViewSet):
@@ -145,16 +298,19 @@ class EventoViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Evento.objects.all()
-    serializer_class = EventoSerializer
-    filterset_fields = ["tematica_id"]
-
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
+    filterset_fields = ["nombre", "lugar_id", "tematica_id", "fecha_inicio"]
 
     def get_permissions(self):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return EventoReadSerializer
+        return EventoWriteSerializer
 
 
 class EsculturaViewSet(viewsets.ModelViewSet):
@@ -192,6 +348,7 @@ class EsculturaViewSet(viewsets.ModelViewSet):
 
     queryset = Escultura.objects.all()
     serializer_class = EsculturaSerializer
+    filterset_fields = ["id", "nombre", "escultor_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -238,8 +395,7 @@ class EscultorViewSet(viewsets.ModelViewSet):
     """
 
     queryset = Escultor.objects.all()
-    serializer_class = EscultorSerializer
-    filterset_fields = ["nombre"]
+    filterset_fields = ["id", "nombre", "pais_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -248,6 +404,11 @@ class EscultorViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return EscultorReadSerializer
+        return EscultorWriteSerializer
 
 
 class ImagenViewSet(viewsets.ModelViewSet):
@@ -284,6 +445,15 @@ class ImagenViewSet(viewsets.ModelViewSet):
 
     queryset = Imagen.objects.all()
     serializer_class = ImagenSerializer
+    filterset_fields = ["id", "escultura_id"]
+
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_permissions(self):
+        if self.request.method == "GET":
+            return [permissions.AllowAny()]
+        return [permission() for permission in self.permission_classes]
 
 
 class PaisViewSet(viewsets.ModelViewSet):
@@ -318,6 +488,7 @@ class PaisViewSet(viewsets.ModelViewSet):
 
     queryset = Pais.objects.all()
     serializer_class = PaisSerializer
+    filterset_fields = ["id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -328,51 +499,62 @@ class PaisViewSet(viewsets.ModelViewSet):
         return [permission() for permission in self.permission_classes]
 
 
-class AdminSisViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = AdminSisSerializer
+class EscultorEventoViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet para manejar objetos EscultorEvento.
+
+    Provee operaciones CRUD para la relación entre Escultores y Eventos.
+
+    Implementa capacidades de filtrado y búsqueda.
+
+    API Endpoints:
+      - list: GET /api/escultoreseventos/
+      - create: POST /api/escultoreseventos/
+      - retrieve: GET /api/escultoreseventos/{id}/
+      - update: PUT /api/escultoreseventos/{id}/
+      - partial_update: PATCH /api/escultoreseventos/{id}/
+      - destroy: DELETE /api/escultoreseventos/{id}/
+
+    Campos de búsqueda:
+        - id
+        - escultor_id
+        - evento_id
+
+    Permissions:
+        - List: Cualquier usuario autenticado.
+        - Create: Cualquier usuario autenticado.
+        - Retrieve: Cualquier usuario autenticado.
+        - Update/Delete: Solamente el dueño o un admin.
+    """
+
+    queryset = EscultorEvento.objects.all()
+    filterset_fields = ["id", "escultor_id", "evento_id"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
 
     def get_permissions(self):
-        if self.request.method == "POST":
+        if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
 
-    # basicamente es el metodo post
-    # pero a este lo sobreescribo para que genere el token de cada nuevo admin
-    def create(self, request, *args, **kwargs):
-        serializer = AdminSisSerializer(data=request.data)
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return EscultorEventoReadSerializer
+        return EscultorEventoWriteSerializer
 
-        if serializer.is_valid():
-            serializer.save()
 
-            userAdmin = User.objects.get(username=serializer.data["username"])
-            userAdmin.set_password(serializer.data["password"])
-            userAdmin.save()
+class AdminSisViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = AdminSisSerializer
+    filterset_fields = ["id", "username", "email"]
 
-            token = Token.objects.create(user=userAdmin)
+    authentication_classes = [authentication.TokenAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
 
-            return Response({"token": token.key}, status=status.HTTP_201_CREATED)
-
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    # esta es la forma de obtener el token de un admin
-    # se obtiene haciendo un post con el username y password del usuario a la rutaBase/get_token/
-    # es decir api/adminsis/get_token/
-    @action(detail=False, methods=["post"], permission_classes=[permissions.AllowAny])
-    def get_token(self, request):
-        userAdmin = get_object_or_404(User, username=request.data["username"])
-
-        if not userAdmin.check_password(request.data["password"]):
-            return Response(
-                {"error": "contra incorrecta"}, status=status.HTTP_400_BAD_REQUEST
-            )
-
-        token, created = Token.objects.get_or_create(user=userAdmin)
-
-        return Response({"token": token.key}, status=status.HTTP_200_OK)
+    def create(self, request):
+        response = {"message": "No se puede hacer post a este endpoint"}
+        return Response(response, status=status.HTTP_403_FORBIDDEN)
 
 
 class TematicaViewSet(viewsets.ModelViewSet):
@@ -408,6 +590,7 @@ class TematicaViewSet(viewsets.ModelViewSet):
 
     queryset = Tematica.objects.all()
     serializer_class = TematicaSerializer
+    filterset_fields = ["id", "nombre"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]
@@ -451,6 +634,7 @@ class LugarViewSet(viewsets.ModelViewSet):
 
     queryset = Lugar.objects.all()
     serializer_class = LugarSerializer
+    filterset_fields = ["id", "nombre"]
 
     authentication_classes = [authentication.TokenAuthentication]
     permission_classes = [permissions.IsAuthenticated]

@@ -6,11 +6,8 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-j+&k(*o_vgi3d01+n^#r14+dagby)7-&-iq!@_2$2t(hd6hw7)"
-
 DEBUG = True
-
 ALLOWED_HOSTS = "localhost,127.0.0.1".split(",")
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -25,9 +22,13 @@ DATABASES = {
     },
 }
 
-GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
-    config("STORAGE_KEY", default="", cast=json.loads)
-)
+try:
+    acc_info = json.loads(config("STORAGE_KEY"))
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(acc_info)
+except json.JSONDecodeError as e:
+    raise ValueError(f"STORAGE_KEY no es un JSON válido: {e}")
+except KeyError:
+    raise ValueError("STORAGE_KEY no está definido en las variables de entorno")
 
 GS_BUCKET_NAME = "bienaldelchaco"
 

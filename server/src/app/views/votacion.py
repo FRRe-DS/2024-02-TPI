@@ -1,16 +1,21 @@
 import datetime
 import logging
-import smtplib
-from email.message import EmailMessage
 from io import BytesIO
 
+import urllib.parse
+
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 import qrcode
 import ulid
-from django.db.models import ObjectDoesNotExist, Sum
+from django.db.models import Sum
 from django.db.models.base import Coalesce
 from django.http.response import HttpResponse
 from rest_framework import authentication, permissions, status, viewsets
+from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view
+from rest_framework import serializers
+from rest_framework.decorators import permission_classes
 from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
@@ -21,6 +26,44 @@ from app.utils import PositiveInt
 from django.conf import settings
 
 
+@extend_schema(
+    summary="Generar QR",
+    description="Genera un código QR para un escultor especificado por su `escultor_id`. El QR contiene una URL con parámetros relevantes.",
+    parameters=[
+        OpenApiParameter(
+            name="escultor_id",
+            description="ID del escultor para el cual generar el QR.",
+            required=True,
+            type=OpenApiTypes.INT,
+        )
+    ],
+    responses={
+        200: {
+            "description": "QR Code image in PNG format",
+            "content": {"image/png": {}},
+        },
+        400: {
+            "description": "Error de validación",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": "Debe ingresar por query parameters el id del escultor"
+                    }
+                }
+            },
+        },
+        404: {
+            "description": "Escultor no encontrado",
+            "content": {
+                "application/json": {
+                    "example": {
+                        "error": "El id del escultor no existe en la base de datos"
+                    }
+                }
+            },
+        },
+    },
+)
 class generarQR(APIView):
     if settings.DJANGO_ENV != "testing":
         throttle_scope = "qr"
@@ -59,12 +102,12 @@ class generarQR(APIView):
 
         id = ulid.from_timestamp(datetime.datetime.now())
 
-        query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={escultor.nombre + " " + escultor.apellido}"
+        nombre_escultor = f"{escultor.nombre} {escultor.apellido}"
+        encoded_nombre_escultor = urllib.parse.quote(nombre_escultor)
+        query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={encoded_nombre_escultor}"
 
         if settings.DJANGO_ENV == "prod":
-            voto_url = (
-                f"https://2024-02-tpi-cloudflare.pages.dev/validar.html?{query_params}"
-            )
+            voto_url = f"https://elrincondelinge.org/validar.html?{query_params}"
         else:
             voto_url = f"http://localhost:5173/validar.html?{query_params}"
 
@@ -89,10 +132,6 @@ class generarQR(APIView):
         return HttpResponse(buffer, content_type="image/png", status=status.HTTP_200_OK)
 
 
-# @api_view(["GET"])
-# def generar_qr(request: Request) -> HttpResponse:
-
-
 class VotoEscultorViewSet(viewsets.ModelViewSet):
     queryset = VotoEscultor.objects.all()
     serializer_class = VotoEscultorSerializer
@@ -101,32 +140,27 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_permissions(self):
-        if self.request.method == "POST":
-            return [permissions.AllowAny()]
+        # Esta linea la uso para poder ver si se efectua o no un voto
+        # if self.request.method in ["GET", "POST"]:
+        if self.request.method in "POST":
+            return [AllowAny()]
         return [permission() for permission in self.permission_classes]
 
-    def create(self, request: Request):
-        correo_votante = str(request.query_params.get("correo_votante"))
+    def create(self, request):
+        correo_votante = request.data.get("correo_votante")
 
         if not correo_votante:
             return Response(
                 {"error": "El correo del votante es obligatorio."},
                 status=status.HTTP_400_BAD_REQUEST,
             )
-
-        votante: Votante
         try:
             votante = Votante.objects.get(correo=correo_votante)
-        except ObjectDoesNotExist:
-            logging.info(
-                "Este votante no se encuentra registrado hasta la fecha. Enviando correo electrónico para verificar su registro."
-            )
-            mandar_email(correo_votante)
+        except Votante.DoesNotExist:
+            logging.error(f"Votante con correo {correo_votante} no encontrado.")
             return Response(
-                {
-                    "status": "Se ha enviado un email de verificación a la dirección indicada"
-                },
-                status=status.HTTP_202_ACCEPTED,
+                {"error": "Votante no encontrado en la base de datos."},
+                status=status.HTTP_404_NOT_FOUND,
             )
 
         request.data["votante_id"] = votante.id
@@ -135,55 +169,49 @@ class VotoEscultorViewSet(viewsets.ModelViewSet):
         if serialized_data.is_valid():
             serialized_data.save()
             return Response(
-                {"status": "voto registrado"}, status=status.HTTP_201_CREATED
+                {"status": "Voto registrado"},
+                status=status.HTTP_201_CREATED,
             )
         else:
             errors = serialized_data.errors
             if isinstance(errors, dict) and "non_field_errors" in errors:
                 error_message = errors["non_field_errors"][0]
-                error = f"Usted ya ha votado a este escultor. err: {error_message}"
+                datos_voto = VotoEscultor.objects.get(votante_id=votante.id)
+                puntaje = datos_voto.puntaje
+                error = f"Usted ya ha votado a este escultor con el puntaje {puntaje}. Error: {error_message}"
                 logging.error(error)
+
                 return Response(
-                    {"error": error},
+                    {"error": error, "puntaje": puntaje},
                     status=status.HTTP_403_FORBIDDEN,
                 )
 
-            error = f"Ocurrió un error al serializar los datos. err: {errors}"
+            error = f"Ocurrió un error al serializar los datos. Error: {errors}"
             logging.error(error)
             return Response(
-                {
-                    "error": error,
-                },
+                {"error": error},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
 
-def mandar_email(destinatario: str) -> Response:
-    """
-    Endpoint para enviar un mail usando la API REST de Resend.
-    """
-
-    remitente = settings.DEFAULT_FROM_EMAIL
-    print(remitente)
-
-    email = EmailMessage()
-    email["From"] = remitente
-    email["To"] = destinatario
-    email["Subject"] = "Confirmación de correo electrónico"
-    email.set_content("<strong> Funciona! </strong>")
-
-    smtp = smtplib.SMTP_SSL("smtp.gmail.com")
-    smtp.login(remitente, settings.EMAIL_APP_KEY)
-    smtp.sendmail(remitente, destinatario, email.as_string())
-    smtp.quit()
-
-    print(email.as_string())
-    return Response(status=status.HTTP_200_OK)
+class EscultorRankingSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    nombre = serializers.CharField()
+    apellido = serializers.CharField()
+    total_puntaje = serializers.IntegerField()
 
 
+@extend_schema(
+    summary="Estado Votacion Endpoint",
+    description="Consulta el estado del servidor y devuelve 204 si está funcionando.",
+    responses={200: EscultorRankingSerializer(many=True)},
+)
 @api_view(["GET"])
-# @permission_classes([IsAuthenticated])
+@permission_classes([permissions.IsAuthenticated])
 def estado_votacion(_request: Request) -> Response:
+    """
+    Muestra el estado de la votacion y devuelve un JSON con los datos.
+    """
     ranking = (
         Escultor.objects.annotate(
             total_puntaje=Coalesce(Sum("votoescultor__puntaje"), 0)
@@ -193,3 +221,54 @@ def estado_votacion(_request: Request) -> Response:
     )
 
     return Response({"result": list(ranking)}, status=status.HTTP_200_OK)
+
+
+@extend_schema(
+    summary="Check Puntaje Endpoint",
+    description="Chequea el puntaje realizado por un votante",
+    responses={200: None},
+)
+@api_view(["GET"])
+def check_puntaje(request: Request) -> Response:
+    """ """
+    correo_votante = request.query_params.get("correo")
+    logging.info(f"Recibi este correo {correo_votante}")
+
+    if correo_votante is None:
+        return Response(
+            {"error": "El correo del votante es obligatorio."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    escultor_id = request.query_params.get("escultor_id")
+
+    if not escultor_id:
+        return Response(
+            {"error": "El id del escultor obligatorio."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    try:
+        votante = Votante.objects.get(correo=correo_votante)
+    except Votante.DoesNotExist:
+        logging.error(f"Votante con correo {correo_votante} no encontrado.")
+        return Response(
+            {"error": "Votante no encontrado en la base de datos."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    try:
+        datos = VotoEscultor.objects.get(escultor_id=escultor_id, votante_id=votante.id)
+    except VotoEscultor.DoesNotExist:
+        logging.error(
+            f"No existe voto regitrado para votante {votante.id} y escultor {escultor_id }"
+        )
+        return Response(
+            {"votado": False, "puntaje": None},
+            status=status.HTTP_200_OK,
+        )
+
+    return Response(
+        {"votado": True, "puntaje": datos.puntaje},
+        status=status.HTTP_200_OK,
+    )
