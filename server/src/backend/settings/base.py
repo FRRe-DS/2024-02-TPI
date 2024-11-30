@@ -102,7 +102,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8000",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://e395fb21.2024-02-tpi-cloudflare-shared.pages.dev",
+"https://674a58fdb97b1456fd6d50aa--superlative-beignet-bb7ce2.netlify.app"
     "https://elrincondelinge.org",
 ]
 
