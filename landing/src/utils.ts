@@ -64,3 +64,4 @@ for (const element of hiddenElements) {
 for (const image of hiddenImgElements) {
 	observer.observe(image);
 }
+

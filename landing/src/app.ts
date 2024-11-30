@@ -30,6 +30,22 @@ export function loadHTML(
 					setPaginaActual(paginaActual);
 				}
 			}
+
+
+		
+			const certamenNav = document.getElementById("certamen-tag") as HTMLElement;
+			const certamenSelection = document.querySelector(".certamenSelection") as HTMLElement;
+			
+			if (certamenNav) {
+				certamenNav.replaceWith(certamenNav.cloneNode(true)); 
+				const newCertamenNav = document.getElementById("certamen-tag") as HTMLElement;
+
+				newCertamenNav.addEventListener("click", () => {
+					
+					certamenSelection.classList.toggle("activePopup");
+				});
+			}
+			
 		})
 		.catch((error) => console.error(error));
 }

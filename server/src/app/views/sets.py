@@ -1,3 +1,4 @@
+from datetime import date
 import logging
 
 from background_task.models import CompletedTask
@@ -153,6 +154,54 @@ def get_token(request):
         {"token": token.key, "created": created},
         status=status.HTTP_200_OK,
     )
+
+
+@extend_schema(
+    summary="recuperar eventos filtrando por año",
+    description="Recupera eventos que ocurren en un año específico (basado en fecha_inicio).",
+    responses={200: None},
+)
+@api_view(["GET"])
+def eventos_por_anio(request: Request) -> Response:
+  
+    anio_actual = date.today().year
+    anios = [anio_actual, anio_actual + 1]
+
+    # Filtra eventos que tengan el año en la lista de años
+    eventos = Evento.objects.filter(fecha_inicio__year__in=anios)
+
+    if not eventos.exists():
+        return Response(
+            {"detail": "No se encontraron eventos para el año actual"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    serializer = EventoReadSerializer(eventos, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@extend_schema(
+    summary="Escultores por eventos",
+    description="recuperar escultores de un evento en particular",
+    responses={200: None},
+)
+@api_view(["GET"])
+def escultores_por_evento(request: Request) -> Response:
+    evento_id = request.query_params.get("evento_id")
+
+    escultores_evento = EscultorEvento.objects.filter(evento_id=evento_id)
+
+    if not escultores_evento.exists():
+        return Response(
+            {"detail": f"No se encontraron escultores para el evento con id {evento_id}."},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    
+    escultores = Escultor.objects.filter(id__in=escultores_evento.values_list('escultor_id', flat=True))
+
+    serializer = EscultorReadSerializer(escultores, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class VotanteViewSet(viewsets.ModelViewSet):

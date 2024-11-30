@@ -1,4 +1,5 @@
-const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
+// const URL_EVENTOS = `${__API_URL__}/api/eventos/`;
+const URL_EVENTOS = `${__API_URL__}/api/eventos_por_anio/`;
 import { formatearFecha, loadHTML } from "../app";
 
 // ------ Get eventos ------
