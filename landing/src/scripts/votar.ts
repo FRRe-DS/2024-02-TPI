@@ -154,9 +154,7 @@ if (form) {
 	});
 }
 
-if (window.location.pathname.includes("votar.html")) {
-	const params = getUrlParams();
+const params = getUrlParams();
 
-	validar_qr(params);
-	getNombreEscultor(params.escultor_id);
-}
+validar_qr(params);
+getNombreEscultor(params.escultor_id);

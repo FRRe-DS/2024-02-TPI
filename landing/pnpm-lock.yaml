@@ -38,6 +38,9 @@ importers:
       typescript:
         specifier: ^5.7.2
         version: 5.7.2
+      ulid:
+        specifier: ^2.3.0
+        version: 2.3.0
     devDependencies:
       '@types/toastify-js':
         specifier: ^1.12.3
@@ -3065,6 +3068,10 @@ packages:
   typescript@5.7.2:
     resolution: {integrity: sha512-i5t66RHxDvVN40HfDd1PsEThGNnlMCMT3jMUuoh9/0TaqWevNontacunWyN02LA9/fIbEWlcHZcgTKb9QoaLfg==}
     engines: {node: '>=14.17'}
+    hasBin: true
+
+  ulid@2.3.0:
+    resolution: {integrity: sha512-keqHubrlpvT6G2wH0OEfSW4mquYRcbe/J8NMmveoQOjUqmo+hXtO+ORCpWhdbZ7k72UtY61BL7haGxW6enBnjw==}
     hasBin: true
 
   ultrahtml@1.5.3:
@@ -7123,6 +7130,8 @@ snapshots:
       semver: 7.6.3
 
   typescript@5.7.2: {}
+
+  ulid@2.3.0: {}
 
   ultrahtml@1.5.3: {}
 
