@@ -21,7 +21,7 @@ async function loadEventos(url: string) {
 						loading="lazy" 
 						src="${evento.foto}" 
 						alt="${evento.nombre}"
-						onerror="this.src='./images/fondo.jpg'; this.onerror=null;">>
+						onerror="this.src='https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg'; this.onerror=null;">
             <div class="card-content">
               <h2>${evento.nombre}</h2>
               <div>

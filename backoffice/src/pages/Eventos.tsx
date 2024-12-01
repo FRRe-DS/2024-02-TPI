@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Btn from "../components/btn";
 import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
@@ -13,7 +12,8 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import Acciones from "../components/acciones";
-import DateFilter from "../components/dateFilter";
+import NuevoEventoPopup from "../components/crearEvento";
+
 
 declare module "@tanstack/react-table" {
   interface FilterFns {
@@ -115,48 +115,56 @@ export default function Eventos() {
   const [data, _setData] = useState<Evento[]>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const url = "http://localhost:8000/api";
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const handleOpenPopup = () => setIsPopupOpen(true);
+  const handleClosePopup = () => setIsPopupOpen(false);
+
+  async function fetchEventos() {
+    try {
+      const eventosResponse = await fetch(`${url}/eventos/`);
+      const lugaresResponse = await fetch(`${url}/lugar/`);
+      const tematicasResponse = await fetch(`${url}/tematica/`);
+
+      if (
+        eventosResponse.status !== 200 ||
+        lugaresResponse.status !== 200 ||
+        tematicasResponse.status !== 200
+      ) {
+        console.error("Error al obtener datos desde el backend");
+        return;
+      }
+
+      const eventos: EventoAPI[] = await eventosResponse.json();
+      const lugares: Lugar[] = await lugaresResponse.json();
+      const tematicas: Tematica[] = await tematicasResponse.json();
+
+      const lugarMap = new Map(lugares.map((lugar) => [lugar.id, lugar.nombre]));
+      const tematicaMap = new Map(
+        tematicas.map((tematica) => [tematica.id, tematica.nombre])
+      );
+
+      const transformedData: Evento[] = eventos.map((evento) => ({
+        id: evento.id,
+        nombre: evento.nombre,
+        lugar: lugarMap.get(evento.lugar_id) || "Lugar no encontrado",
+        tematica: tematicaMap.get(evento.tematica_id) || "Temática no encontrada",
+        inicio: evento.fecha_inicio,
+        fin: evento.fecha_fin,
+        descripcion: evento.descripcion,
+      }));
+
+      const sortedData = transformedData.sort((a, b) => {
+        return new Date(b.inicio).getTime() - new Date(a.inicio).getTime();
+      });
+  
+      _setData(sortedData); 
+  
+    } catch (error) {
+      console.error("Error al procesar los datos", error);
+    }
+  }
 
   useEffect(() => {
-    async function fetchEventos() {
-      try {
-        const eventosResponse = await fetch(`${url}/eventos/`);
-        const lugaresResponse = await fetch(`${url}/lugar/`);
-        const tematicasResponse = await fetch(`${url}/tematica/`);
-
-        if (
-          eventosResponse.status !== 200 ||
-          lugaresResponse.status !== 200 ||
-          tematicasResponse.status !== 200
-        ) {
-          console.error("Error al obtener datos desde el backend");
-          return;
-        }
-
-        const eventos: EventoAPI[] = await eventosResponse.json();
-        const lugares: Lugar[] = await lugaresResponse.json();
-        const tematicas: Tematica[] = await tematicasResponse.json();
-
-        const lugarMap = new Map(lugares.map((lugar) => [lugar.id, lugar.nombre]));
-        const tematicaMap = new Map(
-          tematicas.map((tematica) => [tematica.id, tematica.nombre])
-        );
-
-        const transformedData: Evento[] = eventos.map((evento) => ({
-          id: evento.id,
-          nombre: evento.nombre,
-          lugar: lugarMap.get(evento.lugar_id) || "Lugar no encontrado",
-          tematica: tematicaMap.get(evento.tematica_id) || "Temática no encontrada",
-          inicio: evento.fecha_inicio,
-          fin: evento.fecha_fin,
-          descripcion: evento.descripcion,
-        }));
-
-        _setData(transformedData);
-      } catch (error) {
-        console.error("Error al procesar los datos", error);
-      }
-    }
-
     fetchEventos();
   }, []);
 
@@ -181,7 +189,11 @@ export default function Eventos() {
       <section className="mainSection">
         <header className="header-section">
           <h1 className="header-title">Eventos</h1>
-          <Btn text="Nuevo evento" />
+          <button className="btn-principal" onClick={handleOpenPopup}>Nuevo evento</button>
+          <NuevoEventoPopup 
+            isOpen={isPopupOpen} 
+            onClose={handleClosePopup} 
+            onNuevoEvento={fetchEventos}/>
         </header>
         <div className="section-container">
           <div className="action-btn__container">
@@ -190,7 +202,7 @@ export default function Eventos() {
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
             />
-            <DateFilter text="Fecha" />
+           
           </div>
           <div className="table-container">
             <table className="event-table">

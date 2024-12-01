@@ -1,6 +1,5 @@
 import "./btn.css";
 import { useState } from "react";
-import NuevoEventoPopup from "./crearEvento";
 import NuevoEscultorPopup from "./crearEscultor";
 import NuevaEsculturaPopup from "./crearEscultura";
 import AgregarImagenPopup from "./agregarImagen";
@@ -11,11 +10,6 @@ export default function Btn({ text }: { text: string }) {
   const handleClosePopup = () => setIsPopupOpen(false);
   
   switch(text){
-    case 'Nuevo evento':
-      return(
-        <><button className="btn-principal" onClick={handleOpenPopup}>{text}</button><NuevoEventoPopup isOpen={isPopupOpen} onClose={handleClosePopup} /></>
-      );
-      break;
   
       case 'Nuevo escultor':
       return(

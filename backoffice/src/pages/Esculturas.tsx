@@ -13,7 +13,7 @@ import {
   getFilteredRowModel,
 } from "@tanstack/react-table";
 import Acciones from "../components/acciones";
-import DateFilter from "../components/dateFilter";
+
 
 type EsculturaAPI = {
   id: number;
@@ -189,7 +189,7 @@ export default function Esculturas() {
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
             />
-            <DateFilter text="Fecha" />
+           
           </div>
           <div className="table-container">
             <table className="event-table">

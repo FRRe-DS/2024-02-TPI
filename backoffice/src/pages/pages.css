@@ -112,7 +112,11 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f3f4f6;
+  background-image: url(https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+
 }
 
 .login-form {
@@ -130,6 +134,8 @@
 .login-form h2 {
   text-align: center;
   margin-bottom: 16px;
+  font-size: 1.5rem;
+  font-weight: 600;
   color: #333;
 }
 
@@ -150,7 +156,7 @@ input {
   padding: 12px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s;
+  transition: all 0.3s ease;
 }
 
 .login-btn:hover {
