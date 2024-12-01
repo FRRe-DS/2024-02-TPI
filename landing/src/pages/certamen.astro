@@ -1,0 +1,81 @@
+---
+import Layout from "../layouts/Layout.astro";
+import GridEscultores from "../components/GridEscultores.astro";
+import { API_URL } from "astro:env/client";
+
+const escultores_url = `${API_URL}/api/escultores/`;
+const check_puntaje_url = `${API_URL}/api/check_puntaje/`;
+---
+
+<Layout>
+    <div class="overlay"></div>
+    <div class="popUp-container">
+      
+      <article class="popup">
+        <div class="cerrar-popup-container">
+          <button class="cerrar-popup">x</button>
+        </div>
+
+        <div>
+          <h4 id="nombre-escultor"></h4>
+          <p>
+            Los votos de todos los escultores se contabilizarán para obtener al
+            ganador del certamen
+          </p>
+        </div>
+      </article> 
+    </div>
+    <main>
+        <section class="container-title">
+            <h1>
+                <span class="cursiva">Bienal</span> Internacional de Esculturas 2025
+            </h1>
+            <div id="left2"></div>
+            <div id="right2"></div>
+        </section>
+        <div class="wrapped2">
+            <div class="section-certamen">
+                <section class="h2-mas-p">
+                    <div>
+                        <h2>Concurso internacional de escultura</h2>
+                        <p>1 al 16 de Julio</p>
+                        <div class="divider-sm"></div>
+                    </div>
+                    <div class="info-certamen">
+                        <p class="text-pretty">
+                            Nuevamente, grandes escultores del mundo en escena y en
+                            acción, trabajando a cielo abierto y en público,
+                            esculpiendo piezas que tienen por destino las veredas de
+                            Resistencia.
+                        </p>
+                        <p>
+                            <strong
+                                >Participantes: <span id="total-escultores"></span> escultores</strong
+                            >
+                        </p>
+                        <p>
+                            <strong>Tematica: <span id="tematica"></span></strong>
+                        </p>
+                    </div>
+                </section>
+                <section class="h2-mas-p">
+                    <div>
+                        <h2>Escultores seleccionados</h2>
+                        <p>¡Vota tu escultor favorito!</p>
+                        <div class="divider-sm"></div>
+                    </div>
+                    <!-- TODO: COMPONENTE GRID ESCULTORES! -->
+                    <GridEscultores
+                        apiUrl={escultores_url}
+                        checkPuntajeUrl={check_puntaje_url}
+                    />
+                </section>
+            </div>
+        </div>
+    </main>
+</Layout>
+
+<!-- </main> -->
+<!-- <div id="footer"></div> -->
+<!-- </body> -->
+<!-- </html> -->

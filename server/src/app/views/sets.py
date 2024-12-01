@@ -163,7 +163,6 @@ def get_token(request):
 )
 @api_view(["GET"])
 def eventos_por_anio(request: Request) -> Response:
-  
     anio_actual = date.today().year
     anios = [anio_actual, anio_actual + 1]
 
@@ -172,13 +171,14 @@ def eventos_por_anio(request: Request) -> Response:
 
     if not eventos.exists():
         return Response(
-            {"detail": "No se encontraron eventos para el año actual"},
-            status=status.HTTP_404_NOT_FOUND
+            {"detail": f"No se encontraron eventos para el año {anio_actual}."},
+            status=status.HTTP_404_NOT_FOUND,
         )
 
     serializer = EventoReadSerializer(eventos, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 @extend_schema(
     summary="Escultores por eventos",
@@ -193,11 +193,15 @@ def escultores_por_evento(request: Request) -> Response:
 
     if not escultores_evento.exists():
         return Response(
-            {"detail": f"No se encontraron escultores para el evento con id {evento_id}."},
-            status=status.HTTP_404_NOT_FOUND
+            {
+                "detail": f"No se encontraron escultores para el evento con id {evento_id}."
+            },
+            status=status.HTTP_404_NOT_FOUND,
         )
-    
-    escultores = Escultor.objects.filter(id__in=escultores_evento.values_list('escultor_id', flat=True))
+
+    escultores = Escultor.objects.filter(
+        id__in=escultores_evento.values_list("escultor_id", flat=True)
+    )
 
     serializer = EscultorReadSerializer(escultores, many=True)
 
