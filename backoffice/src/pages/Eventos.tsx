@@ -236,7 +236,7 @@ export default function Eventos() {
                   </tr>
                 ))}
               </tbody>
-              <tfoot>
+              {/* <tfoot>
                 <tr>
                   <td colSpan={8} className="pagination">
                     <a href="#" className="page-link">
@@ -261,7 +261,7 @@ export default function Eventos() {
                     </a>
                   </td>
                 </tr>
-              </tfoot>
+              </tfoot> */}
             </table>
           </div>
         </div>
