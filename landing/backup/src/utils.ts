@@ -14,6 +14,7 @@ export function setPaginaActual(pagina: string) {
 	if (paginaActual) {
 		paginaActual.classList.add("paginaActual");
 	}
+
 	if (paginaActualFooter) {
 		paginaActualFooter.classList.remove("material-icons-outlined");
 		paginaActualFooter.classList.add("material-icons");
@@ -64,4 +65,3 @@ for (const element of hiddenElements) {
 for (const image of hiddenImgElements) {
 	observer.observe(image);
 }
-

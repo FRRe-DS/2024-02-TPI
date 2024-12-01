@@ -1,8 +1,5 @@
-serve: 
+run:
     pnpm run dev
 
-build: check
+build:
     pnpm build
-
-check:
-    pnpm biome check
