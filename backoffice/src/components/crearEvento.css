@@ -1,6 +1,4 @@
-*:focus {
-  outline: 2px solid #007bff; 
-}
+
 
 .overlay {
   position: fixed;
@@ -62,7 +60,9 @@ textarea, select {
   width: 100%;
 }
 
-
+.focus-input:focus{
+  outline: 2px solid #007bff; 
+}
 
 select{
   cursor: pointer;

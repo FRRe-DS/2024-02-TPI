@@ -226,6 +226,7 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
             value={eventData.nombre}
             onChange={handleInputChange}
             required
+            className="focus-input"
           />
 
 <div className="fechas">
@@ -234,12 +235,14 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
               value={startDate ? startDate.toISOString().split("T")[0] : ""}
               onChange={(e) => setStartDate(new Date(e.target.value))}
               required
+              className="focus-input"
             />
             <input
               type="date"
               value={endDate ? endDate.toISOString().split("T")[0] : ""}
               onChange={(e) => setEndDate(new Date(e.target.value))}
               required
+              className="focus-input"
             />
           </div>
 
@@ -248,13 +251,14 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
             placeholder="Descripción"
             value={eventData.descripcion}
             onChange={handleInputChange}
+            className="focus-input"
             required
           />
 
         <div className="custom-file-upload">
               <label htmlFor="file-upload" >
                 {fileName ? <p>Archivo seleccionado: {fileName}</p> : <p>Seleccionar archivo {fileName}</p>}
-  
+
               </label>
               <input
                 id="file-upload"
@@ -273,6 +277,7 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
                 value={eventData.lugar_id}
                 onChange={handleInputChange}
                 required
+                className="focus-input"
               >
                 <option value="" disabled>
                   Seleccione un lugar
@@ -295,6 +300,7 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
                 type="text"
                 name="lugar_nombre"
                 placeholder="Nombre del lugar"
+                className="focus-input"
                 value={nombreLugar}
                 onChange={(e) => setNombreLugar(e.target.value)}
                 required
@@ -303,6 +309,7 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
                 type="text"
                 name="lugar_descripcion"
                 placeholder="Descripción del lugar"
+                className="focus-input"
                 value={descripcionLugar}
                 onChange={(e) => setDescripcionLugar(e.target.value)}
               />
@@ -318,6 +325,7 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
                 value={eventData.tematica_id}
                 onChange={handleInputChange}
                 required
+                className="focus-input"
               >
                 <option value="" disabled>
                   Seleccione un lugar
@@ -343,11 +351,12 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
                 value={nombreTematica}
                 onChange={(e) => setNombreTematica(e.target.value)}
                 required
+                className="focus-input"
               />
               <input
                 type="text"
                 name="tematica_descripcion"
-              
+                className="focus-input"
                 placeholder="Descripción"
                 value={descripcionTematica}
                 onChange={(e) => setDescripcionTematica(e.target.value)}

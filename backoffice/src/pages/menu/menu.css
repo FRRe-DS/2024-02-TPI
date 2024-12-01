@@ -2,44 +2,27 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  width: 100vw;
+  width: 180px;
   height: 100vh;
   background: var(--grey-200);
-  color: white;
+
   padding: 0 16px;
-}
-/* 
-.oculto {
-  width: 0;
-  overflow: hidden;
-}
-
-.navigation__btn {
-  display: block;
-}  */
-
-/* @media (min-width: 650px) { */
-.navigation {
-  width: 180px;
+  padding-bottom: 10px;
   border-right: 1px solid var(--grey-400);
 }
-.navigation__btn {
-  display: none;
-}
+
 
 .salirBtn {
   all: unset;
-  display: flex;
+  display: inline-flex;
+  align-items: center;
   gap: 16px;
   cursor: pointer;
   color: var(--text-200);
   padding: 16px 0;
   transition: all 0.45s ease-out;
 }
-.salirBtn:hover,
-.salirBtn:focus-visible {
-  color: var(--grey-100);
-}
+
 
 .navigation__link {
   all: unset;
@@ -81,6 +64,10 @@
 
 .navigation__link:active {
   scale: 0.95;
+}
+
+.salirBtnSm{
+  display:none;
 }
 
 .paginaActual {
@@ -127,4 +114,66 @@
   -webkit-filter: invert(100%);
   filter: invert(100%);
 }
-/* } */
+
+@media (max-width: 850px) { 
+  .navigation {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    display: inline-flex; 
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: auto;
+    background: var(--grey-200);
+    color: white;
+    padding: 8px;
+    border-right: none;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  }
+  .logo{display: none;}
+
+  .navigation__options {
+    display: flex;
+   justify-content: center;
+   align-items: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .navigation__menu {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100% ;
+   
+  }
+
+  .salirBtn{
+    display: none;
+  }
+
+  .btnSmScreen, .paginaActualSm {
+    all: unset;
+    display: grid;
+    gap: 5px;
+    place-items: center;
+    color: var(--text-300);
+    cursor: pointer;
+  }
+
+  .navigation__link {
+    display: none;
+  }
+  .paginaActual{display: none;}
+  
+  .paginaActualSm{
+    color: var(--primario);
+  }
+
+  .btnSmScreen:focus {
+    outline: auto; 
+  }
+ 
+}

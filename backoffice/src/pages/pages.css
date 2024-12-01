@@ -163,6 +163,12 @@ input {
   background-color: #0056b3;
 }
 
+@media (max-width: 850px) {
+  .section-container {
+    padding: 0 48px 92px 48px;
+
+  }
+}
 
 @media (max-width: 500px) {
   .login-form {
@@ -171,4 +177,6 @@ input {
   input {
     font-size: 14px;
   }
+
+ 
 }
