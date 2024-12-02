@@ -34,6 +34,9 @@ export default defineConfig({
 				enabled: true,
 				/* other options */
 			},
+			experimental: {
+				directoryAndTrailingSlashHandler: true,
+			},
 		}),
 	],
 
