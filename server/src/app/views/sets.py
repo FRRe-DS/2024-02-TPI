@@ -310,15 +310,11 @@ class EventoViewSet(viewsets.ModelViewSet):
         if self.request.method == "GET":
             return [permissions.AllowAny()]
         return [permission() for permission in self.permission_classes]
-    
 
     def get_serializer_class(self):
         if self.request.method == "GET":
             return EventoReadSerializer
         return EventoWriteSerializer
-
-
-
 
 
 class EsculturaViewSet(viewsets.ModelViewSet):
@@ -416,6 +412,7 @@ class EscultorViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.request.method == "GET":
             return EscultorReadSerializer
+
         return EscultorWriteSerializer
 
 

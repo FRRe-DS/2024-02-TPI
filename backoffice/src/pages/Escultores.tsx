@@ -45,109 +45,109 @@ type Escultor = {
 export default function Escultores() {
     const columnHelper = createColumnHelper<Escultor>();
 
-const columns = [
-    columnHelper.accessor("nombre", {
-        header: () => "Nombre",
-        cell: (info) => info.renderValue(),
-        footer: (info) => info.column.id,
-    }),
-    columnHelper.accessor("nacionalidad", {
-        header: () => "Nacionalidad",
-        cell: (info) => info.renderValue(),
-        footer: (info) => info.column.id,
-    }),
-    columnHelper.accessor("correo", {
-        header: () => "Correo",
-        cell: (info) => info.renderValue(),
-        footer: (info) => info.column.id,
-    }),
-    columnHelper.display({
-        id: "acciones",
-        header: "Acciones",
-        cell: (props) => {
-          const openEditPopup = (id: number) => {
-            setEscultorEditId(id);
-            setIsPopupEditOpen(true);
-          };
-      
-          return (
-            <div className="acciones_container">
-              <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
-              
-                <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe8f4;</i></button>
-            </div>
-          );
-        },
-      }),
-];
-    const [escultorEditId, setEscultorEditId] = useState<number | null>(null);   
+    const columns = [
+        columnHelper.accessor("nombre", {
+            header: () => "Nombre",
+            cell: (info) => info.renderValue(),
+            footer: (info) => info.column.id,
+        }),
+        columnHelper.accessor("nacionalidad", {
+            header: () => "Nacionalidad",
+            cell: (info) => info.renderValue(),
+            footer: (info) => info.column.id,
+        }),
+        columnHelper.accessor("correo", {
+            header: () => "Correo",
+            cell: (info) => info.renderValue(),
+            footer: (info) => info.column.id,
+        }),
+        columnHelper.display({
+            id: "acciones",
+            header: "Acciones",
+            cell: (props) => {
+                const openEditPopup = (id: number) => {
+                    setEscultorEditId(id);
+                    setIsPopupEditOpen(true);
+                };
+
+                return (
+                    <div className="acciones_container">
+                        <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
+
+                        <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe8f4;</i></button>
+                    </div>
+                );
+            },
+        }),
+    ];
+    const [escultorEditId, setEscultorEditId] = useState<number | null>(null);
     const [isPopupEditOpen, setIsPopupEditOpen] = useState(false);
-   
+
     const [data, _setData] = useState<Escultor[]>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const url = "http://localhost:8000/api";
 
     async function fetch_escultores() {
-      type EscultorResponse = {
-          id: number,
-          nombre: string,
-          apellido: string,
-          nombre_completo: string,
-          correo: string,
-          foto: string,
-          bibliografia: string,
-          fecha_nacimiento: string,
-          esculturas: object[],
-          eventos: object[],
-          pais: {
-              id: number,
-              iso: string,
-              nombre: string
-          }
-      };
-  
-      type Escultor = {
-					id: number,
-          nombre: string,
-          apellido: string,
-          correo: string,
-          foto: string,
-          bibliografia: string,
-          nacionalidad: string,
-      };
-  
-      try {
-          const response = await fetch(`${url}/escultores/`);
-          if (!response.ok) {
-              console.error(`Hubo un error al hacer el request a ${url}`);
-             
-              _setData([]);
-              return;
-          }
-  
-          const escultoresResponse: EscultorResponse[] = await response.json();
-  
-          const escultores: Escultor[] = escultoresResponse.map(escultorResp => ({
-            	id: escultorResp.id,
-              nombre: escultorResp.nombre_completo,
-              apellido: escultorResp.apellido,
-              correo: escultorResp.correo,
-              foto: escultorResp.foto,
-              bibliografia: escultorResp.bibliografia,
-              nacionalidad: escultorResp.pais?.nombre || "Desconocido",
-          }));
-  
-        
-          _setData(escultores);
-      } catch (error) {
-          console.error("Error al fetchear los escultores:", error);
-          _setData([]);
-      }
-  }
+        type EscultorResponse = {
+            id: number,
+            nombre: string,
+            apellido: string,
+            nombre_completo: string,
+            correo: string,
+            foto: string,
+            bibliografia: string,
+            fecha_nacimiento: string,
+            esculturas: object[],
+            eventos: object[],
+            pais: {
+                id: number,
+                iso: string,
+                nombre: string
+            }
+        };
 
-  useEffect(() => {
-    fetch_escultores();
-}, []);
+        type Escultor = {
+            id: number,
+            nombre: string,
+            apellido: string,
+            correo: string,
+            foto: string,
+            bibliografia: string,
+            nacionalidad: string,
+        };
+
+        try {
+            const response = await fetch(`${url}/escultores/`);
+            if (!response.ok) {
+                console.error(`Hubo un error al hacer el request a ${url}`);
+
+                _setData([]);
+                return;
+            }
+
+            const escultoresResponse: EscultorResponse[] = await response.json();
+
+            const escultores: Escultor[] = escultoresResponse.map(escultorResp => ({
+                id: escultorResp.id,
+                nombre: escultorResp.nombre_completo,
+                apellido: escultorResp.apellido,
+                correo: escultorResp.correo,
+                foto: escultorResp.foto,
+                bibliografia: escultorResp.bibliografia,
+                nacionalidad: escultorResp.pais?.nombre || "Desconocido",
+            }));
+
+
+            _setData(escultores);
+        } catch (error) {
+            console.error("Error al fetchear los escultores:", error);
+            _setData([]);
+        }
+    }
+
+    useEffect(() => {
+        fetch_escultores();
+    }, []);
 
     const table = useReactTable({
         data,
@@ -166,9 +166,9 @@ const columns = [
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const handleOpenPopup = () => setIsPopupOpen(true);
     const handleClosePopup = () => {
-			setIsPopupOpen(false)
-			setIsPopupEditOpen(false)
-		};
+        setIsPopupOpen(false)
+        setIsPopupEditOpen(false)
+    };
 
     return (
         <div className="mainContainer">
@@ -178,14 +178,14 @@ const columns = [
                     <h1 className="header-title">Escultores</h1>
                     <button className="btn-principal" onClick={handleOpenPopup}>Nuevo escultor</button>
                     <NuevoEscultorPopup
-                      isOpen={isPopupOpen} 
-                      onClose={handleClosePopup} 
-                      onNuevoEscultor={fetch_escultores}/>
-										<EditarEscultorPopup
-											isOpen={isPopupEditOpen && escultorEditId !== null}
-											onClose={handleClosePopup}
-											escultorId={escultorEditId} 
-											onUpdate={fetch_escultores}/>
+                        isOpen={isPopupOpen}
+                        onClose={handleClosePopup}
+                        onNuevoEscultor={fetch_escultores} />
+                    <EditarEscultorPopup
+                        isOpen={isPopupEditOpen && escultorEditId !== null}
+                        onClose={handleClosePopup}
+                        escultorId={escultorEditId}
+                        onUpdate={fetch_escultores} />
                 </header>
                 <div className="section-container">
                     <div className="action-btn__container">
@@ -227,7 +227,7 @@ const columns = [
                                     </tr>
                                 ))}
                             </tbody>
-                           
+
                         </table>
                     </div>
                 </div>
