@@ -2,6 +2,7 @@ import { getNombreEscultor } from "./validar";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import { getUrlParams } from "./utils";
+import { API_URL } from "astro:env/client";
 
 const form = document.getElementById("ratingForm") as HTMLFormElement;
 const button = document.querySelector(".btn-votarV2") as HTMLButtonElement;
@@ -82,20 +83,17 @@ if (form) {
 
 			if (rating) {
 				try {
-					const response = await fetch(
-						"http://localhost:8000/api/voto_escultor/",
-						{
-							method: "POST",
-							headers: {
-								"Content-Type": "application/json",
-							},
-							body: JSON.stringify({
-								puntaje: rating,
-								escultor_id: escultor_id,
-								correo_votante: correo,
-							}),
+					const response = await fetch(`${API_URL}/api/voto_escultor/`, {
+						method: "POST",
+						headers: {
+							"Content-Type": "application/json",
 						},
-					);
+						body: JSON.stringify({
+							puntaje: rating,
+							escultor_id: escultor_id,
+							correo_votante: correo,
+						}),
+					});
 
 					if (response.ok) {
 						if (!button.classList.contains("active")) {

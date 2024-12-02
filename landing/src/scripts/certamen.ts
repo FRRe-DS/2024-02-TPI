@@ -52,20 +52,17 @@ function Voto(correo: string, escultor_id: string) {
 
 				if (rating) {
 					try {
-						const response = await fetch(
-							"http://localhost:8000/api/voto_escultor/",
-							{
-								method: "POST",
-								headers: {
-									"Content-Type": "application/json",
-								},
-								body: JSON.stringify({
-									puntaje: rating,
-									escultor_id: escultor_id,
-									correo_votante: correo,
-								}),
+						const response = await fetch(`${API_URL}/api/voto_escultor/`, {
+							method: "POST",
+							headers: {
+								"Content-Type": "application/json",
 							},
-						);
+							body: JSON.stringify({
+								puntaje: rating,
+								escultor_id: escultor_id,
+								correo_votante: correo,
+							}),
+						});
 
 						if (response.ok) {
 							if (!button.classList.contains("active")) {

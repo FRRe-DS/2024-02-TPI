@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 /images
 /dev-dist
-
+.env.production
