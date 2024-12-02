@@ -38,7 +38,8 @@ export default defineConfig({
 					context: "client",
 					access: "public",
 					optional: true,
-					default: "http://localhost:8000",
+					default:
+						"https://tpi-desarrollo-e0f8gccuhvhpbkhj.eastus-01.azurewebsites.net",
 				}),
 			},
 		},
