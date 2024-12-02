@@ -7,11 +7,12 @@ import "dayjs/locale/es";
 interface NuevoEventoPopupProps {
   isOpen: boolean;
   onClose: () => void;
-  onNuevoEvento: (evento: any) => void
+  onNuevoEvento: () => void
 }
 
 
-export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupProps) {
+export default function NuevoEventoPopup({ 
+  isOpen, onClose,  onNuevoEvento }: NuevoEventoPopupProps) {
   const [nombreTematica, setNombreTematica] = useState("");
   const [descripcionTematica, setDescripcionTematica] = useState("");
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -199,6 +200,7 @@ export default function NuevoEventoPopup({ isOpen, onClose }: NuevoEventoPopupPr
 
       if (response.ok) {
         console.log("Evento creado exitosamente");
+        onNuevoEvento(); 
         onClose(); 
       } else {
         const errorData = await response.json();

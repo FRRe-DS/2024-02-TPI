@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Btn from "../components/btn";
 import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
@@ -13,6 +12,7 @@ import {
     getFilteredRowModel,
 } from "@tanstack/react-table";
 import Acciones from "../components/acciones";
+import NuevoEscultorPopup from "../components/crearEscultor";
 
 declare module "@tanstack/react-table" {
     interface FilterFns {
@@ -68,52 +68,65 @@ export default function Escultores() {
     const [globalFilter, setGlobalFilter] = useState("");
     const url = "http://localhost:8000/api";
 
-    useEffect(() => {
-        async function fetch_escultores() {
-            type EscultorResponse = {
-                id: number,
-                nombre: string,
-                correo: string,
-                foto: string,
-                bibliografia: string,
-                pais_id: number
-            };
+    async function fetch_escultores() {
+      type EscultorResponse = {
+          id: number,
+          nombre: string,
+          apellido: string,
+          nombre_completo: string,
+          correo: string,
+          foto: string,
+          bibliografia: string,
+          fecha_nacimiento: string,
+          esculturas: object[],
+          eventos: object[],
+          pais: {
+              id: number,
+              iso: string,
+              nombre: string
+          }
+      };
+  
+      type Escultor = {
+          nombre: string,
+          apellido: string,
+          correo: string,
+          foto: string,
+          bibliografia: string,
+          nacionalidad: string,
+      };
+  
+      try {
+          const response = await fetch(`${url}/escultores/`);
+          if (!response.ok) {
+              console.error(`Hubo un error al hacer el request a ${url}`);
+              console.table(response);
+              _setData([]);
+              return;
+          }
+  
+          const escultoresResponse: EscultorResponse[] = await response.json();
+  
+          const escultores: Escultor[] = escultoresResponse.map(escultorResp => ({
+              nombre: escultorResp.nombre_completo,
+              apellido: escultorResp.apellido,
+              correo: escultorResp.correo,
+              foto: escultorResp.foto,
+              bibliografia: escultorResp.bibliografia,
+              nacionalidad: escultorResp.pais?.nombre || "Desconocido",
+          }));
+  
+          console.table(escultores);
+          _setData(escultores);
+      } catch (error) {
+          console.error("Error al fetchear los escultores:", error);
+          _setData([]);
+      }
+  }
 
-            type PaisResponse = {
-                id: number,
-                nombre: string,
-            };
-
-            const response = await fetch(`${url}/escultores/`);
-            if (response.status != 200) {
-                console.error(`Hubo un error al hacer el request a ${url}`);
-                console.table(response);
-                _setData([]);
-                return;
-            }
-
-            const intermedio_escultor: EscultorResponse[] = await response.json();
-
-            const pais_promises = intermedio_escultor.map(async (escultor_resp) => {
-                const response = await fetch(`${url}/paises/${escultor_resp.pais_id}`);
-                if (response.status != 200) {
-                    console.error(`Hubo un error al hacer el request a ${url}`);
-                    const escultor = { nombre: escultor_resp.nombre, nacionalidad: "Desconocido", correo: escultor_resp.correo, foto: escultor_resp.foto, bibliografia: escultor_resp.bibliografia }
-                    return escultor
-                }
-
-                const pais: PaisResponse = await response.json();
-
-                const escultor: Escultor = { nombre: escultor_resp.nombre, nacionalidad: pais.nombre, correo: escultor_resp.correo, foto: escultor_resp.foto, bibliografia: escultor_resp.bibliografia }
-                return escultor
-            });
-
-            const escultores: Escultor[] = await Promise.all(pais_promises);
-            console.table(escultores);
-            _setData(escultores);
-        }
-        fetch_escultores();
-    }, []);
+  useEffect(() => {
+    fetch_escultores();
+}, []);
 
     const table = useReactTable({
         data,
@@ -129,6 +142,9 @@ export default function Escultores() {
         getFilteredRowModel: getFilteredRowModel(),
         getCoreRowModel: getCoreRowModel(),
     });
+    const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const handleOpenPopup = () => setIsPopupOpen(true);
+    const handleClosePopup = () => setIsPopupOpen(false);
 
     return (
         <div className="mainContainer">
@@ -136,7 +152,11 @@ export default function Escultores() {
             <section className="mainSection">
                 <header className="header-section">
                     <h1 className="header-title">Escultores</h1>
-                    <Btn text="Nuevo escultor" />
+                    <button className="btn-principal" onClick={handleOpenPopup}>Nuevo escultor</button>
+                    <NuevoEscultorPopup
+                      isOpen={isPopupOpen} 
+                      onClose={handleClosePopup} 
+                      onNuevoEscultor={fetch_escultores}/>
                 </header>
                 <div className="section-container">
                     <div className="action-btn__container">
@@ -178,32 +198,7 @@ export default function Escultores() {
                                     </tr>
                                 ))}
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colSpan={8} className="pagination">
-                                        <a href="#" className="page-link">
-                                            <span className="material-symbols-outlined">
-                                                keyboard_double_arrow_left
-                                            </span>
-                                        </a>
-                                        <a href="#" className="page-link">
-                                            <span className="material-symbols-outlined">
-                                                keyboard_arrow_left
-                                            </span>
-                                        </a>
-                                        <a href="#" className="page-link">
-                                            <span className="material-symbols-outlined">
-                                                keyboard_arrow_right
-                                            </span>
-                                        </a>
-                                        <a href="#" className="page-link">
-                                            <span className="material-symbols-outlined">
-                                                keyboard_double_arrow_right
-                                            </span>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tfoot>
+                           
                         </table>
                     </div>
                 </div>

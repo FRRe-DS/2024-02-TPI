@@ -11,11 +11,7 @@ export default function Btn({ text }: { text: string }) {
   
   switch(text){
   
-      case 'Nuevo escultor':
-      return(
-        <><button className="btn-principal" onClick={handleOpenPopup}>{text}</button><NuevoEscultorPopup isOpen={isPopupOpen} onClose={handleClosePopup} /></>
-      );
-      break;
+     
 
       case 'Nueva escultura':
       return(

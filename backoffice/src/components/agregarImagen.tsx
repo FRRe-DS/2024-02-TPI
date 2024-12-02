@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./agregarImagen.css";
 import "dayjs/locale/es";
-import DateFilter from "../components/dateFilterSimple";
+
 
 interface AgregarImagenPopupProps {
   isOpen: boolean;
@@ -58,7 +58,8 @@ export default function AgregarImagenPopup({ isOpen, onClose }: AgregarImagenPop
             <div className="personaldates">
               <h3>Fecha de Publicacion</h3>
               <div className="fechas">
-                <DateFilter text="XX/XX/XX"/>
+                ACA IBA LA FECHA
+                {/* <DateFilter text="XX/XX/XX"/> */}
               </div>
               <h3>Biografia</h3>
               <textarea
