@@ -51,3 +51,52 @@ import "../styles/styles.css";
         <Footer />
     </body>
 </html>
+
+<script>
+    const paginas = ["inicio", "eventos", "certamen"];
+    const pathname = window.location.pathname.slice(1);
+    console.log(pathname);
+
+    const indice = paginas.findIndex((el) => el.includes(pathname));
+
+    console.log(`${paginas[indice]}-tag`);
+
+    const paginaActual = document.getElementById(
+        `${paginas[indice]}-tag`,
+    ) as HTMLElement;
+
+    if (paginaActual) {
+        paginaActual.classList.add("paginaActual");
+    }
+
+    const paginaActualFooter = document.getElementById(
+        `${paginas[indice]}-tag-footer`,
+    ) as HTMLElement;
+
+    if (paginaActualFooter) {
+        paginaActualFooter.classList.remove("material-icons-outlined");
+        paginaActualFooter.classList.add("material-icons");
+    }
+
+    // ----------------------------------------------------------------------------
+    const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            if (entry.isIntersecting) {
+                if (entry.target.classList.contains("hidden")) {
+                    entry.target.classList.add("show");
+                } else if (entry.target.classList.contains("hiddenImg")) {
+                    entry.target.classList.add("showImg");
+                }
+            }
+        }
+    });
+    const hiddenElements = document.querySelectorAll(".hidden");
+    const hiddenImgElements = document.querySelectorAll(".hiddenImg");
+    for (const element of hiddenElements) {
+        observer.observe(element);
+    }
+
+    for (const image of hiddenImgElements) {
+        observer.observe(image);
+    }
+</script>
