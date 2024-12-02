@@ -9,19 +9,20 @@ type Entidad = {
 interface AccionesProps {
   row: Row<Entidad>;
   tipo: "escultura" | "evento" | "escultor";
+  callback: (id: number) => void; // Callback para abrir el popup de edición
 }
 
-export default function Acciones({ row, tipo }: AccionesProps) {
+export default function Acciones({ row, tipo, callback }: AccionesProps) {
   const handleEdit = () => {
     switch (tipo) {
       case "escultura":
-        window.location.href = `/editar-escultura/${row.original.id}`;
+        callback(row.original.id); // Llamar al callback para abrir el popup de edición
         break;
       case "evento":
-        window.location.href = `/editar-evento/${row.original.id}`;
+        // Aquí podrías hacer algo similar para eventos, si es necesario
         break;
       case "escultor":
-        window.location.href = `/editar-escultor/${row.original.id}`;
+        // Similar para escultores, si es necesario
         break;
       default:
         alert("Acción no definida");
@@ -49,7 +50,8 @@ export default function Acciones({ row, tipo }: AccionesProps) {
       <a href="#">
         <span
           onClick={handleVermas}
-          className="material-symbols-outlined acciones">
+          className="material-symbols-outlined acciones"
+        >
           visibility
         </span>
       </a>
@@ -57,7 +59,8 @@ export default function Acciones({ row, tipo }: AccionesProps) {
       <a href="#">
         <span
           onClick={handleEdit}
-          className="material-symbols-outlined acciones">
+          className="material-symbols-outlined acciones"
+        >
           edit
         </span>
       </a>

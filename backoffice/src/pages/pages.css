@@ -48,6 +48,26 @@
   border-collapse: collapse;
 }
 
+.acciones_container {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.acciones_container button{
+  all: unset;
+  cursor: pointer;
+  
+}
+.acciones_container button:hover{
+  color: #007bff;
+}
+
+.acciones {
+  color: var(--text-400);
+}
+
+
 .event-table th,
 .event-table td {
   padding: 14px;

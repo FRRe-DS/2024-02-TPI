@@ -13,12 +13,6 @@ export default function Btn({ text }: { text: string }) {
   
      
 
-      case 'Nueva escultura':
-      return(
-        <><button className="btn-principal" onClick={handleOpenPopup}>{text}</button><NuevaEsculturaPopup isOpen={isPopupOpen} onClose={handleClosePopup} /></>
-      );
-      break;
-
       case 'Agregar imagen':
         return(
           <><button className="btn-principal" onClick={handleOpenPopup}>{text}</button><AgregarImagenPopup isOpen={isPopupOpen} onClose={handleClosePopup} /></>

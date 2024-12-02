@@ -19,6 +19,10 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
   });
   const [countries, setCountries] = useState<{ id: number; nombre: string }[]>([]);
   const url = "http://localhost:8000/api";
+  const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    throw new Error("Token no encontrado. Inicia sesión nuevamente.");
+  }
 
 
   const handleInputChange = (
@@ -28,19 +32,53 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
     setEventData({ ...eventData, [name]: value });
   };
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string>("");
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {    
-      const previewUrl = URL.createObjectURL(file);
-      setImagePreview(previewUrl);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];  
+    const fileContainer = document.querySelector(".custom-file-upload")
+    if (file) {
+      fileContainer?.classList.add("activeFile")
+      setFileName(file.name); 
     }
   };
 
-  const handleSubmit = () => {
-    onNuevoEscultor();
-    onClose();
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    
+    // Agregar datos del formulario
+    formData.append("nombre", eventData.nombre);
+    formData.append("apellido", eventData.apellido);
+    formData.append("pais_id", eventData.nacionalidad);
+    formData.append("correo", eventData.correo);
+    formData.append("bibliografia", eventData.bibliografia);
+    
+    // Agregar archivo si existe
+    const fileInput = document.getElementById("file-upload") as HTMLInputElement;
+    if (fileInput?.files?.[0]) {
+      formData.append("archivo", fileInput.files[0]);
+    }
+  
+    try {
+      const response = await fetch(`${url}/escultores/`, {
+        method: "POST",
+        headers: {       
+          Authorization: `Token ${authToken}`, 
+          
+        },
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error("Error al guardar el escultor");
+      }
+  
+      // Llama al callback de éxito y cierra el popup
+      onNuevoEscultor();
+      onClose();
+    } catch (error) {
+      console.error("Error al guardar el escultor:", error);
+    }
   };
 
   useEffect(() => {
@@ -70,30 +108,10 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
         <h2>Agregar Escultor</h2>
         <div className="divider"></div>
         <form className="form">
-          <div className="imgdates">
-            <div className="image-container">
-            <label htmlFor="img">
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Vista previa"
-                  className="imagenPreview"
-                />
-              ) : (
-                <i className="material-symbols-outlined">&#xe439;</i>
-              )}
-            </label>
-              <input
-                type="file"
-                id="img"
-                accept="image/*"
-                onChange={handleImageChange}
-                style={{ display: "none" }}
-                className="focus-input"
-              />
-            </div>
+         
+         
             <div className="personaldates">
-              <h3>Datos personales</h3>
+              <h3>Información personales</h3>
               <input
                 type="text"
                 name="nombre"
@@ -104,7 +122,7 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
               />
               <input
                 type="text"
-                name="nombre"
+                name="apellido"
                 placeholder="Apellido"
                 value={eventData.apellido}
                 onChange={handleInputChange}
@@ -138,8 +156,8 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
                 className="focus-input"
               />
             </div>
-          </div>
-          <h3>Biografia</h3>
+         
+
           <textarea
             name="bibliografia"
             placeholder="Bibliografia"
@@ -147,6 +165,19 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
             onChange={handleInputChange}
             className="focus-input"
           />
+           <div className="custom-file-upload active">
+              <label htmlFor="file-upload" >
+                {fileName ? <p>Archivo seleccionado: {fileName}</p> : <p>Seleccionar archivo {fileName}</p>}
+
+              </label>
+              <input
+                id="file-upload"
+                type="file"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+             
+            </div>
           <div className="divider"></div>
           <div className="buttons">
             <button type="button" className="btn cancelar" onClick={onClose}>

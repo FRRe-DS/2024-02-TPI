@@ -79,7 +79,9 @@ export default function NuevoEventoPopup({
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];  
+    const fileContainer = document.querySelector(".custom-file-upload")
     if (file) {
+      fileContainer?.classList.add("activeFile")
       setFileName(file.name); 
     }
   };
@@ -257,7 +259,7 @@ export default function NuevoEventoPopup({
             required
           />
 
-        <div className="custom-file-upload">
+        <div className="custom-file-upload active">
               <label htmlFor="file-upload" >
                 {fileName ? <p>Archivo seleccionado: {fileName}</p> : <p>Seleccionar archivo {fileName}</p>}
 

@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table";
 import Acciones from "../components/acciones";
 import NuevoEscultorPopup from "../components/crearEscultor";
+import EditarEscultorPopup from "../components/editarEscultor";
 
 declare module "@tanstack/react-table" {
     interface FilterFns {
@@ -32,6 +33,7 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
 };
 
 type Escultor = {
+    id: number
     nombre: string;
     nacionalidad: string;
     correo: string;
@@ -39,7 +41,9 @@ type Escultor = {
     bibliografia: string;
 };
 
-const columnHelper = createColumnHelper<Escultor>();
+
+export default function Escultores() {
+    const columnHelper = createColumnHelper<Escultor>();
 
 const columns = [
     columnHelper.accessor("nombre", {
@@ -60,10 +64,25 @@ const columns = [
     columnHelper.display({
         id: "acciones",
         header: "Acciones",
-        cell: (props) => <Acciones row={props.row} tipo="escultor" />,    }),
+        cell: (props) => {
+          const openEditPopup = (id: number) => {
+            setEscultorEditId(id);
+            setIsPopupEditOpen(true);
+          };
+      
+          return (
+            <div className="acciones_container">
+              <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
+              
+                <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe8f4;</i></button>
+            </div>
+          );
+        },
+      }),
 ];
-
-export default function Escultores() {
+    const [escultorEditId, setEscultorEditId] = useState<number | null>(null);   
+    const [isPopupEditOpen, setIsPopupEditOpen] = useState(false);
+   
     const [data, _setData] = useState<Escultor[]>([]);
     const [globalFilter, setGlobalFilter] = useState("");
     const url = "http://localhost:8000/api";
@@ -88,6 +107,7 @@ export default function Escultores() {
       };
   
       type Escultor = {
+					id: number,
           nombre: string,
           apellido: string,
           correo: string,
@@ -100,7 +120,7 @@ export default function Escultores() {
           const response = await fetch(`${url}/escultores/`);
           if (!response.ok) {
               console.error(`Hubo un error al hacer el request a ${url}`);
-              console.table(response);
+             
               _setData([]);
               return;
           }
@@ -108,6 +128,7 @@ export default function Escultores() {
           const escultoresResponse: EscultorResponse[] = await response.json();
   
           const escultores: Escultor[] = escultoresResponse.map(escultorResp => ({
+            	id: escultorResp.id,
               nombre: escultorResp.nombre_completo,
               apellido: escultorResp.apellido,
               correo: escultorResp.correo,
@@ -116,7 +137,7 @@ export default function Escultores() {
               nacionalidad: escultorResp.pais?.nombre || "Desconocido",
           }));
   
-          console.table(escultores);
+        
           _setData(escultores);
       } catch (error) {
           console.error("Error al fetchear los escultores:", error);
@@ -144,7 +165,10 @@ export default function Escultores() {
     });
     const [isPopupOpen, setIsPopupOpen] = useState(false);
     const handleOpenPopup = () => setIsPopupOpen(true);
-    const handleClosePopup = () => setIsPopupOpen(false);
+    const handleClosePopup = () => {
+			setIsPopupOpen(false)
+			setIsPopupEditOpen(false)
+		};
 
     return (
         <div className="mainContainer">
@@ -157,6 +181,11 @@ export default function Escultores() {
                       isOpen={isPopupOpen} 
                       onClose={handleClosePopup} 
                       onNuevoEscultor={fetch_escultores}/>
+										<EditarEscultorPopup
+											isOpen={isPopupEditOpen && escultorEditId !== null}
+											onClose={handleClosePopup}
+											escultorId={escultorEditId} 
+											onUpdate={fetch_escultores}/>
                 </header>
                 <div className="section-container">
                     <div className="action-btn__container">

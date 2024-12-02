@@ -1,32 +1,82 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./crearEscultura.css";
 import "dayjs/locale/es";
-import Search from "../components/search";
 
 interface NuevaEsculturaPopupProps {
   isOpen: boolean;
   onClose: () => void;
+  onNuevoEscultura: () => void
 }
 
-export default function NuevaEsculturaPopup({ isOpen, onClose }: NuevaEsculturaPopupProps) {
+interface Escultor {
+  id: number;
+  nombre_completo: string;
+ 
+}
+
+export default function NuevaEsculturaPopup({ isOpen, onClose, onNuevoEscultura }: NuevaEsculturaPopupProps) {
   const [eventData, setEventData] = useState({
-    imagen: "",
     nombre: "",
-    escultor: "",
-    nacionalidad: "",
+    escultor: "",   
     descripcion: "",
   });
 
-  const [globalFilter, setGlobalFilter] = useState("");
+  const authToken = localStorage.getItem("token");
+  const url = "http://localhost:8000/api";
+  const [escultores, setEscultores] = useState<Escultor[]>([]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  // Cargar los escultores desde la API
+  useEffect(() => {
+    const fetchEscultores = async () => {
+      try {
+        const response = await fetch(`${url}/escultores/`); 
+        if (!response.ok) {
+          throw new Error("Error al obtener los escultores");
+        }
+        const data = await response.json();
+        setEscultores(data); // Asume que el backend devuelve una lista de escultores
+      } catch (error) {
+        console.error("Error al cargar escultores:", error);
+      }
+    };
+
+    if (isOpen) {
+      fetchEscultores();
+    }
+  }, [isOpen]);
+
+
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setEventData({ ...eventData, [name]: value });
   };
 
-  const handleSubmit = () => {
-    console.log("Datos del evento:");
-    onClose();
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append("escultor_id", eventData.escultor);
+    formData.append("nombre", eventData.nombre);
+    formData.append("descripcion", eventData.descripcion);
+  
+    try {
+      const response = await fetch(`${url}/esculturas/`, {
+        method: "POST",
+        headers: {       
+          Authorization: `Token ${authToken}`,           
+        },
+        body: formData,
+      });
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Escultura creada con éxito:", data);
+        onNuevoEscultura();
+        onClose();
+      } else {
+        console.error("Error al crear la escultura:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error al realizar la solicitud:", error);
+    }
   };
 
   if (!isOpen) return null;
@@ -35,48 +85,43 @@ export default function NuevaEsculturaPopup({ isOpen, onClose }: NuevaEsculturaP
     <>
       <div className="overlay" onClick={onClose}></div>
       <div className="popup">
-        <h3>Agregar Escultura</h3>
-        <form className="form">
-          <input
-            type="text"
-            name="imagen"
-            placeholder="Imagen"
-            value={eventData.imagen}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="nombre"
-            placeholder="Nombre"
-            value={eventData.nombre}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="escultor"
-            placeholder="Escultor"
-            value={eventData.escultor}
-            onChange={handleInputChange}
-          />
-          <input
-            type="text"
-            name="nacionalidad"
-            placeholder="Nacionalidad"
-            value={eventData.nacionalidad}
-            onChange={handleInputChange}
-          />
-          <textarea
-            name="descripcion"
-            placeholder="Descripción de la escultura"
-            value={eventData.descripcion}
-            onChange={handleInputChange}
-          />
-          <h3>Asignar escultor</h3>
-          <Search
-            text="Buscar por escultor o Nacionalidad"
-            value={globalFilter ?? ""}
-            onChange={(value) => setGlobalFilter(String(value))}
-          />
+      <h2>Agregar Escultura</h2>
+        <div className="divider"></div>
+
+        <form className="form">               
+          <div className="personaldates">
+            <h3>Información personal</h3>
+            <input
+              type="text"
+              name="nombre"
+              placeholder="Nombre"
+              value={eventData.nombre}
+              onChange={handleInputChange}
+              className="focus-input"
+            />
+           <select
+              name="escultor"
+              value={eventData.escultor}
+              onChange={handleInputChange}
+              className="focus-input"
+            >
+              <option value="">Seleccionar escultor</option>
+              {escultores.map((escultor) => (
+                <option key={escultor.id} value={escultor.id}>
+                  {escultor.nombre_completo}
+                </option>
+              ))}
+            </select> 
+               <textarea
+              name="descripcion"
+              placeholder="Descripción"
+              value={eventData.descripcion}
+              onChange={handleInputChange}
+              className="focus-input"
+          />             
+          </div>
+      
+          <div className="divider"></div>
           <div className="buttons">
             <button type="button" className="btn cancelar" onClick={onClose}>
               Cancelar
@@ -85,7 +130,7 @@ export default function NuevaEsculturaPopup({ isOpen, onClose }: NuevaEsculturaP
               Aceptar
             </button>
           </div>
-        </form>
+        </form>    
       </div>
     </>
   );
