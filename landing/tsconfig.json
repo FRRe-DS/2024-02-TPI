@@ -6,8 +6,15 @@
 "env.d.ts"
   ],
   "exclude": [
-    "dist"
+    "dist", "node_modules"
   ],
-  "compilerOptions": {
+ "compilerOptions": {
+    "types": [
+      "astro/client",
+      "vite-plugin-pwa/vanillajs",
+      "vite-plugin-pwa/info",
+      // "vite-plugin-pwa/assets/head"
+      "vite-pwa/assets-generator"
+    ]
   }
 }

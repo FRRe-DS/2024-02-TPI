@@ -12,6 +12,8 @@ export default defineConfig({
 		AstroPWA({
 			includeAssets: ["favicon.svg"],
 			registerType: "autoUpdate",
+			base: "/",
+			scope: "/",
 			manifest: {
 				short_name: "BienalTPI",
 				name: "Bienal del Chaco TPI",
@@ -25,8 +27,12 @@ export default defineConfig({
 				config: true,
 			},
 			workbox: {
-				navigateFallback: "/",
+				navigateFallback: "/error",
 				globPatterns: ["**/*.{css,js,html,svg,png,ico,txt}"],
+			},
+			devOptions: {
+				enabled: true,
+				/* other options */
 			},
 		}),
 	],
