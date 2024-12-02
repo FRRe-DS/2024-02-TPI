@@ -27,7 +27,7 @@ export default defineConfig({
 				config: true,
 			},
 			workbox: {
-				navigateFallback: "/error",
+				navigateFallback: "/",
 				globPatterns: ["**/*.{css,js,html,svg,png,ico,txt}"],
 			},
 			devOptions: {
