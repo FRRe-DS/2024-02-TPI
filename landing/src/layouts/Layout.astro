@@ -1,0 +1,117 @@
+---
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/reset.css";
+import "../styles/styles.css";
+
+import { pwaAssetsHead } from "virtual:pwa-assets/head";
+import { pwaInfo } from "virtual:pwa-info";
+---
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" />
+        {
+            pwaAssetsHead.themeColor && (
+                <meta
+                    name="theme-color"
+                    content={pwaAssetsHead.themeColor.content}
+                />
+            )
+        }
+        {pwaAssetsHead.links.map((link) => <link {...link} />)}
+        <script src="/src/pwa.ts"></script>
+        {pwaInfo && <Fragment set:html={pwaInfo.webManifest.linkTag} />}
+        <link
+            rel="icon"
+            href="/logoBienalWhite.png"
+            sizes="any"
+            type="image/png"
+        />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap"
+            rel="stylesheet"
+        />
+
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+        />
+
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons"
+            rel="stylesheet"
+        />
+        <link
+            href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+            rel="stylesheet"
+        />
+
+        <title>Bienal del Chaco</title>
+
+        <!-- <script type="module" src="/app.ts"></script> -->
+        <!-- <script type="module" src="/utils.ts"></script> -->
+        <!-- <script type="module" src="/js/index.ts"></script> -->
+    </head>
+    <body>
+        <Header />
+        <main>
+            <slot />
+        </main>
+        <Footer />
+    </body>
+</html>
+
+<script>
+    const paginas = ["inicio", "eventos", "certamen"];
+    const pathname = window.location.pathname.slice(1);
+    // console.log(pathname);
+
+    const indice = paginas.findIndex((el) => el.includes(pathname));
+
+    // console.log(`${paginas[indice]}-tag`);
+
+    const paginaActual = document.getElementById(
+        `${paginas[indice]}-tag`,
+    ) as HTMLElement;
+
+    if (paginaActual) {
+        paginaActual.classList.add("paginaActual");
+    }
+
+    const paginaActualFooter = document.getElementById(
+        `${paginas[indice]}-tag-footer`,
+    ) as HTMLElement;
+
+    if (paginaActualFooter) {
+        paginaActualFooter.classList.remove("material-icons-outlined");
+        paginaActualFooter.classList.add("material-icons");
+    }
+
+    // ----------------------------------------------------------------------------
+    const observer = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+            if (entry.isIntersecting) {
+                if (entry.target.classList.contains("hidden")) {
+                    entry.target.classList.add("show");
+                } else if (entry.target.classList.contains("hiddenImg")) {
+                    entry.target.classList.add("showImg");
+                }
+            }
+        }
+    });
+    const hiddenElements = document.querySelectorAll(".hidden");
+    const hiddenImgElements = document.querySelectorAll(".hiddenImg");
+    for (const element of hiddenElements) {
+        observer.observe(element);
+    }
+
+    for (const image of hiddenImgElements) {
+        observer.observe(image);
+    }
+</script>

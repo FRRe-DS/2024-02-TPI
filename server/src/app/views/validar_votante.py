@@ -29,8 +29,15 @@ def mandar_email(destinatario: str, escultor_id: str) -> HttpResponse:
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
 
+    if settings.DJANGO_ENV == "prod":
+        api_url = "https://tpi-desarrollo-e0f8gccuhvhpbkhj.eastus-01.azurewebsites.net"
+    else:
+        api_url = "http://localhost:8000"
+
+    logging.info(f"La API_URL = {api_url}")
     html_content = html_content.replace("{{correo}}", destinatario)
     html_content = html_content.replace("{{escultor_id}}", escultor_id)
+    html_content = html_content.replace("{{api_url}}", api_url)
 
     remitente = settings.DEFAULT_FROM_EMAIL
 

@@ -1,0 +1,20 @@
+---
+export interface EscultoresProps {
+    apiUrl: string;
+    checkPuntajeUrl: string;
+}
+
+const { apiUrl, checkPuntajeUrl } = Astro.props;
+---
+
+<div class="grid-escultores"></div>
+<span id="total-escultores"></span>
+
+<div class="popUp-container" style="display: none;">
+    <div class="popup">
+        <button class="cerrar-popup">×</button>
+        <h2 id="nombre-escultor"></h2>
+    </div>
+</div>
+
+<script src="../scripts/certamen.ts"></script>
