@@ -1739,6 +1739,11 @@ form {
 	font-size: clamp(2rem, 1.286rem + 1.905vw, 3rem);
 }
 
+.qr-section img{
+    width: 100%;
+    max-width: 500px;
+}
+
 @keyframes loading-wave-animation {
 	0% {
 		height: 10px;
