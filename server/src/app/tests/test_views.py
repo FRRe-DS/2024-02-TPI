@@ -1,6 +1,5 @@
 from io import BytesIO
 from django.test import SimpleTestCase
-import time
 import logging
 from django.urls import reverse
 from rest_framework import status
@@ -153,14 +152,13 @@ class QRAPITest(BaseAPITest):
 
     def test_qr_generation_uniqueness(self):
         response = self.client.get(
-            reverse("generar_qr"), {"escultor_id": self.escultor.id}
+            reverse("generar_qr"), {"id": self.escultor.id}
         )
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "image/png")
         img1 = Image.open(BytesIO(response.content))
         self.assertEqual(img1.format, "PNG")
 
-        time.sleep(1)
         response = self.client.get(
             reverse("generar_qr"), {"escultor_id": self.escultor.id}
         )
