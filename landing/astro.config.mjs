@@ -6,6 +6,10 @@ import netlify from "@astrojs/netlify";
 
 import AstroPWA from "@vite-pwa/astro";
 
+import compressor from "astro-compressor";
+
+import purgecss from "astro-purgecss";
+
 // https://astro.build/config
 export default defineConfig({
 	integrations: [
@@ -54,6 +58,8 @@ export default defineConfig({
 				directoryAndTrailingSlashHandler: true,
 			},
 		}),
+		purgecss(),
+		compressor(),
 	],
 
 	experimental: {
@@ -73,3 +79,4 @@ export default defineConfig({
 	output: "hybrid",
 	adapter: netlify(),
 });
+
