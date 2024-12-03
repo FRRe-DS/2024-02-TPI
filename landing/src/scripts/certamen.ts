@@ -160,7 +160,6 @@ async function loadEscultores(url: string, evento_id: number) {
 				const NyA = escultor.nombre_completo;
 
 				article.innerHTML = `
-						
 						<img
 								src="${foto}"
 								loading="lazy"
@@ -168,7 +167,7 @@ async function loadEscultores(url: string, evento_id: number) {
 								class="escultor-img" 
 onerror="this.src='https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg'; this.onerror=null;"/>
 						<div class="wrap-card">
-							 <a href="detalle_escultor?id=${escultor.id}">Ver más</a>
+							 <a href="/detalle_escultor?id=${escultor.id}">Ver más</a>
 							<div class="nombre-origen" id="nombreOrigen-${escultor.id}">
 									<div class="space">
 									<h3 id="nombre-escultor" >${NyA}</h3>
