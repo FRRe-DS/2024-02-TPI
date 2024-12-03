@@ -28,7 +28,7 @@ export default function Search({
 
   return (
     <div className="input-search__container">
-      <span className="material-symbols-outlined">search</span>
+     
       <input
         className="input-search"
         type="text"
@@ -36,6 +36,7 @@ export default function Search({
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
+       <span className="material-symbols-outlined">search</span>
     </div>
   );
 }

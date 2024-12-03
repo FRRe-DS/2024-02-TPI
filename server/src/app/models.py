@@ -75,6 +75,16 @@ class Escultor(models.Model):
             self.foto = convertir_a_webp(self.foto)
         super(Escultor, self).save(*args, **kwargs)
 
+    def update(self, instance, validated_data):
+        foto = validated_data.pop("foto", None)
+        if foto:
+            instance.foto = foto
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
+
     class Meta:
         verbose_name = "Escultor"
         verbose_name_plural = "Escultores"
@@ -231,6 +241,16 @@ class Evento(models.Model):
         if self.foto:
             self.foto = convertir_a_webp(self.foto)
         super(Evento, self).save(*args, **kwargs)
+
+    def update(self, instance, validated_data):
+        foto = validated_data.pop("foto", None)
+        if foto:
+            instance.foto = foto
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance
 
     class Meta:
         verbose_name = "Evento"

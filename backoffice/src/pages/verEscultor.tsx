@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
 import { rankItem } from "@tanstack/match-sorter-utils";
@@ -14,6 +13,7 @@ import {
 
 import NuevaEsculturaPopup from "../components/crearEscultura";
 import EditarEsculturaPopup from "../components/editarEscultura";
+import { useParams } from "react-router-dom";
 
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
@@ -26,30 +26,13 @@ const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
   return itemRank.passed;
 };
 
-type EsculturaAPI = {
-  id: number;
-  escultor_id: number;
-  nombre: string;
-  descripcion: string;
-  fecha_creacion: string;
-};
 
-type Escultor = {
-  id: number;
-  nombre_completo: string;
-  pais_id: number;
-};
-
-type Pais = {
-  id: number;
-  nombre: string;
-};
 
 type Escultura = {
   id: number;
   nombre: string;
-  escultor: string;
-  nacionalidad: string;
+  escultor_id: string;
+  fecha_creacion: string;
   descripcion: string;
 };
 
@@ -72,16 +55,6 @@ export default function Esculturas() {
     cell: (info) => info.renderValue(),
     footer: (info) => info.column.id,
   }),
-  columnHelper.accessor("escultor", {
-    header: () => "Escultor",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("nacionalidad", {
-    header: () => "Nacionalidad",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
   columnHelper.accessor("descripcion", {
     header: () => "Descripción",
     cell: (info) => (
@@ -98,6 +71,7 @@ export default function Esculturas() {
         setIsPopupEditOpen(true);
       };
   
+  
       return (
         <div className="acciones_container">
           <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
@@ -109,7 +83,7 @@ export default function Esculturas() {
 ];
 
 
-
+  const { id } = useParams();
   const [data, setData] = useState<Escultura[]>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const url = "http://localhost:8000/api";
@@ -123,52 +97,88 @@ export default function Esculturas() {
     setIsPopupEditOpen(false)
   };
 
+  type EscultorResponse = {
+    id: number;
+    nombre: string;
+    apellido: string;
+    nombre_completo: string;
+    correo: string;
+    foto: string;
+    bibliografia: string;
+    fecha_nacimiento: string;
+    esculturas: object[];
+    eventos: object[];
+    pais: {
+        id: number;
+        iso: string;
+        nombre: string;
+    };
+};
 
-  const [esculturaEditId, setEsculturaEditId] = useState<number | null>(null); // ID para la escultura a editar
+type Escultor = {
+    id: number;
+    nombre: string;
+    apellido: string;
+    correo: string;
+    foto: string;
+    bibliografia: string;
+    nacionalidad: string;
+};
+const [escultor, setEscultor] = useState<Escultor>();
+  
+  async function fetchEscultor() {
+  
+    try {
+        const response = await fetch(`${url}/escultores/${id}/`); // Cambiado para obtener un solo escultor por su ID
+        if (!response.ok) {
+            throw new Error("Error al obtener el escultor");
+        }
+
+        const escultorResp: EscultorResponse = await response.json();
+
+        const escultorData: Escultor = {
+            id: escultorResp.id,
+            nombre: escultorResp.nombre_completo,
+            apellido: escultorResp.apellido,
+            correo: escultorResp.correo,
+            foto: escultorResp.foto,
+            bibliografia: escultorResp.bibliografia,
+            nacionalidad: escultorResp.pais?.nombre || "Desconocido",
+        };
+
+        setEscultor(escultorData);
+    } catch (error) {
+        console.error("Error al obtener el escultor:", error);
+     
+    }
+}
+
+function copiarQr(id:string | undefined) {
+
+  const url = `https://elrincondelinge.org/qr/?id=${id}`;
+
+  navigator.clipboard.writeText(url)
+    .then(() => {
+      alert("¡URL copiada al portapapeles!");
+    })
+    .catch((err) => {
+      console.error("Error al copiar la URL al portapapeles", err);
+    });
+}
+
+
+  const [esculturaEditId, setEsculturaEditId] = useState<number | null>(null); 
 
   async function fetchEsculturas() {
     try {
-      const esculturasResponse = await fetch(`${url}/esculturas/`);
-      const escultoresResponse = await fetch(`${url}/escultores/`);
-      const paisesResponse = await fetch(`${url}/paises/`);
-
-      if (
-        esculturasResponse.status !== 200 ||
-        escultoresResponse.status !== 200 ||
-        paisesResponse.status !== 200
-      ) {
+      const esculturasResponse = await fetch(`${url}/esculturas/?escultor_id=${id}`);
+      if (esculturasResponse.status !== 200) {
         console.error("Error al obtener datos desde el backend");
         return;
       }
-
-      const esculturas: EsculturaAPI[] = await esculturasResponse.json();
-      const escultores: Escultor[] = await escultoresResponse.json();
-      const paises: Pais[] = await paisesResponse.json();
-
-      const escultorMap = new Map(
-        escultores.map((escultor) => [
-          escultor.id,
-          { nombre: `${escultor.nombre_completo}`, pais_id: escultor.pais_id },
-        ])
-      );
-      const paisMap = new Map(paises.map((pais) => [pais.id, pais.nombre]));
-
-      const transformedData: Escultura[] = esculturas.map((escultura) => {
-        const escultor = escultorMap.get(escultura.escultor_id);
-        const nacionalidad = escultor
-          ? paisMap.get(escultor.pais_id) || "Nacionalidad desconocida"
-          : "Desconocido";
-      
-        return {
-          id: escultura.id,
-          nombre: escultura.nombre,
-          escultor: escultor ? escultor.nombre : "Desconocido",
-          nacionalidad: nacionalidad,
-          descripcion: escultura.descripcion,
-        };
-      });
-
-      setData(transformedData);
+      const data = await esculturasResponse.json();
+  
+      setData(data);
     } catch (error) {
       console.error("Error al procesar los datos", error);
     }
@@ -176,6 +186,7 @@ export default function Esculturas() {
 
   useEffect(() => {
     fetchEsculturas();
+    fetchEscultor()
   }, []);
 
   const table = useReactTable({
@@ -195,11 +206,15 @@ export default function Esculturas() {
 
   return (
     <div className="mainContainer">
-      <Menu paginaActual={"Esculturas"} />
+      <Menu paginaActual={"Escultores"} />
       <section className="mainSection">
         <header className="header-section">
-          <h1 className="header-title">Esculturas</h1>
-          <button className="btn-principal" onClick={handleOpenPopup}>Nueva escultura</button>
+          <h1 className="header-title">Perfil del escultor</h1>
+          <div className="buttons"> 
+            <button className="btn cancelar" onClick={() => copiarQr(id)}>Copiar qr</button>
+            <button className="btn-principal" onClick={handleOpenPopup}>Agregar escultura</button>
+          </div>
+         
           <NuevaEsculturaPopup 
             isOpen={isPopupOpen} 
             onClose={handleClosePopup} 
@@ -211,14 +226,22 @@ export default function Esculturas() {
             onUpdate={fetchEsculturas}/>
         </header>
         <div className="section-container">
-          <div className="action-btn__container">
-            <Search
-              text="Buscar"
-              value={globalFilter ?? ""}
-              onChange={(value) => setGlobalFilter(String(value))}
-            />
+          <div className="contenedor-info-escultor">
+            <div className="center">
+
+            <div className="info">
+              <div className="group"><h2>{escultor?.nombre}</h2>
+              <p>{escultor?.nacionalidad}</p></div>
+              <div className="group"><h3>Bibliografía</h3>
+              <p>{escultor?.bibliografia}</p></div>
+
+            </div>
+            </div>
            
+            <img src={escultor?.foto} alt={escultor?.nombre} title={escultor?.nombre}/>
           </div>
+
+          <h2 className="header-title">Obras realizadas</h2>
           <div className="table-container">
             <table className="event-table">
               <thead>

@@ -1,5 +1,4 @@
-import { useState } from "react";
-import Btn from "../components/btn";
+import { useEffect, useState } from "react";
 import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
@@ -12,11 +11,12 @@ import {
   FilterFn,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import Acciones from "../components/acciones";
-import DateFilter from "../components/dateFilter";
+
+import NuevoEventoPopup from "../components/crearEvento";
+import EditarEventoPopup from "../components/editarEvento";
+
 
 declare module "@tanstack/react-table" {
-  //add fuzzy filter to the filterFns
   interface FilterFns {
     fuzzy: FilterFn<unknown>;
   }
@@ -25,18 +25,18 @@ declare module "@tanstack/react-table" {
   }
 }
 
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  // Rank the item
-  const itemRank = rankItem(row.getValue(columnId), value);
-
-  // Store the itemRank info
-  addMeta({ itemRank });
-
-  // Return if the item should be filtered in/out
-  return itemRank.passed;
+type EventoAPI = {
+  id: number;
+  nombre: string;
+  fecha_inicio: string;
+  fecha_fin: string;
+  descripcion: string;
+  lugar_id: number;
+  tematica_id: number;
 };
 
 type Evento = {
+  id: number;
   nombre: string;
   lugar: string;
   tematica: string;
@@ -45,26 +45,47 @@ type Evento = {
   descripcion: string;
 };
 
-const defaultData: Evento[] = [
-  {
-    nombre: "Bienal 2025",
-    lugar: "Domo del centenario",
-    tematica: "Madera",
-    inicio: "02/10/2024",
-    fin: "02/10/2024",
-    descripcion: "Binela 2025 con temática de madera",
-  },
-  {
-    nombre: "Bienal 2026",
-    lugar: "Parque 2 de febrero",
-    tematica: "Hierro",
-    inicio: "02/10/2025",
-    fin: "02/10/2025",
-    descripcion: "Binela 2026 con temática de hierro",
-  },
-];
+type Lugar = {
+  id: number;
+  nombre: string;
+  descripcion: string;
+};
 
-const columnHelper = createColumnHelper<Evento>();
+type Tematica = {
+  id: number;
+  nombre: string;
+  descripcion: string;
+};
+
+function limitarPalabras(texto: string, max: number): string {
+  const palabra = texto.split(" ");
+  if (palabra.length > max) {
+    return palabra.slice(0, max).join(" ") + "...";
+  }
+  return texto;
+}
+
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  if (columnId !== "nombre" && columnId !== "lugar" && columnId !== "tematica" && columnId !== "inicio") {
+    return false;
+  }
+  const itemRank = rankItem(row.getValue(columnId), value);
+  addMeta({ itemRank });
+  return itemRank.passed;
+};
+
+export default function Eventos() {
+  const [data, _setData] = useState<Evento[]>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const url = "http://localhost:8000/api";
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const handleOpenPopup = () => setIsPopupOpen(true);
+  const handleClosePopup = () => {
+    setIsPopupOpen(false)
+    setIsPopupEditOpen(false)
+  };
+
+  const columnHelper = createColumnHelper<Evento>();
 
 const columns = [
   columnHelper.accessor("nombre", {
@@ -93,33 +114,95 @@ const columns = [
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor("descripcion", {
-    header: () => "Decripción",
-    cell: (info) => info.renderValue(),
+    header: () => "Descripción",
+    cell: (info) => (
+      <span title={info.getValue()}>{limitarPalabras(info.getValue(), 8)}</span>
+    ),
     footer: (info) => info.column.id,
   }),
   columnHelper.display({
     id: "acciones",
     header: "Acciones",
-    cell: (props) => <Acciones row={props.row} />,
+    cell: (props) => {
+      const openEditPopup = (id: number) => {
+        setEventoEditId(id);
+        setIsPopupEditOpen(true);
+      };
+  
+      return (
+        <div className="acciones_container">
+          <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
+        
+        </div>
+      );
+    },
   }),
 ];
 
-export default function Eventos() {
-  const [data, _setData] = useState(() => [...defaultData]);
-  const [globalFilter, setGlobalFilter] = useState("");
+const [isPopupEditOpen, setIsPopupEditOpen] = useState(false);
+const [eventoEditId, setEventoEditId] = useState<number | null>(null); 
+
+  async function fetchEventos() {
+    try {
+      const eventosResponse = await fetch(`${url}/eventos/`);
+      const lugaresResponse = await fetch(`${url}/lugar/`);
+      const tematicasResponse = await fetch(`${url}/tematica/`);
+
+      if (
+        eventosResponse.status !== 200 ||
+        lugaresResponse.status !== 200 ||
+        tematicasResponse.status !== 200
+      ) {
+        console.error("Error al obtener datos desde el backend");
+        return;
+      }
+
+      const eventos: EventoAPI[] = await eventosResponse.json();
+      const lugares: Lugar[] = await lugaresResponse.json();
+      const tematicas: Tematica[] = await tematicasResponse.json();
+
+      const lugarMap = new Map(lugares.map((lugar) => [lugar.id, lugar.nombre]));
+      const tematicaMap = new Map(
+        tematicas.map((tematica) => [tematica.id, tematica.nombre])
+      );
+
+      const transformedData: Evento[] = eventos.map((evento) => ({
+        id: evento.id,
+        nombre: evento.nombre,
+        lugar: lugarMap.get(evento.lugar_id) || "Lugar no encontrado",
+        tematica: tematicaMap.get(evento.tematica_id) || "Temática no encontrada",
+        inicio: evento.fecha_inicio,
+        fin: evento.fecha_fin,
+        descripcion: evento.descripcion,
+      }));
+
+      const sortedData = transformedData.sort((a, b) => {
+        return new Date(b.inicio).getTime() - new Date(a.inicio).getTime();
+      });
+  
+      _setData(sortedData); 
+  
+    } catch (error) {
+      console.error("Error al procesar los datos", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchEventos();
+  }, []);
 
   const table = useReactTable({
     data,
     columns,
     filterFns: {
-      fuzzy: fuzzyFilter, //define as a filter function that can be used in column definitions
+      fuzzy: fuzzyFilter,
     },
     state: {
       globalFilter,
     },
     onGlobalFilterChange: setGlobalFilter,
-    globalFilterFn: "fuzzy", //apply fuzzy filter to the global filter (most common use case for fuzzy filter)
-    getFilteredRowModel: getFilteredRowModel(), //client side filtering
+    globalFilterFn: "fuzzy",
+    getFilteredRowModel: getFilteredRowModel(),
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -129,16 +212,25 @@ export default function Eventos() {
       <section className="mainSection">
         <header className="header-section">
           <h1 className="header-title">Eventos</h1>
-          <Btn text="Nuevo evento" />
+          <button className="btn-principal" onClick={handleOpenPopup}>Nuevo evento</button>
+          <NuevoEventoPopup 
+            isOpen={isPopupOpen} 
+            onClose={handleClosePopup} 
+            onNuevoEvento={fetchEventos}/>
+          <EditarEventoPopup
+            isOpen={isPopupEditOpen && eventoEditId !== null}
+            onClose={handleClosePopup}
+            eventoId={eventoEditId} 
+            onUpdate={fetchEventos}/>
         </header>
         <div className="section-container">
           <div className="action-btn__container">
             <Search
-              text="Buscar por evento, lugar o temática"
+              text="Buscar"
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
             />
-            <DateFilter text="Fecha" />
+           
           </div>
           <div className="table-container">
             <table className="event-table">
@@ -172,8 +264,7 @@ export default function Eventos() {
                   </tr>
                 ))}
               </tbody>
-
-              <tfoot>
+              {/* <tfoot>
                 <tr>
                   <td colSpan={8} className="pagination">
                     <a href="#" className="page-link">
@@ -198,7 +289,7 @@ export default function Eventos() {
                     </a>
                   </td>
                 </tr>
-              </tfoot>
+              </tfoot> */}
             </table>
           </div>
         </div>
