@@ -252,7 +252,7 @@ onerror="this.src='https://storage.cloud.google.com/bienaldelchaco/img/media/fon
 						Voto(email, id);
 					} else {
 						// Si no hay email en localStorage, redirigimos para validación
-						window.location.href = `./validar.html?id=${id}`;
+						window.location.href = `/validar?id=${id}`;
 					}
 				});
 			}
