@@ -8,7 +8,7 @@ const params = getUrlParams();
 const shareButton = document.querySelector(
 	".share-button",
 ) as HTMLButtonElement;
-const urlToShare = `https://erincondelinge.org/detalle_evento.html?id=${params.id}`;
+const urlToShare = `https://elrincondelinge.org/detalle_evento.html?id=${params.id}`;
 const messageToShare = "¡Miren ese increíble evento de la Bienal del Chaco!";
 
 async function loadEvento(URL: string, id: string) {

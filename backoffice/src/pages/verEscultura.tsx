@@ -1,10 +1,10 @@
-import React from "react";
+
 import Btn from "../components/btn";
 import Menu from "./menu/Menu";
 import "./pages.css";
 
 export default function VerEscultura() {
-  // Datos simulados (pueden reemplazarse con datos de un fetch API)
+
   const escultura = {
     nombre: "El planeta de los pollos",
     descripcion: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. 
@@ -16,10 +16,6 @@ export default function VerEscultura() {
     },
     fechaFinalizacion: "xx/xx/xxxx",
     imagenes: Array(12).fill(null),
-  };
-
-  const handleAgregarImagen = () => {
-    alert("Agregar nueva imagen");
   };
 
   return (

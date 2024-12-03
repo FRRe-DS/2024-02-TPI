@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
@@ -33,7 +32,6 @@ type EsculturaAPI = {
   nombre: string;
   descripcion: string;
   fecha_creacion: string;
-  qr: string | null;
 };
 
 type Escultor = {
@@ -62,7 +60,6 @@ function limitarPalabras(texto: string, max: number): string {
   }
   return texto;
 }
-
 
 
 
@@ -104,7 +101,7 @@ export default function Esculturas() {
       return (
         <div className="acciones_container">
           <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
-          <button onClick={() => console.log("Acción ver mas")}><button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe8f4;</i></button></button>
+          <button onClick={() => console.log("")}><i className="material-symbols-outlined">&#xe8f4;</i></button>
         </div>
       );
     },

@@ -98,6 +98,7 @@ export default function EditarEsculturaPopup({
           onChange={(e) => setDescripcion(e.target.value)} 
           className="focus-input texarea-bigger"
         />
+          <div className="divider"></div>
         <div className="buttons">
           <button type="button" onClick={onClose} className="btn cancelar">Cerrar</button>
           <button type="submit" className="btn aceptar">Actualizar</button>
