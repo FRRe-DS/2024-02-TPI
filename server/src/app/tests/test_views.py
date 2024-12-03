@@ -1,5 +1,6 @@
 import hashlib
 from io import BytesIO
+import time
 from django.test import SimpleTestCase
 import logging
 from django.urls import reverse
@@ -160,6 +161,7 @@ class QRAPITest(BaseAPITest):
         img1 = Image.open(BytesIO(response.content))
         self.assertEqual(img1.format, "PNG")
 
+        time.sleep(0.1)
         response = self.client.get(
             reverse("generar_qr"), {"escultor_id": self.escultor.id}
         )
@@ -170,7 +172,9 @@ class QRAPITest(BaseAPITest):
 
         hash1 = get_image_hash(img1)
         hash2 = get_image_hash(img2)
-        self.assertNotEqual(hash1, hash2, "QR codes should be unique but they are identical.")
+        self.assertNotEqual(
+            hash1, hash2, "QR codes should be unique but they are identical."
+        )
 
     def test_qr_generation_invalid_id_400_BAD_REQUEST(self):
         response = self.client.get(reverse("generar_qr"), {"escultor_id": -2})
@@ -187,11 +191,13 @@ class QRAPITest(BaseAPITest):
         self.assertEqual(response.status_code, 400)
         self.assertIn("error", response.data)
 
+
 def get_image_hash(img):
     """Compute the hash of the binary content of an image."""
     with BytesIO() as output:
-        img.save(output, format='PNG')
+        img.save(output, format="PNG")
         return hashlib.md5(output.getvalue()).hexdigest()
+
 
 class VotanteAPITest(BaseAPITest):
     def setUp(self):
