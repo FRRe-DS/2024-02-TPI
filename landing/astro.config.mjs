@@ -36,6 +36,7 @@ export default defineConfig({
 					/^\/eventos/,
 					/^\/detalle_evento/,
 					/^\/detalle_escultor/,
+					/^\/qr/,
 				],
 				runtimeCaching: [
 					{
