@@ -1,6 +1,7 @@
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import { loadHTML } from "../app";
+import { validar_qr } from "./votar";
 
 export function getUrlParams(): Record<string, string> {
 	const params = new URLSearchParams(window.location.search);
@@ -10,6 +11,8 @@ export function getUrlParams(): Record<string, string> {
 	}
 	return searchConfig;
 }
+
+
 
 export async function getNombreEscultor(id: string) {
 	const url = "http://localhost:8000/api/escultores/";
@@ -231,5 +234,10 @@ if (volverAValidar) {
 if (window.location.pathname.includes("validar.html")) {
 	loadHTML("header.html", "header", "");
 	loadHTML("footer.html", "footer", "certamen");
+	
+	if (params.ulid){
+		validar_qr(params)
+	}
+	
 	getNombreEscultor(params.id);
 }

@@ -100,12 +100,11 @@ class generarQR(APIView):
 
         logging.info(f"Generando QR para {escultor_id}...")
 
-        id = ulid.from_timestamp(datetime.datetime.now())
+        qrulid = ulid.from_timestamp(datetime.datetime.now())
 
         # nombre_escultor = f"{escultor.nombre} {escultor.apellido}"
         # encoded_nombre_escultor = urllib.parse.quote(nombre_escultor)
-        # query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={encoded_nombre_escultor}"
-        query_params = f"id={escultor_id}"
+        query_params = f"id={escultor_id}&ulid={qrulid}"
 
         if settings.DJANGO_ENV == "prod":
             voto_url = f"https://elrincondelinge.org/validar.html?{query_params}"

@@ -18,7 +18,7 @@ function extractTimeStampFromULID(input: string): Date {
 
 const TIME_LIMIT_MINS = 1.0;
 
-function validar_qr(params: Record<string, string>) {
+export function validar_qr(params: Record<string, string>) {
 	const ulid_id = params.ulid;
 
 	if (!ulid_id) {
@@ -34,7 +34,7 @@ function validar_qr(params: Record<string, string>) {
 		console.log("Es válido!");
 		console.log(spanned);
 	} else {
-		// TODO: Hacer que se muestre una pantalla de error como tengo en votar.html cuando ya se voto a un escultor
+		
 		console.error(`Es inválido!, el qr tiene un timestamp de ${timestamp}`);
 		Toastify({
 			text: "El qr ha caducado!",
@@ -158,7 +158,9 @@ if (window.location.pathname.includes("votar.html")) {
 	loadHTML("header.html", "header", "");
 	loadHTML("footer.html", "footer", "");
 	const params = getUrlParams();
-
-	validar_qr(params);
+	if (params.ulid){
+		validar_qr(params);
+	}
+	
 	getNombreEscultor(params.escultor_id);
 }
