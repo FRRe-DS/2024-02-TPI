@@ -1,5 +1,6 @@
 from io import BytesIO
 from django.test import SimpleTestCase
+import time
 import logging
 from django.urls import reverse
 from rest_framework import status
@@ -159,6 +160,7 @@ class QRAPITest(BaseAPITest):
         img1 = Image.open(BytesIO(response.content))
         self.assertEqual(img1.format, "PNG")
 
+        time.sleep(1)
         response = self.client.get(
             reverse("generar_qr"), {"escultor_id": self.escultor.id}
         )
@@ -166,7 +168,6 @@ class QRAPITest(BaseAPITest):
         self.assertEqual(response["Content-Type"], "image/png")
         img2 = Image.open(BytesIO(response.content))
         self.assertEqual(img2.format, "PNG")
-
         self.assertNotEqual(img1, img2)
 
     def test_qr_generation_invalid_id_400_BAD_REQUEST(self):
