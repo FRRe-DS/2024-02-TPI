@@ -103,6 +103,16 @@ def validar_votante(request: Request) -> HttpResponse:
 def crear_votante(request: Request) -> HttpResponse:
     correo = request.GET.get("correo")
     escultor_id = request.GET.get("escultor_id")
+    api_url = (
+        "https://tpi-desarrollo-e0f8gccuhvhpbkhj.eastus-01.azurewebsites.net"
+        if settings.DJANGO_ENV == "prod"
+        else "http://localhost:8000"
+    )
+    client_url = (
+        "https://elrincondelinge.org"
+        if settings.DJANGO_ENV == "prod"
+        else "http://localhost:5173"
+    )
 
     if not correo or not escultor_id:
         return JsonResponse(
@@ -111,7 +121,8 @@ def crear_votante(request: Request) -> HttpResponse:
         )
 
     try:
-        url = "http://localhost:8000/api/votantes/"
+        url = f"{api_url}/api/votantes/"
+
         data = {
             "correo": correo,
         }
@@ -119,26 +130,11 @@ def crear_votante(request: Request) -> HttpResponse:
         response = requests.post(url, json=data)
 
         if response.status_code == 201:
-            if settings.DJANGO_ENV == "prod":
-                return redirect(
-                    f"https://elrincondelinge.org/votar.html?correo={correo}&escultor_id={escultor_id}"
-                )
-            else:
-                return redirect(
-                    f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
-                )
+            return redirect(
+                f"{client_url}/votar.html?correo={correo}&escultor_id={escultor_id}"
+            )
         else:
-            if settings.DJANGO_ENV == "prod":
-                return redirect(
-                    f"https://elrincondelinge.org/error.html?&escultor_id={escultor_id}"
-                )
-            else:
-                return redirect(
-                    f"http://localhost:5173/error.html?&escultor_id={escultor_id}"
-                )
+            return redirect(f"{client_url}/error?&escultor_id={escultor_id}")
 
     except Exception:
-        if settings.DJANGO_ENV == "prod":
-            return redirect("https://elrincondelinge.org/certamen.html")
-        else:
-            return redirect("http://localhost:5173/certamen.html")
+        return redirect(f"{client_url}/certamen")
