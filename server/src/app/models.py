@@ -76,7 +76,7 @@ class Escultor(models.Model):
         super(Escultor, self).save(*args, **kwargs)
 
     def update(self, instance, validated_data):
-        foto = validated_data.pop('foto', None)
+        foto = validated_data.pop("foto", None)
         if foto:
             instance.foto = foto
         for attr, value in validated_data.items():
@@ -243,7 +243,7 @@ class Evento(models.Model):
         super(Evento, self).save(*args, **kwargs)
 
     def update(self, instance, validated_data):
-        foto = validated_data.pop('foto', None)
+        foto = validated_data.pop("foto", None)
         if foto:
             instance.foto = foto
         for attr, value in validated_data.items():
