@@ -1,4 +1,4 @@
-import { getNombreEscultor } from "./validar";
+import { getNombreEscultor, validar_qr } from "./validar";
 import Toastify from "toastify-js";
 import "toastify-js/src/toastify.css";
 import { getUrlParams } from "./utils";
@@ -109,3 +109,6 @@ if (form) {
 const params = getUrlParams();
 
 getNombreEscultor(params.escultor_id);
+if (params.key){
+	validar_qr(params);
+} 
