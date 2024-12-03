@@ -12,7 +12,6 @@ interface NuevaEsculturaPopupProps {
 interface Escultor {
   id: number;
   nombre_completo: string;
- 
 }
 
 export default function NuevaEsculturaPopup({ isOpen, onClose, onNuevoEscultura }: NuevaEsculturaPopupProps) {
@@ -28,7 +27,7 @@ export default function NuevaEsculturaPopup({ isOpen, onClose, onNuevoEscultura 
   const { id } = useParams();
   const [escultorSeleccionado, setEscultorSeleccionado] = useState<string | null>(null);
 
-useEffect(() => {
+
   const fetchEscultores = async () => {
     try {
       if (id) {
@@ -53,6 +52,8 @@ useEffect(() => {
     }
   };
 
+useEffect(() => {
+ 
   if (isOpen) {
     fetchEscultores();
   }

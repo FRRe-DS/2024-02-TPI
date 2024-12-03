@@ -24,6 +24,10 @@
   align-items: center;
 }
 
+.select-certamen{
+  width: 320px;
+}
+
 .header-title {
   font-size:clamp(1.125rem, 0.5rem + 1.667vw, 2rem);
 

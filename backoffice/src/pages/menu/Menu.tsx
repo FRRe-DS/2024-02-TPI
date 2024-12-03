@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export default function Menu({
   paginaActual,
 }: {
-  paginaActual: "Eventos" | "Escultores" | "Esculturas";
+  paginaActual: "Eventos" | "Escultores" | "Esculturas" | "Certamen";
 }) {
   const navigate = useNavigate(); 
 
@@ -79,6 +79,18 @@ export default function Menu({
                 <p>Esculturas</p>
               </Link>
             </li>
+            <li>
+              <Link
+                to={"/Certamen"}
+                className={
+                  paginaActual === "Certamen"
+                    ? "paginaActual"
+                    : "navigation__link"
+                }>
+                <i className="material-symbols-outlined">&#xe71a;</i>
+                <p>Certamen</p>
+              </Link>
+            </li>
            
           </ul>
           : <ul className="navigation__menu"> 
@@ -90,7 +102,7 @@ export default function Menu({
                   ? "paginaActualSm"
                   : "btnSmScreen"
               }>
-              <i className="material-symbols-outlined">&#xebcc;</i>
+              <i className="material-symbols-outlined">&#xe71a;</i>
              
               <p>Eventos</p>
             </Link>
@@ -119,6 +131,18 @@ export default function Menu({
               <p>Esculturas</p>
             </Link>
           </li>
+          <li>
+              <Link
+                to={"/Certamen"}
+                className={
+                  paginaActual === "Certamen"
+                    ? "paginaActualSm"
+                    : "btnSmScreen"
+                }>
+                <i className="material-symbols-outlined">&#xe71a;</i>
+                <p>Certamen</p>
+              </Link>
+            </li>
           <li>
             <button className="btnSmScreen" onClick={handleLogout}>
               <i className="material-symbols-outlined">&#xe9ba;</i>

@@ -123,3 +123,7 @@ textarea {
   color: var(--text-400);
 }
 
+.center{
+  display: grid;
+  place-items: center;
+}

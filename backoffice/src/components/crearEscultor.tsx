@@ -56,7 +56,7 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
     // Agregar archivo si existe
     const fileInput = document.getElementById("file-upload") as HTMLInputElement;
     if (fileInput?.files?.[0]) {
-      formData.append("archivo", fileInput.files[0]);
+      formData.append("foto", fileInput.files[0]);
     }
   
     try {
@@ -73,7 +73,6 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
         throw new Error("Error al guardar el escultor");
       }
   
-      // Llama al callback de éxito y cierra el popup
       onNuevoEscultor();
       onClose();
     } catch (error) {
