@@ -216,7 +216,7 @@ const volverAValidar = document.getElementById(
 const params = getUrlParams();
 
 if (volverAValidar) {
-	volverAValidar.href = `validar?id=${params.id}`;
+	volverAValidar.href = `/validar?id=${params.id}`;
 }
 
 if (window.location.pathname.includes("validar")) {
