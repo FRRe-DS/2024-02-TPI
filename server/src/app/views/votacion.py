@@ -104,7 +104,7 @@ class generarQR(APIView):
 
         nombre_escultor = f"{escultor.nombre} {escultor.apellido}"
         encoded_nombre_escultor = urllib.parse.quote(nombre_escultor)
-        query_params = f"escultor_id={escultor_id}&id={id}&nombre-escultor={encoded_nombre_escultor}"
+        query_params = f"id={escultor_id}&key={id}&nombre-escultor={encoded_nombre_escultor}"
 
         if settings.DJANGO_ENV == "prod":
             voto_url = f"https://elrincondelinge.org/validar.html?{query_params}"

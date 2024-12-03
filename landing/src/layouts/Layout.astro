@@ -70,11 +70,11 @@ import { pwaInfo } from "virtual:pwa-info";
 <script>
     const paginas = ["inicio", "eventos", "certamen"];
     const pathname = window.location.pathname.slice(1);
-    console.log(pathname);
+    // console.log(pathname);
 
     const indice = paginas.findIndex((el) => el.includes(pathname));
 
-    console.log(`${paginas[indice]}-tag`);
+    // console.log(`${paginas[indice]}-tag`);
 
     const paginaActual = document.getElementById(
         `${paginas[indice]}-tag`,
