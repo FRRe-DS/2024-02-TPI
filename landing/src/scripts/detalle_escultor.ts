@@ -12,7 +12,7 @@ const params = getUrlParams();
 const formContainer = document.querySelector(".formulario-voto") as HTMLElement;
 
 const btnVotar = document.querySelector("#btnVotar") as HTMLLinkElement;
-btnVotar.href = `./validar.html?id=${params.id}`;
+btnVotar.href = `/validar?id=${params.id}`;
 
 if (email) {
 	btnVotar.style.display = "none";
@@ -195,7 +195,7 @@ if (form) {
 							},
 						}).showToast();
 						setTimeout(() => {
-							window.location.href = "./certamen.html";
+							window.location.href = "/certamen";
 						}, 3000);
 					}
 				} catch (error) {

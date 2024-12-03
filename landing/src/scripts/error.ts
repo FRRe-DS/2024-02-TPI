@@ -7,8 +7,8 @@ const params = getUrlParams();
 
 if (params.escultor_id) {
 	if (volverAValidar) {
-		volverAValidar.href = `validar.html?id=${params.escultor_id}`;
+		volverAValidar.href = `validar?id=${params.escultor_id}`;
 	}
 } else {
-	volverAValidar.href = "certamen.html";
+	volverAValidar.href = "/certamen";
 }

@@ -48,7 +48,7 @@ function validar_qr(params: Record<string, string>) {
 		}).showToast();
 
 		setTimeout(() => {
-			window.location.href = "./certamen.html";
+			window.location.href = "/certamen";
 		}, 3000);
 	}
 }
@@ -74,7 +74,7 @@ if (form) {
 				},
 			}).showToast();
 
-			window.location.href = "./certamen.html";
+			window.location.href = "/certamen";
 		}
 
 		if (formElement) {
@@ -108,7 +108,7 @@ if (form) {
 
 						localStorage.setItem("userEmail", correo);
 						setTimeout(() => {
-							window.location.href = "./certamen.html";
+							window.location.href = "/certamen";
 						}, 3000);
 					} else {
 						Toastify({
@@ -121,7 +121,7 @@ if (form) {
 							},
 						}).showToast();
 						setTimeout(() => {
-							window.location.href = "./certamen.html";
+							window.location.href = "/certamen";
 						}, 3000);
 						console.error("Error al enviar rating:", response.status);
 					}
