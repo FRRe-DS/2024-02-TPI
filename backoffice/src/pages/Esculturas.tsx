@@ -17,6 +17,16 @@ import NuevaEsculturaPopup from "../components/crearEscultura";
 import EditarEsculturaPopup from "../components/editarEscultura";
 
 
+const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  if (columnId !== "nombre" && columnId !== "nacionalidad" && columnId !== "escultor") {
+    return false;
+  }
+
+  const itemRank = rankItem(String(row.getValue(columnId) ?? ""), value);
+  addMeta({ itemRank });
+  return itemRank.passed;
+};
+
 type EsculturaAPI = {
   id: number;
   escultor_id: number;
@@ -52,13 +62,6 @@ function limitarPalabras(texto: string, max: number): string {
   }
   return texto;
 }
-
-const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
-  const itemRank = rankItem(String(row.getValue(columnId) ?? ""), value);
-  addMeta({ itemRank });
-  return itemRank.passed;
-};
-
 
 
 
@@ -107,6 +110,7 @@ export default function Esculturas() {
     },
   }),
 ];
+
 
 
   const [data, setData] = useState<Escultura[]>([]);
@@ -212,7 +216,7 @@ export default function Esculturas() {
         <div className="section-container">
           <div className="action-btn__container">
             <Search
-              text="Buscar por escultor o nacionalidad"
+              text="Buscar"
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
             />

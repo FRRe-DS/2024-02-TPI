@@ -11,8 +11,9 @@ import {
   FilterFn,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import Acciones from "../components/acciones";
+
 import NuevoEventoPopup from "../components/crearEvento";
+import EditarEventoPopup from "../components/editarEvento";
 
 
 declare module "@tanstack/react-table" {
@@ -65,12 +66,26 @@ function limitarPalabras(texto: string, max: number): string {
 }
 
 const fuzzyFilter: FilterFn<any> = (row, columnId, value, addMeta) => {
+  if (columnId !== "nombre" && columnId !== "lugar" && columnId !== "tematica" && columnId !== "inicio") {
+    return false;
+  }
   const itemRank = rankItem(row.getValue(columnId), value);
   addMeta({ itemRank });
   return itemRank.passed;
 };
 
-const columnHelper = createColumnHelper<Evento>();
+export default function Eventos() {
+  const [data, _setData] = useState<Evento[]>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const url = "http://localhost:8000/api";
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const handleOpenPopup = () => setIsPopupOpen(true);
+  const handleClosePopup = () => {
+    setIsPopupOpen(false)
+    setIsPopupEditOpen(false)
+  };
+
+  const columnHelper = createColumnHelper<Evento>();
 
 const columns = [
   columnHelper.accessor("nombre", {
@@ -108,16 +123,24 @@ const columns = [
   columnHelper.display({
     id: "acciones",
     header: "Acciones",
-    cell: (props) => <Acciones row={props.row} tipo="evento" />,  }),
+    cell: (props) => {
+      const openEditPopup = (id: number) => {
+        setEventoEditId(id);
+        setIsPopupEditOpen(true);
+      };
+  
+      return (
+        <div className="acciones_container">
+          <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
+        
+        </div>
+      );
+    },
+  }),
 ];
 
-export default function Eventos() {
-  const [data, _setData] = useState<Evento[]>([]);
-  const [globalFilter, setGlobalFilter] = useState("");
-  const url = "http://localhost:8000/api";
-  const [isPopupOpen, setIsPopupOpen] = useState(false);
-  const handleOpenPopup = () => setIsPopupOpen(true);
-  const handleClosePopup = () => setIsPopupOpen(false);
+const [isPopupEditOpen, setIsPopupEditOpen] = useState(false);
+const [eventoEditId, setEventoEditId] = useState<number | null>(null); 
 
   async function fetchEventos() {
     try {
@@ -194,11 +217,16 @@ export default function Eventos() {
             isOpen={isPopupOpen} 
             onClose={handleClosePopup} 
             onNuevoEvento={fetchEventos}/>
+          <EditarEventoPopup
+            isOpen={isPopupEditOpen && eventoEditId !== null}
+            onClose={handleClosePopup}
+            eventoId={eventoEditId} 
+            onUpdate={fetchEventos}/>
         </header>
         <div className="section-container">
           <div className="action-btn__container">
             <Search
-              text="Buscar por evento, lugar o temática"
+              text="Buscar"
               value={globalFilter ?? ""}
               onChange={(value) => setGlobalFilter(String(value))}
             />

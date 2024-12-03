@@ -85,7 +85,7 @@ export default function EditarEscultorPopup({
         }
     }, [escultorId]);
 
-    // Manejar el envío del formulario para actualizar el escultor
+  
     const handleSubmit = (e: React.FormEvent) => {
         const cleanString = (input: string): string => {
             return input.replace(/[\r\n]/g, '').trim();
@@ -104,12 +104,9 @@ export default function EditarEscultorPopup({
 
             if (foto instanceof File) {
                 formData.append("foto", foto);
-                console.debug(`Se ve asi ${foto?.name}`)
-            } else {
-                console.log("La foto no fue actualizada, ignorando.")
-            }
-
-            console.table(formData);
+                // console.debug(`Se ve asi ${foto?.name}`)
+            } 
+            // console.table(formData);
 
             fetch(`${url}/escultores/${escultorId}/`, {
                 method: "PUT",
@@ -154,7 +151,7 @@ export default function EditarEscultorPopup({
                                         <img src={escultor.foto} alt="Foto actual" />
                                     </div>
                                 ) : (
-                                    <p>Seleccionar archivo</p>
+                                    <p className="fill-space">Seleccionar foto</p>
                                 )}
                             </label>
                             <input

@@ -190,7 +190,7 @@ export default function Escultores() {
                 <div className="section-container">
                     <div className="action-btn__container">
                         <Search
-                            text="Buscar por escultor o Nacionalidad"
+                            text="Buscar"
                             value={globalFilter ?? ""}
                             onChange={(value) => setGlobalFilter(String(value))}
                         />
