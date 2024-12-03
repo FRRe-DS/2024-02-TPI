@@ -34,6 +34,7 @@ def mandar_email(destinatario: str, escultor_id: str) -> HttpResponse:
     else:
         api_url = "http://localhost:8000"
 
+    logging.info(f"La API_URL = {api_url}")
     html_content = html_content.replace("{{correo}}", destinatario)
     html_content = html_content.replace("{{escultor_id}}", escultor_id)
     html_content = html_content.replace("{{api_url}}", api_url)
