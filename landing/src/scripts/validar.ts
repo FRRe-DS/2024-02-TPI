@@ -222,7 +222,7 @@ function extractTimeStampFromULID(input: string): Date {
 	return new Date(timestamp);
 }
 
-function validar_qr(params: Record<string, string>) {
+export function validar_qr(params: Record<string, string>) {
 	const ulid_id = params.key;
 
 	if (!ulid_id) {
@@ -265,4 +265,7 @@ if (volverAValidar) {
 }
 
 getNombreEscultor(params.id);
-validar_qr(params);
+if (params.key){
+	validar_qr(params);
+}
+

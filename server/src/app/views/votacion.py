@@ -100,7 +100,7 @@ class generarQR(APIView):
 
         logging.info(f"Generando QR para {escultor_id}...")
 
-        id = ulid.from_timestamp(datetime.datetime.now())
+        qrulid = ulid.from_timestamp(datetime.datetime.now())
 
         nombre_escultor = f"{escultor.nombre} {escultor.apellido}"
         encoded_nombre_escultor = urllib.parse.quote(nombre_escultor)

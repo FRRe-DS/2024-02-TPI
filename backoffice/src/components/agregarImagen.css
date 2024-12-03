@@ -18,9 +18,9 @@
   border-radius: 16px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   z-index: 10;
-  width: auto;
+  width: 600px;
+  height: 400px;
   max-width: 90%;
-height: auto !important;
 }
 
 .form {
@@ -31,7 +31,7 @@ height: auto !important;
 
 textarea {
   resize: none; /* Evita que el usuario cambie el tamaño manualmente */
-  height: 200px; /* Altura fija del campo */
+  height: 50px; /* Altura fija del campo */
   overflow-y: auto; /* Habilita el scroll vertical si el contenido es largo */
   padding: 8px;
   border: 1px solid var(--grey-400);
@@ -48,40 +48,28 @@ textarea {
 }
 
 .image-container {
-  
+  flex: 1;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #F0F3F8;
-  cursor: pointer;
+}
+
+.image-container img {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 30px;
+  gap: 10px;
+  margin: 0 auto;
+  width: 150px;
+  height: 150px;
+  background: #E3E3E3;
   border-radius: 16px;
+  flex: none;
+  order: 0;
+  flex-grow: 0;
 }
-
-
-.image-container label{
-  width: 100%;
-  
-  display: grid;
-  place-content: center;
-  cursor: pointer;
-  
-}
-
-.image-container label i{
-  font-size: 64px;
-  color: var(--text-300);
-  cursor: pointer;
-}
-
-.imagenPreview{
-  width: 100%;
-
-  object-fit: contain;
-  object-position: center;
-
-}
-
-
 
 .personaldates {
   flex: 1;
@@ -101,8 +89,7 @@ textarea {
   display: flex;
   justify-content: flex-end;
   gap: 8px;
-  margin: 0 !important;
-
+  margin-top: 16px;
 }
 
 .btn {
@@ -110,7 +97,7 @@ textarea {
   padding: 8px 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background 0.3s;
 }
 
 .aceptar {
@@ -123,3 +110,6 @@ textarea {
   color: var(--text-400);
 }
 
+.btn:hover {
+  opacity: 0.8;
+}
