@@ -27,8 +27,23 @@ export default defineConfig({
 				config: true,
 			},
 			workbox: {
-				navigateFallback: "/",
+				// navigateFallback: "/",
 				globPatterns: ["**/*.{css,js,html,svg,png,ico,txt}"],
+				navigateFallback: undefined, // Disable default navigation fallback
+				navigateFallbackDenylist: [
+					/^\/certamen/,
+					/^\/validar/,
+					/^\/eventos/,
+					/^\/detalle_evento/,
+					/^\/detalle_escultor/,
+				],
+				runtimeCaching: [
+					{
+						urlPattern:
+							/^https:\/\/elrincondelinge\.org\/(certamen|validar|eventos|detalle_evento|detalle_escultor)/,
+						handler: "NetworkFirst", // Prioritize network requests for these routes
+					},
+				],
 			},
 			devOptions: {
 				enabled: true,
