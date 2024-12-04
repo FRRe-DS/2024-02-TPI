@@ -81,7 +81,7 @@ def validar_votante(request: Request) -> HttpResponse:
                 )
             else:
                 return redirect(
-                    f"http://localhost:5173/votar.html?correo={correo}&escultor_id={escultor_id}"
+                    f"http://127.0.0.1:4321/votar.html?correo={correo}&escultor_id={escultor_id}"
                 )
 
         except Votante.DoesNotExist:
@@ -111,7 +111,7 @@ def crear_votante(request: Request) -> HttpResponse:
     client_url = (
         "https://elrincondelinge.org"
         if settings.DJANGO_ENV == "prod"
-        else "http://localhost:5173"
+        else "http://127.0.0.1:4321"
     )
 
     if not correo or not escultor_id:

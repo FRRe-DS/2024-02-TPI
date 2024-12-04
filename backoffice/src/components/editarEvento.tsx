@@ -18,22 +18,22 @@ export default function EditarEventoPopup({
     eventoId,
     onUpdate,
 }: EditarEventoPopupProps) {
-    const [nombre, setNombre] = useState<string>("");
-    const [lugar, setLugar] = useState<string>("");
-    const [lugarId, setLugarId] = useState<number>(0);
-    const [tematica, setTematica] = useState<string>("");
-    const [tematicaId, setTematicaId] = useState<number>(0);
-    const [inicio, setInicio] = useState<string>(""); // Fecha en formato ISO
-    const [fin, setFin] = useState<string>(""); // Fecha en formato ISO
-    const [descripcion, setDescripcion] = useState<string>("");
-    const [previewImage, setPreviewImage] = useState<string | null>(null);
-    const [fileName, setFileName] = useState<string | null>(null);
-    const [file, setFile] = useState<File | null>(null);
-    const authToken = localStorage.getItem("token");
+  const [nombre, setNombre] = useState<string>("");
+  const [lugar, setLugar] = useState<string>("");
+  const [lugarId, setLugarId] = useState<number>(0);
+  const [tematica, setTematica] = useState<string>("");
+  const [tematicaId, setTematicaId] = useState<number>(0);
+  const [inicio, setInicio] = useState<string>(""); // Fecha en formato ISO
+  const [fin, setFin] = useState<string>(""); // Fecha en formato ISO
+  const [descripcion, setDescripcion] = useState<string>("");
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    window.location.href = "/Login";
+  }
 
-    if (!authToken) {
-        throw new Error("Token no encontrado. Inicia sesión nuevamente.");
-    }
 
     useEffect(() => {
         if (eventoId !== null) {

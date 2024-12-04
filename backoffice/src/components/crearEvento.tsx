@@ -12,33 +12,34 @@ interface NuevoEventoPopupProps {
 }
 
 
-export default function NuevoEventoPopup({
-    isOpen, onClose, onNuevoEvento }: NuevoEventoPopupProps) {
-    const [nombreTematica, setNombreTematica] = useState("");
-    const [descripcionTematica, setDescripcionTematica] = useState("");
-    const [startDate, setStartDate] = useState<Date | null>(null);
-    const [endDate, setEndDate] = useState<Date | null>(null);
-    const [eventData, setEventData] = useState({
-        nombre: "",
-        lugar_id: "",
-        tematica_id: "",
-        descripcion: "",
-        foto: null as File | null,
-    });
-    const [nombreLugar, setNombreLugar] = useState('');
-    const [descripcionLugar, setDescripcionLugar] = useState('');
-    const [agregarLugar, setAgregarLugar] = useState(false);
-    const [agregarTematica, setAgregarTematica] = useState(false);
+export default function NuevoEventoPopup({ 
+  isOpen, onClose,  onNuevoEvento }: NuevoEventoPopupProps) {
+  const [nombreTematica, setNombreTematica] = useState("");
+  const [descripcionTematica, setDescripcionTematica] = useState("");
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [eventData, setEventData] = useState({
+    nombre: "",
+    lugar_id: "",
+    tematica_id: "",
+    descripcion: "",
+    foto: null as File | null,
+  });
+  const [nombreLugar, setNombreLugar] = useState('');
+  const [descripcionLugar, setDescripcionLugar] = useState('');
+  const [agregarLugar, setAgregarLugar] = useState(false); 
+  const [agregarTematica, setAgregarTematica] = useState(false); 
+  
+  const [tematicas, setTematicas] = useState<{ id: number; nombre: string }[]>([]);
+  const [lugares, setLugares] = useState<{ id: number; nombre: string }[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [fileName, setFileName] = useState<string>("");
 
-    const [tematicas, setTematicas] = useState<{ id: number; nombre: string }[]>([]);
-    const [lugares, setLugares] = useState<{ id: number; nombre: string }[]>([]);
-    const [error, setError] = useState<string | null>(null);
-    const [fileName, setFileName] = useState<string>("");
 
-    const authToken = localStorage.getItem("token");
-    if (!authToken) {
-        throw new Error("Token no encontrado. Inicia sesión nuevamente.");
-    }
+  const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    window.location.href = "/Login";
+  }
 
     useEffect(() => {
         if (isOpen) {

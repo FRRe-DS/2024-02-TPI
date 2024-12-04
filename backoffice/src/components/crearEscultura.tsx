@@ -11,9 +11,8 @@ interface NuevaEsculturaPopupProps {
 }
 
 interface Escultor {
-    id: number;
-    nombre_completo: string;
-
+  id: number;
+  nombre_completo: string;
 }
 
 export default function NuevaEsculturaPopup({ isOpen, onClose, onNuevoEscultura }: NuevaEsculturaPopupProps) {
@@ -23,40 +22,46 @@ export default function NuevaEsculturaPopup({ isOpen, onClose, onNuevoEscultura 
         descripcion: "",
     });
 
-    const authToken = localStorage.getItem("token");
-    const [escultores, setEscultores] = useState<Escultor[]>([]);
-    const { id } = useParams();
-    const [escultorSeleccionado, setEscultorSeleccionado] = useState<string | null>(null);
+  const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    window.location.href = "/Login";
+  }
 
-    useEffect(() => {
-        const fetchEscultores = async () => {
-            try {
-                if (id) {
+  const [escultores, setEscultores] = useState<Escultor[]>([]);
+  const { id } = useParams();
+  const [escultorSeleccionado, setEscultorSeleccionado] = useState<string | null>(null);
 
-                    const response = await fetch(`${url}/escultores/${id}`);
-                    if (!response.ok) {
-                        throw new Error("Error al obtener el escultor");
-                    }
-                    const data = await response.json();
-                    setEscultorSeleccionado(data.nombre_completo);
-                } else {
 
-                    const response = await fetch(`${url}/escultores/`);
-                    if (!response.ok) {
-                        throw new Error("Error al obtener los escultores");
-                    }
-                    const data = await response.json();
-                    setEscultores(data);
-                }
-            } catch (error) {
-                console.error("Error al cargar escultores:", error);
-            }
-        };
+  const fetchEscultores = async () => {
+    try {
+      if (id) {
 
-        if (isOpen) {
-            fetchEscultores();
+        const response = await fetch(`${url}/escultores/${id}`);
+        if (!response.ok) {
+          throw new Error("Error al obtener el escultor");
         }
-    }, [id, isOpen]);
+        const data = await response.json();
+        setEscultorSeleccionado(data.nombre_completo); 
+      } else {
+       
+        const response = await fetch(`${url}/escultores/`);
+        if (!response.ok) {
+          throw new Error("Error al obtener los escultores");
+        }
+        const data = await response.json();
+        setEscultores(data); 
+      }
+    } catch (error) {
+      console.error("Error al cargar escultores:", error);
+    }
+  };
+
+useEffect(() => {
+ 
+  if (isOpen) {
+    fetchEscultores();
+  }
+}, [id, isOpen]);
 
 
 

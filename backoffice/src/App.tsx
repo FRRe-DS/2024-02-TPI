@@ -9,6 +9,7 @@ import VerEvento from './pages/verEvento';
 import EditarEvento from './pages/editarEvento';
 import VerEscultor from './pages/verEscultor';
 import EditarEscultor from './pages/editarEscultura';
+import Certamen from './pages/Certamen';
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/Eventos" element={<Eventos />} />
                 <Route path="/Escultores" element={<Escultores />} />
                 <Route path="/Esculturas" element={<Esculturas />} />
+                <Route path="/Certamen" element={<Certamen />} />
                 <Route path="/ver-escultura/:id" element={<VerEscultura />} />
                 <Route path="/editar-escultura/:id" element={<EditarEscultura />} />
                 <Route path="/ver-evento/:id" element={<VerEvento />} />

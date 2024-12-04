@@ -108,15 +108,7 @@ export default function Escultores() {
             }
         };
 
-        type Escultor = {
-            id: number,
-            nombre: string,
-            apellido: string,
-            correo: string,
-            foto: string,
-            bibliografia: string,
-            nacionalidad: string,
-        };
+    
 
         try {
             const response = await fetch(`${url}/escultores/`);

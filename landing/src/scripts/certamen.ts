@@ -165,7 +165,7 @@ async function loadEscultores(url: string, evento_id: number) {
 								loading="lazy"
 								alt="${NyA}"
 								class="escultor-img" 
-onerror="this.src='https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg'; this.onerror=null;"/>
+onerror="this.src='src/assets/img_media_fondo.jpg'; this.onerror=null;"/>
 						<div class="wrap-card">
 							 <a href="/detalle_escultor?id=${escultor.id}">Ver más</a>
 							<div class="nombre-origen" id="nombreOrigen-${escultor.id}">

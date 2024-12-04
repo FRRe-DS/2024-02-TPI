@@ -46,6 +46,12 @@ class EventoReadSerializer(serializers.ModelSerializer):
         model = Evento
         fields = "__all__"
 
+        
+class EventosBienalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Evento
+        fields = ['id', 'nombre', 'fecha_inicio'] 
+
 
 class EscultorEventoReadSerializer(serializers.ModelSerializer):
     evento = EventoReadSerializer(source="evento_id")

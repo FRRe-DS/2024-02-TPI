@@ -33,6 +33,7 @@ from app.serializers import (
     EsculturaSerializer,
     EventoReadSerializer,
     EventoWriteSerializer,
+    EventosBienalSerializer,
     ImagenSerializer,
     LugarSerializer,
     PaisSerializer,
@@ -179,6 +180,26 @@ def eventos_por_anio(request: Request) -> Response:
 
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@extend_schema(
+    summary="recuperar solo los certamen",
+    description="Recupera eventos bienal ordenados por fecha de mayo a menor",
+    responses={200: None},
+)
+
+@api_view(["GET"])
+def eventos_bienal(request):
+    
+    eventos = Evento.objects.filter(nombre__icontains="Concurso Internacional").order_by("-fecha_inicio")
+
+    if not eventos.exists():
+        return Response(
+            {"detail": "No se encontraron eventos con la palabra 'bienal'."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
+
+    serializer = EventosBienalSerializer(eventos, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @extend_schema(
     summary="Escultores por eventos",

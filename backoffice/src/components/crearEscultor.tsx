@@ -17,12 +17,14 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
         correo: "",
         bibliografia: "",
 
-    });
-    const [countries, setCountries] = useState<{ id: number; nombre: string }[]>([]);
-    const authToken = localStorage.getItem("token");
-    if (!authToken) {
-        throw new Error("Token no encontrado. Inicia sesión nuevamente.");
-    }
+  });
+  const [countries, setCountries] = useState<{ id: number; nombre: string }[]>([]);
+
+  const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    window.location.href = "/Login";
+  }
+
 
 
     const handleInputChange = (
@@ -43,43 +45,42 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
         }
     };
 
-    const handleSubmit = async () => {
-        const formData = new FormData();
-
-        // Agregar datos del formulario
-        formData.append("nombre", eventData.nombre);
-        formData.append("apellido", eventData.apellido);
-        formData.append("pais_id", eventData.nacionalidad);
-        formData.append("correo", eventData.correo);
-        formData.append("bibliografia", eventData.bibliografia);
-
-        // Agregar archivo si existe
-        const fileInput = document.getElementById("file-upload") as HTMLInputElement;
-        if (fileInput?.files?.[0]) {
-            formData.append("archivo", fileInput.files[0]);
-        }
-
-        try {
-            const response = await fetch(`${url}/escultores/`, {
-                method: "POST",
-                headers: {
-                    Authorization: `Token ${authToken}`,
-
-                },
-                body: formData,
-            });
-
-            if (!response.ok) {
-                throw new Error("Error al guardar el escultor");
-            }
-
-            // Llama al callback de éxito y cierra el popup
-            onNuevoEscultor();
-            onClose();
-        } catch (error) {
-            console.error("Error al guardar el escultor:", error);
-        }
-    };
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    
+    // Agregar datos del formulario
+    formData.append("nombre", eventData.nombre);
+    formData.append("apellido", eventData.apellido);
+    formData.append("pais_id", eventData.nacionalidad);
+    formData.append("correo", eventData.correo);
+    formData.append("bibliografia", eventData.bibliografia);
+    
+    // Agregar archivo si existe
+    const fileInput = document.getElementById("file-upload") as HTMLInputElement;
+    if (fileInput?.files?.[0]) {
+      formData.append("foto", fileInput.files[0]);
+    }
+  
+    try {
+      const response = await fetch(`${url}/escultores/`, {
+        method: "POST",
+        headers: {       
+          Authorization: `Token ${authToken}`, 
+          
+        },
+        body: formData,
+      });
+  
+      if (!response.ok) {
+        throw new Error("Error al guardar el escultor");
+      }
+  
+      onNuevoEscultor();
+      onClose();
+    } catch (error) {
+      console.error("Error al guardar el escultor:", error);
+    }
+  };
 
     useEffect(() => {
         fetchCountries();

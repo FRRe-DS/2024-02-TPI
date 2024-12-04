@@ -24,10 +24,11 @@ export default function EditarEsculturaPopup({
     onUpdate,
 }: EditarEsculturaPopupProps) {
 
-    const authToken = localStorage.getItem("token");
-    if (!authToken) {
-        throw new Error("Token no encontrado. Inicia sesión nuevamente.");
-    }
+  const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    window.location.href = "/Login";
+  }
+
 
     const [escultura, setEscultura] = useState<Escultura | null>(null);
     const [nombre, setNombre] = useState<string>("");
