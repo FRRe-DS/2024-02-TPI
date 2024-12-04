@@ -20,13 +20,13 @@ export async function getNombreEscultor(id: string) {
 
 		const nombre = escultor.nombre_completo;
 		nombreEscultor.textContent = nombre;
-		let foto = ""
-		if (escultor.foto){
+		let foto = "";
+		if (escultor.foto) {
 			foto = escultor.foto;
-		}else{
-			foto = "src/assets/img_media_fondo.jpg"
+		} else {
+			foto = "src/assets/img_media_fondo.jpg";
 		}
-		
+
 		fotoEscultor.src = foto;
 		fotoEscultor.alt = nombre;
 		fotoEscultor.title = nombre;
@@ -94,7 +94,7 @@ async function validar_votante() {
 		}
 
 		try {
-			const response = await fetch(				
+			const response = await fetch(
 				`${API_URL}/validar_votante/?correo=${email}&escultor_id=${escultor_id}`,
 
 				{
@@ -270,7 +270,6 @@ if (volverAValidar) {
 }
 
 getNombreEscultor(params.id);
-if (params.key){
+if (params.key) {
 	validar_qr(params);
 }
-
