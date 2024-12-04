@@ -61,6 +61,10 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
+        "django.core.cache": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
     },
     "root": {
         "handlers": ["console"],
@@ -85,16 +89,6 @@ INSTALLED_APPS = [
     "drf_spectacular",
 ]
 
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379/1",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
-        },
-        "KEY_PREFIX": "drf_cache",
-    }
-}
 
 MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",

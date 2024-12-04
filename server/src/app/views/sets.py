@@ -1,5 +1,7 @@
 import logging
+import time
 from datetime import date
+from django.core.cache import cache
 from background_task.models import CompletedTask
 from background_task.tasks import Task
 from django.contrib.auth.models import User
@@ -10,7 +12,6 @@ from rest_framework import authentication, permissions, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.request import Request
-from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 
 from app.models import (
@@ -185,28 +186,105 @@ def eventos_por_anio(request: Request) -> Response:
     description="Recuperar los escultores de un evento.",
     responses={200: None},
 )
+# @api_view(["GET"])
+# def escultores_por_evento(request: Request) -> Response:
+#     evento_id = request.query_params.get("evento_id")
+#     cache_key = f"escultores_evento_{evento_id}"
+
+#     CACHE_TIMEOUT = 60 * 60
+
+#     cached_response = cache.get(cache_key)
+#     if cached_response is not None:
+#         logging.info(f"Cache HIT para la key: {cache_key}")
+#         return Response(cached_response, status=status.HTTP_200_OK)
+
+#     logging.info(f"Cache MISS para la key: {cache_key}")
+
+#     escultores_evento = EscultorEvento.objects.filter(evento_id=evento_id)
+#     if not escultores_evento.exists():
+#         return Response(
+#             {
+#                 "detail": f"No se encontraron escultores para el evento con id {evento_id}."
+#             },
+#             status=status.HTTP_404_NOT_FOUND,
+#         )
+
+#     escultores = Escultor.objects.filter(
+#         id__in=escultores_evento.values_list("escultor_id", flat=True)
+#     )
+#     serializer = EscultorReadSerializer(escultores, many=True)
+
+#     cache.set(cache_key, serializer.data, CACHE_TIMEOUT)
+
+#     return Response(serializer.data, status=status.HTTP_200_OK)
 @api_view(["GET"])
-@cache_page(60 * 15)
 def escultores_por_evento(request: Request) -> Response:
     evento_id = request.query_params.get("evento_id")
+    cache_key = f"escultores_evento_{evento_id}"
 
-    escultores_evento = EscultorEvento.objects.filter(evento_id=evento_id)
+    CACHE_TIMEOUT = 60 * 60  # 1 hour
 
-    if not escultores_evento.exists():
+    # Create a lock key that is unique for each request
+    lock_key = f"{cache_key}:lock"
+
+    # Get the Redis connection from the cache backend
+    redis_conn = cache.client.get_client()
+
+    # Try to acquire the lock (set it if it doesn't exist)
+    lock = redis_conn.setnx(lock_key, "locked")
+
+    if lock:
+        try:
+            # Set a timeout for the lock to avoid deadlocks (e.g., 30 seconds)
+            redis_conn.expire(lock_key, 30)  # 30 seconds lock timeout
+
+            # Check the cache for the data
+            cached_response = cache.get(cache_key)
+            if cached_response is not None:
+                logging.info(f"Cache HIT para la key: {cache_key}")
+                return Response(cached_response, status=status.HTTP_200_OK)
+
+            logging.info(f"Cache MISS para la key: {cache_key}")
+
+            # Fetch the data from the database
+            escultores_evento = EscultorEvento.objects.filter(evento_id=evento_id)
+            if not escultores_evento.exists():
+                return Response(
+                    {
+                        "detail": f"No se encontraron escultores para el evento con id {evento_id}."
+                    },
+                    status=status.HTTP_404_NOT_FOUND,
+                )
+
+            escultores = Escultor.objects.filter(
+                id__in=escultores_evento.values_list("escultor_id", flat=True)
+            )
+            serializer = EscultorReadSerializer(escultores, many=True)
+
+            # Cache the result
+            cache.set(cache_key, serializer.data, CACHE_TIMEOUT)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        finally:
+            # Release the lock after the operation is done
+            redis_conn.delete(lock_key)
+    else:
+        # If we can't acquire the lock, wait and try to get the cached data
+        time.sleep(0.1)  # Wait for 100ms (or adjust based on your needs)
+
+        # Check the cache again after waiting
+        cached_response = cache.get(cache_key)
+        if cached_response is not None:
+            logging.info(f"Cache HIT after waiting for the lock, key: {cache_key}")
+            return Response(cached_response, status=status.HTTP_200_OK)
+
+        # If still no cached response, proceed with the standard flow
         return Response(
             {
-                "detail": f"No se encontraron escultores para el evento con id {evento_id}."
+                "detail": "Another worker is processing the request. Please try again later."
             },
-            status=status.HTTP_404_NOT_FOUND,
+            status=status.HTTP_429_TOO_MANY_REQUESTS,
         )
-
-    escultores = Escultor.objects.filter(
-        id__in=escultores_evento.values_list("escultor_id", flat=True)
-    )
-
-    serializer = EscultorReadSerializer(escultores, many=True)
-
-    return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class VotanteViewSet(viewsets.ModelViewSet):

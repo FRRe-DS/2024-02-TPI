@@ -43,7 +43,5 @@ ENV PATH="/app/.venv/bin:$PATH" \
     DJANGO_ENV="prod" \
     PYTHONUNBUFFERED=1
 
-# ADD ./src /app
-
 EXPOSE 80
 CMD ["sh", "-c", "gunicorn -b 0.0.0.0:80 -c ./gunicorn.conf.py backend.wsgi:application"]

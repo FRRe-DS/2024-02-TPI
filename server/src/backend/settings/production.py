@@ -29,6 +29,16 @@ SESSION_COOKIE_SECURE = True
 
 DATABASES = {"default": config("DATABASE_URL", cast=dj_database_url.parse)}
 
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
+
 try:
     acc_info = json.loads(config("STORAGE_KEY"))
     GS_CREDENTIALS = service_account.Credentials.from_service_account_info(acc_info)
