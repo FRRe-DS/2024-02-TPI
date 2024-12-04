@@ -69,7 +69,7 @@ urlpatterns = [
     path("api/estado_votacion/", estado_votacion, name="estado_votacion"),
     path("api/check_puntaje/", check_puntaje, name="check_puntaje"),
     path("api/eventos_por_anio/", eventos_por_anio, name="eventos_por_anio"),
-    path('api/eventos-bienal/', eventos_bienal, name='eventos-bienal'),
+    path("api/eventos-bienal/", eventos_bienal, name="eventos-bienal"),
     path(
         "api/escultores_por_evento/",
         escultores_por_evento,
