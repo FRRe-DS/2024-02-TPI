@@ -3,40 +3,17 @@
   "include": [
     ".astro/types.d.ts",
     "**/*",
-    "env.d.ts"
+"env.d.ts"
   ],
   "exclude": [
-    "dist",
-    "node_modules"
+    "dist", "node_modules"
   ],
-  "compilerOptions": {
+ "compilerOptions": {
     "types": [
       "astro/client",
       "vite-plugin-pwa/vanillajs",
       "vite-plugin-pwa/info",
       "vite-pwa/assets-generator"
-    ],
-    "jsx": "react-jsx",
-    "jsxImportSource": "react",
-
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Bundler mode */
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "isolatedModules": true,
-    "moduleDetection": "force",
-    "noEmit": true,
-    "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true
+    ]
   }
 }

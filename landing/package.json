@@ -11,11 +11,8 @@
   "dependencies": {
     "@astrojs/check": "^0.9.4",
     "@astrojs/netlify": "^5.5.4",
-    "@astrojs/react": "^4.0.0",
-    "@emotion/react": "^11.13.5",
-    "@emotion/styled": "^11.13.5",
     "assets-generator": "link:@types/vite-pwa/assets-generator",
-    "astro": "^5.0.0",
+    "astro": "^4.16.16",
     "astro-compressor": "^1.0.0",
     "astro-purgecss": "^5.0.0",
     "prettier": "^3.4.1",
