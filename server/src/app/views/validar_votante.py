@@ -76,13 +76,18 @@ def validar_votante(request: Request) -> HttpResponse:
             logging.info(f"El usuario con el correo {correo} ya existe!")
 
             if settings.DJANGO_ENV == "prod":
-                return redirect(
+                url =  (
                     f"https://elrincondelinge.org/votar?correo={correo}&escultor_id={escultor_id}"
                 )
             else:
-                return redirect(
+                url = (
                     f"http://localhost:4321/votar?correo={correo}&escultor_id={escultor_id}"
                 )
+
+            return JsonResponse(
+                {"url": url}, 
+                status=status.HTTP_200_OK
+            )
 
         except Votante.DoesNotExist:
             mandar_email(correo, escultor_id)

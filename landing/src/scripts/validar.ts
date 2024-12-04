@@ -2,6 +2,7 @@ import Toastify from "toastify-js";
 import { API_URL } from "astro:env/client";
 import "toastify-js/src/toastify.css";
 import { getUrlParams } from "./utils";
+valida;
 
 const TIME_LIMIT_MINS = 1.0;
 
@@ -106,7 +107,8 @@ async function validar_votante() {
 			);
 
 			if (response.status === 200) {
-				window.location.href = response.url;
+				const data = await response.json();
+				window.location.href = data.url;
 			} else if (response.status === 201) {
 				notificarEmail();
 				console.log("Envio exitoso");
