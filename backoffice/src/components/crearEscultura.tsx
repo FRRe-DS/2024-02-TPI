@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import "./crearEscultura.css";
 import "dayjs/locale/es";
 import { useParams } from "react-router-dom";
+import { url } from "../utils";
 
 interface NuevaEsculturaPopupProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onNuevoEscultura: () => void
+    isOpen: boolean;
+    onClose: () => void;
+    onNuevoEscultura: () => void
 }
 
 interface Escultor {
@@ -15,11 +16,11 @@ interface Escultor {
 }
 
 export default function NuevaEsculturaPopup({ isOpen, onClose, onNuevoEscultura }: NuevaEsculturaPopupProps) {
-  const [eventData, setEventData] = useState({
-    nombre: "",
-    escultor: "",   
-    descripcion: "",
-  });
+    const [eventData, setEventData] = useState({
+        nombre: "",
+        escultor: "",
+        descripcion: "",
+    });
 
   const authToken = localStorage.getItem("token");
   if (!authToken) {
@@ -65,110 +66,110 @@ useEffect(() => {
 
 
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setEventData({ ...eventData, [name]: value });
-  };
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setEventData({ ...eventData, [name]: value });
+    };
 
-  const handleSubmit = async () => {
-    let escultor_id = "" 
-    if (id){
-      escultor_id = id
-    }else{
-      escultor_id = eventData.escultor
-    }
+    const handleSubmit = async () => {
+        let escultor_id = ""
+        if (id) {
+            escultor_id = id
+        } else {
+            escultor_id = eventData.escultor
+        }
 
-    const formData = new FormData();
-    formData.append("escultor_id", escultor_id);
-    formData.append("nombre", eventData.nombre);
-    formData.append("descripcion", eventData.descripcion);
-  
-    try {
-      const response = await fetch(`${url}/esculturas/`, {
-        method: "POST",
-        headers: {       
-          Authorization: `Token ${authToken}`,           
-        },
-        body: formData,
-      });
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Escultura creada con éxito:", data);
-        onNuevoEscultura();
-        onClose();
-      } else {
-        console.error("Error al crear la escultura:", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error al realizar la solicitud:", error);
-    }
-  };
+        const formData = new FormData();
+        formData.append("escultor_id", escultor_id);
+        formData.append("nombre", eventData.nombre);
+        formData.append("descripcion", eventData.descripcion);
 
-  if (!isOpen) return null;
+        try {
+            const response = await fetch(`${url}/esculturas/`, {
+                method: "POST",
+                headers: {
+                    Authorization: `Token ${authToken}`,
+                },
+                body: formData,
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Escultura creada con éxito:", data);
+                onNuevoEscultura();
+                onClose();
+            } else {
+                console.error("Error al crear la escultura:", response.statusText);
+            }
+        } catch (error) {
+            console.error("Error al realizar la solicitud:", error);
+        }
+    };
 
-  return (
-    <>
-      <div className="overlay" onClick={onClose}></div>
-      <div className="popup">
-      <h2>Agregar Escultura</h2>
-        <div className="divider"></div>
+    if (!isOpen) return null;
 
-        <form className="form">               
-          <div className="personaldates">
-            <h3>Información de la escultura</h3>
-            <input
-              type="text"
-              name="nombre"
-              placeholder="Nombre"
-              value={eventData.nombre}
-              onChange={handleInputChange}
-              className="focus-input"
-            />
-            {id ? (
-              <input
-                type="text"
-                name="nombre"
-                placeholder="Nombre"
-                value={escultorSeleccionado || ""}
-                readOnly
-                className="focus-input readonly"
-              />
-            ) : (
-              <select
-                name="escultor"
-                value={eventData.escultor}
-                onChange={handleInputChange}
-                className="focus-input"
-              >
-                <option value="">Seleccionar escultor</option>
-                {escultores.map((escultor) => (
-                  <option key={escultor.id} value={escultor.id}>
-                    {escultor.nombre_completo}
-                  </option>
-                ))}
-              </select>
-            )}
-           
-               <textarea
-              name="descripcion"
-              placeholder="Descripción"
-              value={eventData.descripcion}
-              onChange={handleInputChange}
-              className="focus-input texarea-bigger"
-          />             
-          </div>
-      
-          <div className="divider"></div>
-          <div className="buttons">
-            <button type="button" className="btn cancelar" onClick={onClose}>
-              Cancelar
-            </button>
-            <button type="button" className="btn aceptar" onClick={handleSubmit}>
-              Aceptar
-            </button>
-          </div>
-        </form>    
-      </div>
-    </>
-  );
+    return (
+        <>
+            <div className="overlay" onClick={onClose}></div>
+            <div className="popup">
+                <h2>Agregar Escultura</h2>
+                <div className="divider"></div>
+
+                <form className="form">
+                    <div className="personaldates">
+                        <h3>Información de la escultura</h3>
+                        <input
+                            type="text"
+                            name="nombre"
+                            placeholder="Nombre"
+                            value={eventData.nombre}
+                            onChange={handleInputChange}
+                            className="focus-input"
+                        />
+                        {id ? (
+                            <input
+                                type="text"
+                                name="nombre"
+                                placeholder="Nombre"
+                                value={escultorSeleccionado || ""}
+                                readOnly
+                                className="focus-input readonly"
+                            />
+                        ) : (
+                            <select
+                                name="escultor"
+                                value={eventData.escultor}
+                                onChange={handleInputChange}
+                                className="focus-input"
+                            >
+                                <option value="">Seleccionar escultor</option>
+                                {escultores.map((escultor) => (
+                                    <option key={escultor.id} value={escultor.id}>
+                                        {escultor.nombre_completo}
+                                    </option>
+                                ))}
+                            </select>
+                        )}
+
+                        <textarea
+                            name="descripcion"
+                            placeholder="Descripción"
+                            value={eventData.descripcion}
+                            onChange={handleInputChange}
+                            className="focus-input texarea-bigger"
+                        />
+                    </div>
+
+                    <div className="divider"></div>
+                    <div className="buttons">
+                        <button type="button" className="btn cancelar" onClick={onClose}>
+                            Cancelar
+                        </button>
+                        <button type="button" className="btn aceptar" onClick={handleSubmit}>
+                            Aceptar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </>
+    );
 }

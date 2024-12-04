@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "./crearEscultura.css";
+import { url } from "../utils";
 
 interface EditarEscultorPopupProps {
     isOpen: boolean;
@@ -36,7 +37,6 @@ export default function EditarEscultorPopup({
     const [bibliografia, setBibliografia] = useState<string>("");
     const [fileName, setFileName] = useState<string | null>(null);
     const [previewImage, setPreviewImage] = useState<string | null>(null);
-    const url = "http://localhost:8000/api"
     const authToken = localStorage.getItem("token");
     if (!authToken) {
       window.location.href = "/Login";
@@ -86,7 +86,7 @@ export default function EditarEscultorPopup({
         }
     }, [escultorId]);
 
-  
+
     const handleSubmit = (e: React.FormEvent) => {
         const cleanString = (input: string): string => {
             return input.replace(/[\r\n]/g, '').trim();
@@ -106,7 +106,7 @@ export default function EditarEscultorPopup({
             if (foto instanceof File) {
                 formData.append("foto", foto);
                 // console.debug(`Se ve asi ${foto?.name}`)
-            } 
+            }
             // console.table(formData);
 
             fetch(`${url}/escultores/${escultorId}/`, {

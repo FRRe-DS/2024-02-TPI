@@ -12,155 +12,167 @@ import catedra from "../assets/img_media_catedra-de-dsw-high-resolution-logo-tra
 import evento from "../assets/img_media_arte-y-cultura-high-resolution-logo-transparent.png";
 ---
 
-<Layout>
-    <section class="hero-section">
-        <section id="up"></section>
-        <section id="down"></section>
-        <section id="left"></section>
-        <section id="right"></section>
-        <div class="hero-title">
-            <div>
-                <h1><span class="cursiva">Bienal</span> del Chaco</h1>
-                <h2>del 1 al 31 de Julio</h2>
-                <p>
-                    Una manifestación internacional de arte contemporáneo que
-                    reúne artistas y pueblo en un mismo espacio, conectando de
-                    manera potente a la gente con el arte y la naturaleza.
-                </p>
-            </div>
-            <div class="action-btns">
-                <a href="/eventos">
-                    <button class="btn-primario">Descubre la Bienal 2025</button
-                    >
-                </a>
-                <a href="/certamen">
-                    <button class="btn-secundario"
-                        >Certamen de Esculturas</button
-                    >
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <section class="event-section">
-        <h2>
-            Bienvenido a una <span class="cursiva">experiencia</span> diferente
-        </h2>
-        <p>
-            Explora y disfruta de todas las emocionantes actividades que tenemos
-            programadas para ti. ¡No te pierdas ni un solo momento de diversión
-            y entretenimiento!
-        </p>
-
-        <div class="mosaico-container">
-            <div class="divider-m"></div>
-
-            <div class="mosaico-gallery">
-                <div id="card-1" class="mosaico-card-evento"></div>
-                <div id="card-2" class="mosaico-card-evento"></div>
-                <div id="card-3" class="mosaico-card-evento"></div>
-                <div id="card-4" class="mosaico-card-evento"></div>
-                <div id="card-0" class="mosaico-card-evento"></div>
-                <div id="card-6" class="mosaico-card-evento"></div>
-                <div id="card-5" class="mosaico-card-evento"></div>
-            </div>
-            <div class="divider-m"></div>
-        </div>
-
-        <div class="gap-2rem">
-            <p class="hidden">
-                Todas las actividades de la Bienal son de acceso libre y
-                gratuito, consulta el cronograma completo de actividades
-            </p>
-            <a class="hidden btn-secundarioV2" href="/eventos">Ver Cronograma</a
-            >
-        </div>
-    </section>
-
-    <div class="comment">
-        <div class="opacity-50"></div>
-        <p>
-            Es un orgullo para nosotros, los chaqueños, haber construido un
-            acontecimiento internacional de reconocimiento pleno en la escena
-            escultórica mundial. Grandes escultores del mundo en escena y en
-            acción, trabajando a cielo abierto y en público, esculpiendo piezas
-            que tienen por destino las veredas de Resistencia. Y así se cierra
-            el círculo virtuoso: la obra de arte que pasa a formar parte del
-            paisaje cotidiano haciendo del arte un bien de todos.
-        </p>
-    </div>
-    <section class="art-gallery-section">
-        <div class="wrapped">
-            <h2 class="hidden">
-                Galería de <span class="cursiva">imagenes</span>
-            </h2>
-            <div class="divider-m marginBottom-30"></div>
-
-            <div
-                class="slider"
-                style="--width: 400px; --height: 400px; --quantity: 7"
-            >
-                <div class="list">
-                    <div class="item" style="--position: 1">
-                        <img src={escultor1.src} alt="" />
+<html>
+    <!--
+`output: 'server'` is configured, but this page is static!
+The rest of my site is rendered on demand!
+-->
+    <html>
+        <Layout>
+            <section class="hero-section">
+                <section id="up"></section>
+                <section id="down"></section>
+                <section id="left"></section>
+                <section id="right"></section>
+                <div class="hero-title">
+                    <div>
+                        <h1><span class="cursiva">Bienal</span> del Chaco</h1>
+                        <h2>del 1 al 31 de Julio</h2>
+                        <p>
+                            Una manifestación internacional de arte
+                            contemporáneo que reúne artistas y pueblo en un
+                            mismo espacio, conectando de manera potente a la
+                            gente con el arte y la naturaleza.
+                        </p>
                     </div>
-                    <div class="item" style="--position: 2">
-                        <img src={escultor2.src} alt="" />
-                    </div>
-                    <div class="item" style="--position: 3">
-                        <img src={escultor3.src} alt="" />
-                    </div>
-                    <div class="item" style="--position: 4">
-                        <img src={escultor4.src} alt="" />
-                    </div>
-                    <div class="item" style="--position: 5">
-                        <img src={escultor5.src} alt="" />
-                    </div>
-                    <div class="item" style="--position: 6">
-                        <img src={escultor6.src} alt="" />
-                    </div>
-                    <div class="item" style="--position: 7">
-                        <img src={escultor7.src} alt="" />
+                    <div class="action-btns">
+                        <a href="/eventos">
+                            <button class="btn-primario"
+                                >Descubre la Bienal 2025</button
+                            >
+                        </a>
+                        <a href="/certamen">
+                            <button class="btn-secundario"
+                                >Certamen de Esculturas</button
+                            >
+                        </a>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-    <div class="ubicacion" id="footer-ubicacion">
-        <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3541.0319846974326!2d-58.98358272376322!3d-27.43711391532011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94450c5b04a7481d%3A0xf99641a09f8495d2!2sDomo%20Del%20Centenario!5e0!3m2!1ses-419!2sus!4v1730040666456!5m2!1ses-419!2sus"
-            width="600"
-            height="450"
-            style="border: 0"
-            allowfullscreen=""
-            loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            class="map"></iframe>
-        <div class="card-invitacion">
-            <p>Visita la <span class="cursiva">Bienal</span></p>
-            <p>
-                Avenida de los Inmigrantes 1001 <br />Resistencia, Chaco -
-                Argentina
-            </p>
-        </div>
-    </div>
-    <div class="sponsors" id="footer-sponsors">
-        <img
-            src={logoUTN.src}
-            alt="UTN"
-            title="Logo Universidad Técnologica Nacional"
-        />
-        <img
-            src={catedra.src}
-            alt="Logo Catedra de DSW"
-            title="Catedra de DWS"
-        />
-        <img
-            src={evento.src}
-            alt="Logo Arte y Cultura"
-            title="Arte y cultura"
-        />
-    </div>
-</Layout>
+            </section>
 
-<script src="../scripts/index.ts"></script>
+            <section class="event-section">
+                <h2>
+                    Bienvenido a una <span class="cursiva">experiencia</span> diferente
+                </h2>
+                <p>
+                    Explora y disfruta de todas las emocionantes actividades que
+                    tenemos programadas para ti. ¡No te pierdas ni un solo
+                    momento de diversión y entretenimiento!
+                </p>
+
+                <div class="mosaico-container">
+                    <div class="divider-m"></div>
+
+                    <div class="mosaico-gallery">
+                        <div id="card-1" class="mosaico-card-evento"></div>
+                        <div id="card-2" class="mosaico-card-evento"></div>
+                        <div id="card-3" class="mosaico-card-evento"></div>
+                        <div id="card-4" class="mosaico-card-evento"></div>
+                        <div id="card-0" class="mosaico-card-evento"></div>
+                        <div id="card-6" class="mosaico-card-evento"></div>
+                        <div id="card-5" class="mosaico-card-evento"></div>
+                    </div>
+                    <div class="divider-m"></div>
+                </div>
+
+                <div class="gap-2rem">
+                    <p class="hidden">
+                        Todas las actividades de la Bienal son de acceso libre y
+                        gratuito, consulta el cronograma completo de actividades
+                    </p>
+                    <a class="hidden btn-secundarioV2" href="/eventos"
+                        >Ver Cronograma</a
+                    >
+                </div>
+            </section>
+
+            <div class="comment">
+                <div class="opacity-50"></div>
+                <p>
+                    Es un orgullo para nosotros, los chaqueños, haber construido
+                    un acontecimiento internacional de reconocimiento pleno en
+                    la escena escultórica mundial. Grandes escultores del mundo
+                    en escena y en acción, trabajando a cielo abierto y en
+                    público, esculpiendo piezas que tienen por destino las
+                    veredas de Resistencia. Y así se cierra el círculo virtuoso:
+                    la obra de arte que pasa a formar parte del paisaje
+                    cotidiano haciendo del arte un bien de todos.
+                </p>
+            </div>
+            <section class="art-gallery-section">
+                <div class="wrapped">
+                    <h2 class="hidden">
+                        Galería de <span class="cursiva">imagenes</span>
+                    </h2>
+                    <div class="divider-m marginBottom-30"></div>
+
+                    <div
+                        class="slider"
+                        style="--width: 400px; --height: 400px; --quantity: 7"
+                    >
+                        <div class="list">
+                            <div class="item" style="--position: 1">
+                                <img src={escultor1.src} alt="" />
+                            </div>
+                            <div class="item" style="--position: 2">
+                                <img src={escultor2.src} alt="" />
+                            </div>
+                            <div class="item" style="--position: 3">
+                                <img src={escultor3.src} alt="" />
+                            </div>
+                            <div class="item" style="--position: 4">
+                                <img src={escultor4.src} alt="" />
+                            </div>
+                            <div class="item" style="--position: 5">
+                                <img src={escultor5.src} alt="" />
+                            </div>
+                            <div class="item" style="--position: 6">
+                                <img src={escultor6.src} alt="" />
+                            </div>
+                            <div class="item" style="--position: 7">
+                                <img src={escultor7.src} alt="" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="ubicacion" id="footer-ubicacion">
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3541.0319846974326!2d-58.98358272376322!3d-27.43711391532011!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x94450c5b04a7481d%3A0xf99641a09f8495d2!2sDomo%20Del%20Centenario!5e0!3m2!1ses-419!2sus!4v1730040666456!5m2!1ses-419!2sus"
+                    width="600"
+                    height="450"
+                    style="border: 0"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                    class="map"></iframe>
+                <div class="card-invitacion">
+                    <p>Visita la <span class="cursiva">Bienal</span></p>
+                    <p>
+                        Avenida de los Inmigrantes 1001 <br />Resistencia, Chaco
+                        - Argentina
+                    </p>
+                </div>
+            </div>
+            <div class="sponsors" id="footer-sponsors">
+                <img
+                    src={logoUTN.src}
+                    alt="UTN"
+                    title="Logo Universidad Técnologica Nacional"
+                />
+                <img
+                    src={catedra.src}
+                    alt="Logo Catedra de DSW"
+                    title="Catedra de DWS"
+                />
+                <img
+                    src={evento.src}
+                    alt="Logo Arte y Cultura"
+                    title="Arte y cultura"
+                />
+            </div>
+        </Layout>
+
+        <script src="../scripts/index.ts"></script>
+    </html>
+</html>

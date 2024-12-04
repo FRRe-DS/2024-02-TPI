@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table";
 import NuevoEscultorPopup from "../components/crearEscultor";
 import EditarEscultorPopup from "../components/editarEscultor";
+import { url } from "../utils";
 
 declare module "@tanstack/react-table" {
     interface FilterFns {
@@ -75,8 +76,8 @@ export default function Escultores() {
                     <div className="acciones_container">
                         <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
 
-                        <button onClick={() =>window.location.href = `/ver-escultor/${props.row.original.id}`}>
-                        <i className="material-symbols-outlined">&#xe8f4;</i></button>
+                        <button onClick={() => window.location.href = `/ver-escultor/${props.row.original.id}`}>
+                            <i className="material-symbols-outlined">&#xe8f4;</i></button>
                     </div>
                 );
             },
@@ -87,7 +88,6 @@ export default function Escultores() {
 
     const [data, _setData] = useState<Escultor[]>([]);
     const [globalFilter, setGlobalFilter] = useState("");
-    const url = "http://localhost:8000/api";
 
     async function fetch_escultores() {
         type EscultorResponse = {
