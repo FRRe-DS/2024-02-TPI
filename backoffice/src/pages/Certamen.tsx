@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Search from "../components/search";
 import Menu from "./menu/Menu";
 import "./pages.css";
 import { rankItem } from "@tanstack/match-sorter-utils";
@@ -13,6 +12,7 @@ import {
 } from "@tanstack/react-table";
 
 import AgregarEscultorAevento from "../components/escultorEvento";
+import RankingTable from "../components/ranking";
 
 
 
@@ -41,6 +41,7 @@ interface Evento {
     id: number;
     nombre: string;
     fecha_inicio: string;
+    finalizado: boolean;
   }
 
 export default function Certamen() {
@@ -48,24 +49,24 @@ export default function Certamen() {
   
     const [eventos, setEventos] = useState<Evento[]>([]);
     const [certamen, setCertamen] = useState<Evento | null>(null);
-  
-    useEffect(() => {
-      
-      const fetchEventos = async () => {
-        try {
-          const response = await fetch(`${url}/eventos-bienal/`);
-          const data: Evento[] = await response.json();
-          setEventos(data);
-          if (data.length > 0) {
-            setCertamen(data[0]);
-          }
-        } catch (error) {
-          console.error("Error al obtener eventos:", error);
+
+
+
+    const fetchEventos = async () => {
+      try {
+        const response = await fetch(`${url}/eventos-bienal/`);
+        const data: Evento[] = await response.json();
+        setEventos(data);
+        
+        if (data.length > 0) {
+          setCertamen(data[0]);
         }
-      };
-  
-      fetchEventos();
-    }, []);
+      } catch (error) {
+        console.error("Error al obtener eventos:", error);
+      }
+    };
+
+
   
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
       const selectedId = parseInt(event.target.value, 10);
@@ -159,6 +160,50 @@ export default function Certamen() {
     }
 }
 
+const authToken = localStorage.getItem("token");
+if (!authToken) {
+  window.location.href = "/Login";
+}
+
+const handleEstadoEvento = async () => {
+  if (!certamen) {
+    alert("No hay un evento seleccionado.");
+    return;
+  }
+
+  const nuevoEstado = !certamen.finalizado;
+
+  try {
+    const response = await fetch(`${url}/eventos/${certamen.id}/`, {
+      method: "PATCH", 
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${authToken}`, 
+      },
+      body: JSON.stringify({ finalizado: nuevoEstado }),
+    });
+
+    if (response.ok) {
+         
+      setCertamen({ ...certamen, finalizado: nuevoEstado });
+     
+     
+    } else {
+      console.error("Error al actualizar el estado del evento:", response.statusText);
+    
+    }
+  } catch (error) {
+    console.error("Error al actualizar el estado del evento:", error);
+    
+  }
+};
+
+useEffect(() => {
+
+  fetchEventos();
+}, []);
+
+
 
 useEffect(() => {
   if (certamen) {
@@ -211,20 +256,35 @@ useEffect(() => {
         <div className="section-container">
           <div className="action-btn__container">
            
-      <select
-        id="evento-selector"
-        value={certamen?.id || ""}
-        onChange={handleChange}
-        className="focus-input select-certamen"
-      >
-        {eventos.map((evento) => (
-          <option key={evento.id} value={evento.id}>
-            {evento.nombre}
-          </option>
-        ))}
-      </select>
-           
+            <select
+              id="evento-selector"
+              value={certamen?.id || ""}
+              onChange={handleChange}
+              className="focus-input select-certamen"
+            >
+              {eventos.map((evento) => (
+                <option key={evento.id} value={evento.id}>
+                  {evento.nombre}
+                </option>
+              ))}
+            </select>
+
+            <button
+              className="btn cancelar finalizar"
+              onClick={handleEstadoEvento}
+              disabled={!certamen} 
+            >
+              {certamen?.finalizado ? "Reabrir Evento" : "Finalizar Evento"}
+            </button>
+              
           </div>
+          {certamen?.finalizado &&  
+            <>
+            <h2>Ranking</h2>
+            <RankingTable/>
+            </>
+          }
+         
           <div className="table-container">
                         <table className="event-table">
                             <thead>

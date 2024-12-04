@@ -22,6 +22,10 @@ export default function NuevaEsculturaPopup({ isOpen, onClose, onNuevoEscultura 
   });
 
   const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    window.location.href = "/Login";
+  }
+
   const url = "http://localhost:8000/api";
   const [escultores, setEscultores] = useState<Escultor[]>([]);
   const { id } = useParams();

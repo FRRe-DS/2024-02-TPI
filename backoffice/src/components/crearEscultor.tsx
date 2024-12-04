@@ -21,8 +21,9 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
   const url = "http://localhost:8000/api";
   const authToken = localStorage.getItem("token");
   if (!authToken) {
-    throw new Error("Token no encontrado. Inicia sesión nuevamente.");
+    window.location.href = "/Login";
   }
+
 
 
   const handleInputChange = (

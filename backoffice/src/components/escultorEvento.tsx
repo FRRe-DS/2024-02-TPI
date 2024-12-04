@@ -31,10 +31,9 @@ export default function AgregarEscultorAevento({ isOpen, onClose, onNuevoEsculto
 
   const authToken = localStorage.getItem("token");
   if (!authToken) {
-    alert("Token no encontrado. Por favor, inicia sesión.");
-    onClose();
-    return;
-}
+    window.location.href = "/Login";
+  }
+
 
   const fetchEscultores = async () => {
     try {
@@ -105,7 +104,7 @@ export default function AgregarEscultorAevento({ isOpen, onClose, onNuevoEsculto
 
   
         const escultor = await response.json(); 
-        console.log(escultor)
+      
 
 
         await crearRelacionEventoEscultor(escultor.id);

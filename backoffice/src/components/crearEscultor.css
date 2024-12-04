@@ -119,8 +119,17 @@ textarea {
 }
 
 .cancelar {
-  background-color: var(--grey-100);
+  background-color: var(--grey-100) ;
   color: var(--text-400);
+}
+
+.finalizar{
+  color: var(--primario) !important;
+  font-weight: 500 ;
+}
+
+.finalizar:hover{
+background-color: var(--primario-100);
 }
 
 .center{

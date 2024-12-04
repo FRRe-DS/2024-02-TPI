@@ -38,7 +38,7 @@ export default function NuevoEventoPopup({
 
   const authToken = localStorage.getItem("token");
   if (!authToken) {
-    throw new Error("Token no encontrado. Inicia sesión nuevamente.");
+    window.location.href = "/Login";
   }
 
   useEffect(() => {
