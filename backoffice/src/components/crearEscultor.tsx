@@ -19,7 +19,7 @@ export default function NuevoEscultorPopup({ isOpen, onClose, onNuevoEscultor }:
 
   });
   const [countries, setCountries] = useState<{ id: number; nombre: string }[]>([]);
-  const url = "http://localhost:8000/api";
+
   const authToken = localStorage.getItem("token");
   if (!authToken) {
     window.location.href = "/Login";

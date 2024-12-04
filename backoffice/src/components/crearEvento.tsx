@@ -35,7 +35,6 @@ export default function NuevoEventoPopup({
   const [error, setError] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>("");
 
-  const url = "http://localhost:8000/api";
 
   const authToken = localStorage.getItem("token");
   if (!authToken) {

@@ -83,7 +83,7 @@ async function inicializar() {
 
 		imagenEvento.onerror = function () {
 			this.src =
-				"https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg";
+				"src/assets/img_media_fondo.jpg";
 			this.onerror = null;
 		};
 
