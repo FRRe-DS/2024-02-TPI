@@ -42,6 +42,7 @@ body {
 
 .dyslexia-font {
     font-family: 'Open-Dyslexic', Arial, sans-serif;
+    --cursiva: 'Open-Dyslexic', Arial, sans-serif;
 }
 
 .eventos-tag {
