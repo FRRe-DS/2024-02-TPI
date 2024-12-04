@@ -37,6 +37,10 @@ import { pwaInfo } from "virtual:pwa-info";
             href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&family=Mulish:ital,wght@0,200..1000;1,200..1000&display=swap"
             rel="stylesheet"
         />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/@opendyslexic/opendyslexic@1.0.0/stylesheet.css"
+        />
 
         <link
             rel="stylesheet"
@@ -68,6 +72,13 @@ import { pwaInfo } from "virtual:pwa-info";
 </html>
 
 <script>
+    const letraBtn = document.getElementById("letraBtn");
+    if (letraBtn) {
+        letraBtn.addEventListener("click", () => {
+            document.body.classList.toggle("dyslexia-font");
+        });
+    }
+
     const paginas = ["inicio", "eventos", "certamen"];
     const pathname = window.location.pathname.slice(1);
     // console.log(pathname);

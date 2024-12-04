@@ -47,7 +47,7 @@
 
     <div>
         <button>
-            <i class="material-icons" title="Agrandar texto">&#xeae2;</i>
+            <i class="material-icons" id= "letraBtn" title="Agrandar texto">&#xeae2;</i>
         </button>
         <button><i class="material-icons" title="Contraste">&#xeb37;</i></button
         >
@@ -55,6 +55,9 @@
 </header>
 
 <script>
+
+    const letraBtn = document.getElementById("certamen-tag") as HTMLElement;
+
     const certamenNav = document.getElementById("certamen-tag") as HTMLElement;
     const certamenSelection = document.querySelector(
         ".certamenSelection",
