@@ -80,7 +80,7 @@ export default function Esculturas() {
       );
     },
   }),
-];
+  ];
 
 
   const { id } = useParams();
@@ -113,9 +113,9 @@ export default function Esculturas() {
         iso: string;
         nombre: string;
     };
-};
+  };
 
-type Escultor = {
+  type Escultor = {
     id: number;
     nombre: string;
     apellido: string;
@@ -123,8 +123,8 @@ type Escultor = {
     foto: string;
     bibliografia: string;
     nacionalidad: string;
-};
-const [escultor, setEscultor] = useState<Escultor>();
+  };
+  const [escultor, setEscultor] = useState<Escultor>();
   
   async function fetchEscultor() {
   
@@ -151,9 +151,9 @@ const [escultor, setEscultor] = useState<Escultor>();
         console.error("Error al obtener el escultor:", error);
      
     }
-}
+  }
 
-function copiarQr(id:string | undefined) {
+  function copiarQr(id:string | undefined) {
 
   const url = `https://elrincondelinge.org/qr/?id=${id}`;
 
@@ -164,7 +164,7 @@ function copiarQr(id:string | undefined) {
     .catch((err) => {
       console.error("Error al copiar la URL al portapapeles", err);
     });
-}
+  }
 
 
   const [esculturaEditId, setEsculturaEditId] = useState<number | null>(null); 
