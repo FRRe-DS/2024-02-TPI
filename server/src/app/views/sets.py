@@ -1,6 +1,5 @@
-from datetime import date
 import logging
-
+from datetime import date
 from background_task.models import CompletedTask
 from background_task.tasks import Task
 from django.contrib.auth.models import User
@@ -11,6 +10,7 @@ from rest_framework import authentication, permissions, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.request import Request
+from django.views.decorators.cache import cache_page
 from rest_framework.response import Response
 
 from app.models import (
@@ -26,10 +26,10 @@ from app.models import (
 )
 from app.serializers import (
     AdminSisSerializer,
-    EscultorWriteSerializer,
-    EscultorReadSerializer,
-    EscultorEventoWriteSerializer,
     EscultorEventoReadSerializer,
+    EscultorEventoWriteSerializer,
+    EscultorReadSerializer,
+    EscultorWriteSerializer,
     EsculturaSerializer,
     EventoReadSerializer,
     EventoWriteSerializer,
@@ -181,11 +181,12 @@ def eventos_por_anio(request: Request) -> Response:
 
 
 @extend_schema(
-    summary="Escultores por eventos",
-    description="recuperar escultores de un evento en particular",
+    summary="Escultores por evento",
+    description="Recuperar los escultores de un evento.",
     responses={200: None},
 )
 @api_view(["GET"])
+@cache_page(60 * 15)
 def escultores_por_evento(request: Request) -> Response:
     evento_id = request.query_params.get("evento_id")
 

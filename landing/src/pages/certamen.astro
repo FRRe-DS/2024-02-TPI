@@ -1,34 +1,42 @@
 ---
+export const prerender = false;
 import Layout from "../layouts/Layout.astro";
 import GridEscultores from "../components/GridEscultores.astro";
 import { API_URL } from "astro:env/client";
 
 const escultores_url = `${API_URL}/api/escultores/`;
 const check_puntaje_url = `${API_URL}/api/check_puntaje/`;
+
+const params = Astro.url;
+let anio = Number(params.searchParams.get("anio"));
+if (anio !== 2022 && anio !== 2025) {
+    anio = 2025;
+}
 ---
 
 <Layout>
     <div class="overlay"></div>
     <div class="popUp-container">
-      
-      <article class="popup">
-        <div class="cerrar-popup-container">
-          <button class="cerrar-popup">x</button>
-        </div>
+        <article class="popup">
+            <div class="cerrar-popup-container">
+                <button class="cerrar-popup">x</button>
+            </div>
 
-        <div>
-          <h4 id="nombre-escultor"></h4>
-          <p>
-            Los votos de todos los escultores se contabilizarán para obtener al
-            ganador del certamen
-          </p>
-        </div>
-      </article> 
+            <div>
+                <h4 id="nombre-escultor"></h4>
+                <p>
+                    Los votos de todos los escultores se contabilizarán para
+                    obtener al ganador del certamen
+                </p>
+            </div>
+        </article>
     </div>
     <main>
         <section class="container-title">
             <h1>
-                <span class="cursiva">Bienal</span> Internacional de Esculturas 2025
+                <span class="cursiva">Bienal</span> Internacional de Esculturas {
+                    anio
+                }
             </h1>
             <div id="left2"></div>
             <div id="right2"></div>
@@ -43,18 +51,21 @@ const check_puntaje_url = `${API_URL}/api/check_puntaje/`;
                     </div>
                     <div class="info-certamen">
                         <p class="text-pretty">
-                            Nuevamente, grandes escultores del mundo en escena y en
-                            acción, trabajando a cielo abierto y en público,
-                            esculpiendo piezas que tienen por destino las veredas de
-                            Resistencia.
+                            Nuevamente, grandes escultores del mundo en escena y
+                            en acción, trabajando a cielo abierto y en público,
+                            esculpiendo piezas que tienen por destino las
+                            veredas de Resistencia.
                         </p>
                         <p>
                             <strong
-                                >Participantes: <span id="total-escultores"></span> escultores</strong
+                                >Participantes: <span id="total-escultores"
+                                ></span> escultores</strong
                             >
                         </p>
                         <p>
-                            <strong>Tematica: <span id="tematica"></span></strong>
+                            <strong
+                                >Tematica: <span id="tematica"></span></strong
+                            >
                         </p>
                     </div>
                 </section>

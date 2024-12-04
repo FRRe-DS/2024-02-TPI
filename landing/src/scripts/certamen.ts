@@ -215,8 +215,9 @@ onerror="this.src='https://storage.cloud.google.com/bienaldelchaco/img/media/fon
 							"nombre-escultor",
 						) as HTMLHeadElement;
 
-						nombreEscultor.textContent =
-							escultores[Number(id) - 1].nombre_completo;
+						const idx = anio === 2025 ? Number(id) - 1 : Number(id) - 10;
+						console.log("El indice es", idx);
+						nombreEscultor.textContent = escultores[idx].nombre_completo;
 						const formPopUp = document.createElement("form");
 
 						formPopUp.id = `votoForm-${id}`;

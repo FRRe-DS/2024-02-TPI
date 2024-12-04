@@ -57,6 +57,26 @@ initdb:
     sleep 1
     done
     >&2 echo "Postgres está disponible en el puerto ${DB_PORT}"
+    # ------------------------------------------------------------------------------------
+    REDIS_PORT=${REDIS_PORT:=6379}
+
+    if [[ -z "${SKIP_DOCKER}" ]]
+    then
+        # Run Redis in Docker
+        docker run \
+        -p "${REDIS_PORT}":6379 \
+        -d redis:7.2.1 \
+        redis-server --appendonly yes
+    else
+        >&2 echo "Es probable que Redis ya esté funcionando en el puerto ${REDIS_PORT}"
+    fi
+
+    until redis-cli -p "${REDIS_PORT}" ping | grep -q PONG; do
+        >&2 echo "Redis todavía no está disponible"
+        sleep 1
+    done
+
+    >&2 echo "Redis está disponible en el puerto ${REDIS_PORT}"
 
 check:
     ruff check ./
