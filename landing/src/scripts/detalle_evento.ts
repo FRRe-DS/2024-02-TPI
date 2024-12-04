@@ -8,7 +8,7 @@ const params = getUrlParams();
 const shareButton = document.querySelector(
 	".share-button",
 ) as HTMLButtonElement;
-const urlToShare = `https://erincondelinge.org/detalle_evento?id=${params.id}`;
+const urlToShare = `https://elrincondelinge.org/detalle_evento?id=${params.id}`;
 const messageToShare = "¡Miren ese increíble evento de la Bienal del Chaco!";
 
 async function loadEvento(URL: string, id: string) {
@@ -64,8 +64,7 @@ async function loadEvento(URL: string, id: string) {
 		imagenEvento.title = evento.nombre;
 
 		imagenEvento.onerror = function () {
-			this.src =
-				"src/assets/img_media_fondo.jpg";
+			this.src = "src/assets/img_media_fondo.jpg";
 			this.onerror = null;
 		};
 	} catch (error) {

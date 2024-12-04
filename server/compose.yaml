@@ -1,6 +1,7 @@
 services:
   web:
-    image: restapi.azurecr.io/samples/django-rest:v7
+    build:
+      context: .
     container_name: django_app
     ports:
       - "80:80"
