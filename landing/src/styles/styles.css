@@ -1224,6 +1224,10 @@ center {
 	padding: 3rem clamp(3rem, 2.286rem + 1.905vw, 4rem);
 }
 
+.formulario-voto form{
+	width: 100%;
+}
+
 .recuadro, .recuadroV2{
 	border-radius: 40px;
 	border: 1px solid var(--bg-2);
@@ -1263,7 +1267,7 @@ form {
 	border-radius: 8px;
 	padding: 8px 14px;
 	text-align: left;
-	min-width: 100%;
+
 	width: 100%;
 }
 
@@ -1880,4 +1884,22 @@ form {
 		all: unset;
 		width: 100%;
 	}
+
+	.container-votar,
+.error-container {
+
+	margin-inline: 16px;
+
+}
+
+.formulario-voto {
+
+	padding: 16px;
+}
+
+.formulario-voto form .input-email {
+
+	width: 90%;
+}
+
 }

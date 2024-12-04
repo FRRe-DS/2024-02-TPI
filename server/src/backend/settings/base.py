@@ -116,6 +116,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:4321",
     "https://stupendous-begonia-be137c.netlify.app",
     "https://elrincondelinge.org",
+    "https://admin.elrincondelinge.org",
 ]
 
 CORS_ALLOW_HEADERS = [

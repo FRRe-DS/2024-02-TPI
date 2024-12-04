@@ -20,7 +20,13 @@ export async function getNombreEscultor(id: string) {
 
 		const nombre = escultor.nombre_completo;
 		nombreEscultor.textContent = nombre;
-		const foto = escultor.foto;
+		let foto = ""
+		if (escultor.foto){
+			foto = escultor.foto;
+		}else{
+			foto = "src/assets/img_media_fondo.jpg"
+		}
+		
 		fotoEscultor.src = foto;
 		fotoEscultor.alt = nombre;
 		fotoEscultor.title = nombre;
@@ -88,8 +94,7 @@ async function validar_votante() {
 		}
 
 		try {
-			const response = await fetch(
-				// Le tengo que pasar el id escultor ya que cuando se valide quiero que me redirija a votar.html y necesito el id del escultor que iba a votar.
+			const response = await fetch(				
 				`${API_URL}/validar_votante/?correo=${email}&escultor_id=${escultor_id}`,
 
 				{

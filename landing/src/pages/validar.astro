@@ -1,8 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const { searchParams } = Astro.url;
-const escultor_id = searchParams.get("id");
+// const { searchParams } = Astro.url;
+// const escultor_id = searchParams.get("id");
 ---
 
 <Layout>
@@ -20,7 +20,7 @@ const escultor_id = searchParams.get("id");
                         src="https://lottie.host/8597446d-f3e2-4f2e-b2fa-d20abacad15f/y6wsc1xjhF.lottie"
                         background="transparent"
                         speed="1"
-                        style="width: 200px; height: 200px"
+                        style="width: 150px; height: 150px"
                         loop
                         autoplay></dotlottie-player>
 
@@ -43,7 +43,7 @@ const escultor_id = searchParams.get("id");
                         is:inline
                         src="https://challenges.cloudflare.com/turnstile/v0/api.js"
                         async
-                        defer
+                        defer                                                
                         onload="console.log('Turnstile script loaded')"
                     ></script>
 
