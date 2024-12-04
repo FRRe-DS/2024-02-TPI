@@ -1,6 +1,7 @@
 ---
 import { pwaAssetsHead } from "virtual:pwa-assets/head";
 import { pwaInfo } from "virtual:pwa-info";
+import background from "../assets/background.svg";
 
 import "../styles/reset.css";
 import "../styles/styles.css";
@@ -54,11 +55,7 @@ import "../styles/styles.css";
     </head>
     <body>
         <main>
-            <img
-                src="https://storage.cloud.google.com/bienaldelchaco/img/media/fondo.jpg"
-                alt=""
-                class="qr-background"
-            />
+            <img src={background.src} alt="" class="qr-background" />
             <section class="qr-section">
                 <div class="center-logo">
                     <svg

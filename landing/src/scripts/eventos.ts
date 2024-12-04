@@ -1,17 +1,7 @@
 import { API_URL } from "astro:env/client";
+import { formatearFecha } from "./utils";
 const URL_EVENTOS = `${API_URL}/api/eventos_por_anio/`;
 
-export function formatearFecha(fechaString: string) {
-	const [year, month, day] = fechaString.split("-").map(Number);
-
-	const fecha = new Date(year, month - 1, day);
-
-	const opciones: Intl.DateTimeFormatOptions = {
-		day: "2-digit",
-		month: "short",
-	};
-	return fecha.toLocaleDateString("es-ES", opciones);
-}
 // ------ Get eventos ------
 
 async function loadEventos(url: string) {

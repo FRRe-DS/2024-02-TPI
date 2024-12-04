@@ -1,5 +1,15 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import escultor1 from "../assets/img_media_escultor-1.jpg";
+import escultor2 from "../assets/img_media_escultor-2.jpg";
+import escultor3 from "../assets/img_media_escultor-3.jpg";
+import escultor4 from "../assets/img_media_escultor-4.jpg";
+import escultor5 from "../assets/img_media_escultor-5.jpg";
+import escultor6 from "../assets/img_media_escultor-6.jpg";
+import escultor7 from "../assets/img_media_escultor-7.jpeg";
+import logoUTN from "../assets/img_media_logo-utn.png";
+import catedra from "../assets/img_media_catedra-de-dsw-high-resolution-logo-transparent.png";
+import evento from "../assets/img_media_arte-y-cultura-high-resolution-logo-transparent.png";
 ---
 
 <Layout>
@@ -92,46 +102,25 @@ import Layout from "../layouts/Layout.astro";
             >
                 <div class="list">
                     <div class="item" style="--position: 1">
-                        <img
-                            src="https://storage.cloud.google.com/bienaldelchaco/img/media/escultor-1.jpg"
-                            alt=""
-                        />
+                        <img src={escultor1.src} alt="" />
                     </div>
                     <div class="item" style="--position: 2">
-                        <img
-                            src="https://storage.cloud.google.com/bienaldelchaco/img/media/escultor-2.jpg"
-                            alt=""
-                        />
+                        <img src={escultor2.src} alt="" />
                     </div>
                     <div class="item" style="--position: 3">
-                        <img
-                            src="https://storage.cloud.google.com/bienaldelchaco/img/media/escultor-3.jpg"
-                            alt=""
-                        />
+                        <img src={escultor3.src} alt="" />
                     </div>
                     <div class="item" style="--position: 4">
-                        <img
-                            src="https://storage.cloud.google.com/bienaldelchaco/img/media/escultor-4.jpg"
-                            alt=""
-                        />
+                        <img src={escultor4.src} alt="" />
                     </div>
                     <div class="item" style="--position: 5">
-                        <img
-                            src="https://storage.cloud.google.com/bienaldelchaco/img/media/escultor-5.jpg"
-                            alt=""
-                        />
+                        <img src={escultor5.src} alt="" />
                     </div>
                     <div class="item" style="--position: 6">
-                        <img
-                            src="https://storage.cloud.google.com/bienaldelchaco/img/media/escultor-6.jpg"
-                            alt=""
-                        />
+                        <img src={escultor6.src} alt="" />
                     </div>
                     <div class="item" style="--position: 7">
-                        <img
-                            src="https://storage.cloud.google.com/bienaldelchaco/img/media/escultor-7.jpeg"
-                            alt=""
-                        />
+                        <img src={escultor7.src} alt="" />
                     </div>
                 </div>
             </div>
@@ -157,19 +146,21 @@ import Layout from "../layouts/Layout.astro";
     </div>
     <div class="sponsors" id="footer-sponsors">
         <img
-            src="https://storage.cloud.google.com/bienaldelchaco/img/media/logo-utn.png"
+            src={logoUTN.src}
             alt="UTN"
             title="Logo Universidad Técnologica Nacional"
         />
         <img
-            src="https://storage.cloud.google.com/bienaldelchaco/img/media/catedra-de-dsw-high-resolution-logo-transparent.png"
+            src={catedra.src}
             alt="Logo Catedra de DSW"
             title="Catedra de DWS"
         />
         <img
-            src="https://storage.cloud.google.com/bienaldelchaco/img/media/arte-y-cultura-high-resolution-logo-transparent.png"
+            src={evento.src}
             alt="Logo Arte y Cultura"
             title="Arte y cultura"
         />
     </div>
 </Layout>
+
+<script src="../scripts/index.ts"></script>
