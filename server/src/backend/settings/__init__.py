@@ -35,6 +35,7 @@ if DJANGO_ENV == "prod":
         CSRF_COOKIE_SECURE,
         CSRF_TRUSTED_ORIGINS,
         SESSION_COOKIE_SECURE,
+        CACHES,
     )
 elif DJANGO_ENV == "testing":
     from .testing import (
@@ -48,6 +49,7 @@ else:
     from .development import (
         DATABASES,
         DEBUG,
+        CACHES,
         ALLOWED_HOSTS,
         SECRET_KEY,
         BASE_DIR,
@@ -83,4 +85,5 @@ __all__ = [
     "CSRF_TRUSTED_ORIGINS",
     "SESSION_COOKIE_SECURE",
     "CLOUDFLARE_TURNSTILE_SECRET_KEY",
+    "CACHES",
 ]

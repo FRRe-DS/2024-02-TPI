@@ -1,0 +1,31 @@
+services:
+  web:
+    build:
+      context: .
+    container_name: django_app
+    ports:
+      - "80:80"
+    environment:
+      - DJANGO_ENV=prod
+      - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_URL=${DATABASE_URL}
+      - STORAGE_KEY=${STORAGE_KEY}
+      - CLOUDFLARE_TURNSTILE_SECRET_KEY=${CLOUDFLARE_TURNSTILE_SECRET_KEY}
+      - EMAIL_APP_KEY=${EMAIL_APP_KEY}
+    depends_on:
+      - redis
+    networks:
+      - default
+
+  redis:
+    image: redis:7.2.1
+    ports:
+      - "6379:6379"
+    # command: redis-server
+    restart: always
+    networks:
+      - default
+
+networks:
+  default:
+    driver: bridge

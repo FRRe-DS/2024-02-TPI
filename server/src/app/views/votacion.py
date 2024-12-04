@@ -202,7 +202,7 @@ class EscultorRankingSerializer(serializers.Serializer):
 
 @extend_schema(
     summary="Estado Votacion Endpoint",
-    description="Consulta el estado del servidor y devuelve 204 si está funcionando.",
+    description="Consulta el estado de cada escultor y devuelve una lista ordenada de acuerdo al puntaje.",
     responses={200: EscultorRankingSerializer(many=True)},
 )
 @api_view(["GET"])
