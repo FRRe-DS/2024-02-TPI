@@ -35,6 +35,7 @@ type Escultor = {
   foto: string,
   bibliografia: string,
   nacionalidad: string,
+ 
 };
 
 interface Evento {
@@ -57,9 +58,11 @@ export default function Certamen() {
         const response = await fetch(`${url}/eventos-bienal/`);
         const data: Evento[] = await response.json();
         setEventos(data);
-        
+
         if (data.length > 0) {
           setCertamen(data[0]);
+          
+     
         }
       } catch (error) {
         console.error("Error al obtener eventos:", error);
@@ -150,7 +153,7 @@ export default function Certamen() {
             correo: escultorResp.correo,
             foto: escultorResp.foto,
             bibliografia: escultorResp.bibliografia,
-            nacionalidad: escultorResp.pais?.nombre || "Desconocido",
+            nacionalidad: escultorResp.pais?.nombre || "Desconocido",       
         }));
 
         _setData(escultores);
@@ -281,7 +284,7 @@ useEffect(() => {
           {certamen?.finalizado &&  
             <>
             <h2>Ranking</h2>
-            <RankingTable/>
+            <RankingTable evento_id={certamen.id}/>
             </>
           }
          

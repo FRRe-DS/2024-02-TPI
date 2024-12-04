@@ -2,8 +2,12 @@ import datetime
 import logging
 import urllib.parse
 from io import BytesIO
+from django.http import HttpRequest
 
 import qrcode
+
+
+from app.views.sets import escultores_por_evento
 import ulid
 from django.conf import settings
 from django.db.models import Sum
@@ -18,8 +22,8 @@ from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from app.models import Escultor, Votante, VotoEscultor
-from app.serializers import VotoEscultorSerializer
+from app.models import Escultor, EscultorEvento, Votante, VotoEscultor
+from app.serializers import EscultorReadSerializer, VotoEscultorSerializer
 from app.utils import PositiveInt
 
 
@@ -200,26 +204,55 @@ class EscultorRankingSerializer(serializers.Serializer):
     total_puntaje = serializers.IntegerField()
 
 
+def obtener_escultores_por_evento(evento_id):
+    escultores_evento = EscultorEvento.objects.filter(evento_id=evento_id)
+    if not escultores_evento.exists():
+        return None, {
+            "detail": f"No se encontraron escultores para el evento con id {evento_id}."
+        }
+
+    escultores = Escultor.objects.filter(
+        id__in=escultores_evento.values_list("escultor_id", flat=True)
+    )
+    return escultores, None
+
+
 @extend_schema(
     summary="Estado Votacion Endpoint",
     description="Consulta el estado del servidor y devuelve 204 si está funcionando.",
     responses={200: EscultorRankingSerializer(many=True)},
 )
 @api_view(["GET"])
-@permission_classes([permissions.IsAuthenticated])
-def estado_votacion(_request: Request) -> Response:
+def estado_votacion(request: Request) -> Response:
     """
-    Muestra el estado de la votacion y devuelve un JSON con los datos.
+    Muestra el estado de la votación y devuelve un JSON con los datos.
     """
-    ranking = (
-        Escultor.objects.annotate(
-            total_puntaje=Coalesce(Sum("votoescultor__puntaje"), 0)
+    evento_id = request.query_params.get("evento_id")
+
+    if not evento_id:
+        return Response(
+            {"detail": "Se requiere el parámetro 'evento_id'."},
+            status=status.HTTP_400_BAD_REQUEST,
         )
-        .values("id", "nombre", "apellido", "total_puntaje")
+
+    escultores, error = obtener_escultores_por_evento(evento_id)
+    if error:
+        return Response(error, status=status.HTTP_404_NOT_FOUND)
+
+    # Calcular ranking
+    escultores_ids = [escultor.id for escultor in escultores]
+
+    ranking = (
+        Escultor.objects.filter(id__in=escultores_ids)
+        .annotate(total_puntaje=Coalesce(Sum("votoescultor__puntaje"), 0))
         .order_by("-total_puntaje")
     )
 
-    return Response({"result": list(ranking)}, status=status.HTTP_200_OK)
+    # Serializar los escultores con sus detalles
+    serializer = EscultorReadSerializer(ranking, many=True)
+
+    # Retornar la respuesta con el ranking y los escultores serializados
+    return Response({"ranking": serializer.data}, status=status.HTTP_200_OK)
 
 
 @extend_schema(

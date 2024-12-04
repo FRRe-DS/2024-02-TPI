@@ -1072,7 +1072,7 @@ center {
 	color: var(--bg-2);
 }
 
-.btn-votar, .calificacion{
+.btn-votar, .calificacion, .calificacion-premio{
 	color: var(--text-400);
 	display: inline-flex;
 	gap: 10px;
@@ -1088,6 +1088,27 @@ center {
 	border: 1px solid #111111;
 	transition: 0.4s ease;
 }
+
+.calificacion-premio{
+	border-radius: 50%;
+	padding: 8px 8px;
+}
+
+.calificacion-premio .premio{
+	font-size: 42px !important;
+	color: #4e4e4e;
+}
+
+.premio-1{
+	color: #ffcd29 !important;
+}
+.premio-2{
+	color: #b4b4b4 !important;
+}
+.premio-3{
+	color: #cd7f32 !important;
+}
+
 .btn-votar:hover {
 	border: 1px solid var(--bg-2);
 	background-color: transparent;
@@ -1747,6 +1768,8 @@ form {
     width: 100%;
     max-width: 500px;
 }
+
+
 
 @keyframes loading-wave-animation {
 	0% {
