@@ -1,7 +1,6 @@
 services:
   web:
-    build:
-      context: .
+    image: restapi.azurecr.io/samples/django-rest:v7
     container_name: django_app
     ports:
       - "80:80"
@@ -21,7 +20,7 @@ services:
     image: redis:7.2.1
     ports:
       - "6379:6379"
-    # command: redis-server
+
     restart: always
     networks:
       - default
