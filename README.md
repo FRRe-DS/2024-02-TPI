@@ -296,5 +296,3 @@ Listaremos los requerimientos no funcionales y como fueron implementados:
 ### Links
 
 - **Landing**: https://elrincondelinge.org/
-- **Informe**: https://drive.google.com/file/d/15u_LMyq5K9ODy7BVkdM_XwLg-VZJdNHI/view?usp=sharing
-
