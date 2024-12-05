@@ -173,7 +173,7 @@ async function loadEscultores(baseUrl: string, evento_id:number, estado: boolean
 
 				const contenido = estado
 				? `<div class="calificacion-premio">
-							<i class="material-icons-outlined premio-${puesto} premio" id="certamen-tag-footer">&#xe7af;</i>
+							<i class="material-icons-outlined  premio" id="premio-${puesto}">&#xe7af;</i>
 					</div>`
 				: votado
 				? `<div class="calificacion">

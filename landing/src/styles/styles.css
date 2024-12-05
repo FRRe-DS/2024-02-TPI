@@ -334,7 +334,7 @@ footer {
     margin-top: 15px;
 }
 
-.action-btns a button {
+.action-btns{
     display: inline-flex;
     justify-content: center;
     gap: 20px;
@@ -1089,13 +1089,13 @@ center {
 	color: #4e4e4e;
 }
 
-.calificacion-premio  .premio-1{
+#premio-1{
 	color: #ffcd29 !important;
 }
-.calificacion-premio  .premio-2{
+#premio-2{
 	color: #b4b4b4 !important;
 }
-.calificacion-premio  .premio-3{
+#premio-3{
 	color: #cd7f32 !important;
 }
 
