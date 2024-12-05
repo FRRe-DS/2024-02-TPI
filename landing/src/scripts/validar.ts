@@ -2,7 +2,7 @@ import Toastify from "toastify-js";
 import { API_URL } from "astro:env/client";
 import "toastify-js/src/toastify.css";
 import { getUrlParams } from "./utils";
-valida;
+
 
 const TIME_LIMIT_MINS = 1.0;
 
