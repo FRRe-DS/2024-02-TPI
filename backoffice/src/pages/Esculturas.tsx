@@ -14,6 +14,7 @@ import {
 
 import NuevaEsculturaPopup from "../components/crearEscultura";
 import EditarEsculturaPopup from "../components/editarEscultura";
+import { useNavigate } from "react-router-dom";
 import { url } from "../utils";
 
 
@@ -102,7 +103,7 @@ export default function Esculturas() {
       return (
         <div className="acciones_container">
           <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
-          <button onClick={() =>window.location.href = `/ver-escultura/${props.row.original.id}`}>
+          <button onClick={() => navigate(`/ver-escultura/${props.row.original.id}`)}>
           <i className="material-symbols-outlined">&#xe8f4;</i></button>
         </div>
       );

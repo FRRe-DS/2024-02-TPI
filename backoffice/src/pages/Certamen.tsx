@@ -109,7 +109,7 @@ export default function Certamen() {
                   <div className="acciones_container">
                   
 
-                      <button onClick={() =>window.location.href = `/ver-escultor/${props.row.original.id}`}>
+                      <button onClick={() => navigate(`/ver-escultor/${props.row.original.id}`)}>
                       <i className="material-symbols-outlined">&#xe8f4;</i></button>
                   </div>
               );
