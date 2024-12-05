@@ -13,6 +13,7 @@ import {
 
 import AgregarEscultorAevento from "../components/escultorEvento";
 import RankingTable from "../components/ranking";
+import { url } from "../utils";
 
 
 
@@ -35,6 +36,7 @@ type Escultor = {
   foto: string,
   bibliografia: string,
   nacionalidad: string,
+ 
 };
 
 interface Evento {
@@ -57,9 +59,11 @@ export default function Certamen() {
         const response = await fetch(`${url}/eventos-bienal/`);
         const data: Evento[] = await response.json();
         setEventos(data);
-        
+
         if (data.length > 0) {
           setCertamen(data[0]);
+          
+     
         }
       } catch (error) {
         console.error("Error al obtener eventos:", error);
@@ -115,7 +119,7 @@ export default function Certamen() {
 
   const [data, _setData] = useState<Escultor[]>([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const url = "http://localhost:8000/api";
+
 
   async function fetch_escultores(certamenId: number | null) {
     type EscultorResponse = {
@@ -150,7 +154,7 @@ export default function Certamen() {
             correo: escultorResp.correo,
             foto: escultorResp.foto,
             bibliografia: escultorResp.bibliografia,
-            nacionalidad: escultorResp.pais?.nombre || "Desconocido",
+            nacionalidad: escultorResp.pais?.nombre || "Desconocido",       
         }));
 
         _setData(escultores);
@@ -281,7 +285,7 @@ useEffect(() => {
           {certamen?.finalizado &&  
             <>
             <h2>Ranking</h2>
-            <RankingTable/>
+            <RankingTable evento_id={certamen.id}/>
             </>
           }
          
