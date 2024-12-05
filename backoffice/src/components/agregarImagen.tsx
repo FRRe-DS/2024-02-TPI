@@ -1,37 +1,78 @@
-import { useState } from "react";
-import "./agregarImagen.css";
-import "dayjs/locale/es";
-
+import React, { useState } from "react";
+import "./crearEvento.css"
+import { url } from "../utils";
 
 interface AgregarImagenPopupProps {
   isOpen: boolean;
   onClose: () => void;
+  esculturaId: number | undefined; 
+  onUpdate: () => void; 
 }
 
-export default function AgregarImagenPopup({ isOpen, onClose }: AgregarImagenPopupProps) {
-  const [eventData, setEventData] = useState({
-    fecha_publicacion: "",
-    descripcion:"",
-  });
+export default function AgregarImagenPopup({
+  isOpen,
+  onClose,
+  esculturaId,
+  onUpdate,
+}: AgregarImagenPopupProps) {
+  const [descripcion, setDescripcion] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setEventData({ ...eventData, [name]: value });
-  };
 
-  const [selectedImage, setSelectedImage] = useState("../Camera.png");//
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {//
-    const file = e.target.files?.[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setSelectedImage(imageUrl);
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+     
+      const reader = new FileReader();
+      reader.onloadend = () => setPreviewImage(reader.result as string);
+      reader.readAsDataURL(selectedFile);
     }
   };
 
-  const handleSubmit = () => {
-    console.log("Datos del evento");
-    onClose(); // Cierra el popup al enviar
+  const authToken = localStorage.getItem("token");
+  if (!authToken) {
+    window.location.href = "/Login";
+  }
+
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!file || !descripcion || !esculturaId) {
+      alert("Todos los campos son obligatorios.");
+      return;
+    }
+
+    try {
+     
+      const formData = new FormData();
+      formData.append("imagen", file); 
+      formData.append("descripcion", descripcion);
+      formData.append("escultura_id", esculturaId.toString()); 
+
+   
+      const response = await fetch(`${url}/imagenes/`, {
+        method: "POST",
+        headers: {
+          Authorization: `Token ${authToken}`,
+      },
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log("Imagen subida correctamente.");
+        onUpdate(); 
+        onClose();
+      } else {
+        const errorData = await response.json();
+        console.log(`Error al subir la imagen: ${errorData.detail || "Error desconocido"}`);
+      }
+    } catch (error) {
+      console.error("Error al subir la imagen:", error);
+   
+    }
   };
 
   if (!isOpen) return null;
@@ -40,42 +81,52 @@ export default function AgregarImagenPopup({ isOpen, onClose }: AgregarImagenPop
     <>
       <div className="overlay" onClick={onClose}></div>
       <div className="popup">
-        <h1>Editar Imagen</h1>
-        <form className="form">
-          <div className="imgdates">
-            <div className="image-container">
-              <label htmlFor="img">
-                <img src={selectedImage} alt="Imagen seleccionada" />
+        <h2>Agregar Imagen</h2>
+        <div className="divider"></div>
+        <form onSubmit={handleSubmit} className="form">
+          <div className="one-col-grid">
+  
+            <div className="custom-file-upload">
+              <label htmlFor="file-upload">
+                {previewImage ? (
+                  <div className="cambiar-img-grid">
+                    <img src={previewImage} alt="Vista previa" />
+                  </div>
+                ) : file ? (
+                  <div>
+                    <p>Archivo seleccionado: {file.name}</p>
+                  </div>
+                ) : (
+                  <p className="fill-space">Seleccionar foto</p>
+                )}
               </label>
               <input
+                id="file-upload"
                 type="file"
-                id="img"
                 accept="image/*"
-                onChange={handleImageChange}
+                onChange={handleFileChange}
                 style={{ display: "none" }}
               />
             </div>
-            <div className="personaldates">
-              <h3>Fecha de Publicacion</h3>
-              <div className="fechas">
-                ACA IBA LA FECHA
-                {/* <DateFilter text="XX/XX/XX"/> */}
-              </div>
-              <h3>Biografia</h3>
+
+          
+            <div className="form">
               <textarea
-                name="Descripcion"
-                placeholder="Descripcion"
-                value={eventData.descripcion}
-                onChange={handleInputChange}
+                placeholder="Descripción"
+                value={descripcion}
+                onChange={(e) => setDescripcion(e.target.value)}
+                className="focus-input texarea-bigger"
               />
             </div>
           </div>
+
+          <div className="divider"></div>
           <div className="buttons">
-            <button type="button" className="btn cancelar" onClick={onClose}>
-              Cancelar
+            <button type="button" onClick={onClose} className="btn cancelar">
+              Cerrar
             </button>
-            <button type="button" className="btn aceptar" onClick={handleSubmit}>
-              Guardar
+            <button type="submit" className="btn aceptar">
+              Aceptar
             </button>
           </div>
         </form>
@@ -83,4 +134,3 @@ export default function AgregarImagenPopup({ isOpen, onClose }: AgregarImagenPop
     </>
   );
 }
-

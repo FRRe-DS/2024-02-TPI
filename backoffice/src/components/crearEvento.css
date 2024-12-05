@@ -213,7 +213,8 @@ textarea {
 }
 
 .texarea-bigger{
-  height: 200px;
+ 
+  height: 100px;
 }
 
 .two-col-grid{
@@ -222,12 +223,24 @@ textarea {
   gap: 12px;
 }
 
+.one-col-grid{
+  display: grid;
+  grid-template-columns: 1fr ;
+  gap: 12px;
+}
+
 .cambiar-img{
   width: 100%;
   min-height: 300px;
   height: 100%;
   object-fit: contain;
-  
+}
+
+.cambiar-img-grid{
+  width: 100%;
+  min-height: 300px;
+  height: 100%;
+  object-fit: contain;
 }
 
 .cambiar-img img{

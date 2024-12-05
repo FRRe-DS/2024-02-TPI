@@ -13,6 +13,7 @@ import {
 
 import AgregarEscultorAevento from "../components/escultorEvento";
 import RankingTable from "../components/ranking";
+import { url } from "../utils";
 
 
 
@@ -118,7 +119,7 @@ export default function Certamen() {
 
   const [data, _setData] = useState<Escultor[]>([]);
   const [globalFilter, setGlobalFilter] = useState("");
-  const url = "http://localhost:8000/api";
+
 
   async function fetch_escultores(certamenId: number | null) {
     type EscultorResponse = {

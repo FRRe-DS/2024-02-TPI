@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import Btn from "../components/btn";
+
 import Menu from "./menu/Menu";
 import "./pages.css";
+import "../components/btn.css";
 import "./verEscultura.css";
 import { useParams } from "react-router-dom";
+import { url } from "../utils";
+import AgregarImagenPopup from "../components/agregarImagen";
 
 type Imagen = {
   id: number;
@@ -37,8 +40,6 @@ export default function VerEscultura() {
   const [escultura, setEscultura] = useState<Escultura | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const url = "http://localhost:8000/api";
-
   type EscultorResponse = {
     id: number;
     nombre: string;
@@ -57,7 +58,6 @@ export default function VerEscultura() {
     };
   };
 
-  // Función para obtener los datos de la escultura
   async function fetchEscultura() {
     try {
       const response = await fetch(`${url}/esculturas/${id}`);
@@ -79,7 +79,7 @@ export default function VerEscultura() {
   async function fetchEscultor() {
   
     try {
-        const response = await fetch(`${url}/escultores/${id}/`); // Cambiado para obtener un solo escultor por su ID
+        const response = await fetch(`${url}/escultores/${id}/`); 
         if (!response.ok) {
             throw new Error("Error al obtener el escultor");
         }
@@ -113,47 +113,55 @@ export default function VerEscultura() {
     return <div className="error">{error}</div>;
   }
 
+  const [isPopupOpen, setIsPopupOpen] = useState(false);
+  const handleOpenPopup = () => setIsPopupOpen(true);
+  const handleClosePopup = () => setIsPopupOpen(false);
+
   return (
     <div className="mainContainer">
       <Menu paginaActual={"Esculturas"} />
       <section className="mainSection">
         <header className="header-section">
           <h1 className="header-title">Galería de imágenes</h1>
-          <Btn text="Agregar imagen" />
+          <button className="btn-principal" onClick={handleOpenPopup}>Agregar imagen</button>
+          <AgregarImagenPopup isOpen={isPopupOpen} onClose={handleClosePopup} esculturaId={escultura?.id} onUpdate={fetchEscultura}/>
         </header>
-        <div className="content">
-          {/* Panel de información */}
-          <div className="info-panel">
-            <h2 className="escultura-title">{escultura?.nombre}</h2>
-            <h3 className="section-title">Descripción</h3>
-            <p>{escultura?.descripcion}</p>
-            <h3 className="section-title">Autor</h3>
-            <div className="author-info">
-              <div className="prueba">
-              <img className="imagen"
-                  src={escultor?.foto}
-                />
-              </div>
-            </div>
-            <div>
-                <p className="author-name">{escultor?.nombre_completo}</p>
-                <p className="author-nationality">{escultor?.nacionalidad}</p>
-              </div>
-            <h3 className="section-title">Finalizada</h3>
-            <p>{escultura?.fechaCreacion}</p>
+        <div className="section-container">
+          <div className="grid-ver-escultura">
+          <div className="contenedor-info-escultor-v2">      
+           
+           <div className="container-ver-escultura info-escultor">
+           <h2 className="">{escultura?.nombre}</h2>
+           <p className="color-p-grey">{escultura?.descripcion}</p>
+           <div className="divider"  ></div>
+             <h2 className="">Autor</h2>
+             <div className="group">
+               <h3 >{escultor?.nombre_completo}</h3>
+               <p className="color-p-grey">{escultor?.nacionalidad}</p>
+             </div>
+   
+               <img className="foto-escultor"
+                 src={escultor?.foto}
+               />  
+           </div>
+         
+         </div>
+
+         <div className="image-gallery">
+           {escultura?.imagenes.map((imagen) => (
+             <div className="image-placeholder">
+               <img 
+                 key={imagen.id}
+                 src={imagen.imagen}
+                 alt={`Imagen de ${escultura.nombre}`}
+               />
+             </div>
+           ))}
+         </div>
+
+
           </div>
-          {/* Galería de imágenes */}
-          <div className="image-gallery">
-            {escultura?.imagenes.map((imagen) => (
-              <div className="image-placeholder">
-                <img className="contenedor-info-escultor"
-                  key={imagen.id}
-                  src={imagen.imagen}
-                  alt={`Imagen de ${escultura.nombre}`}
-                />
-              </div>
-            ))}
-          </div>
+          
         </div>
       </section>
     </div>

@@ -40,7 +40,7 @@ export default function RankingTable({ evento_id }: RankingTableProps)
         }
 
         const data = await response.json();
-        console.log("API Response:", data.ranking); 
+       
         setRanking(data.ranking); 
        
       } catch (err: any) {
