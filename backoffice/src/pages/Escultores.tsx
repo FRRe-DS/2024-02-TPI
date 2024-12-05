@@ -13,6 +13,7 @@ import {
 } from "@tanstack/react-table";
 import NuevoEscultorPopup from "../components/crearEscultor";
 import EditarEscultorPopup from "../components/editarEscultor";
+import { useNavigate } from "react-router-dom";
 import { url } from "../utils";
 
 declare module "@tanstack/react-table" {
@@ -46,6 +47,7 @@ type Escultor = {
 
 export default function Escultores() {
     const columnHelper = createColumnHelper<Escultor>();
+    const navigate = useNavigate();
 
     const columns = [
         columnHelper.accessor("nombre", {
@@ -76,7 +78,7 @@ export default function Escultores() {
                     <div className="acciones_container">
                         <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
 
-                        <button onClick={() => window.location.href = `/ver-escultor/${props.row.original.id}`}>
+                        <button onClick={() => navigate(`/ver-escultor/${props.row.original.id}`)}>
                             <i className="material-symbols-outlined">&#xe8f4;</i></button>
                     </div>
                 );

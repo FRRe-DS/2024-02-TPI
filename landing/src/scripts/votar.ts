@@ -65,6 +65,7 @@ if (form) {
 							window.location.href = "/certamen";
 						}, 3000);
 					} else {
+						localStorage.setItem("userEmail", correo);
 						Toastify({
 							text: "¡Error al enviar la calificación, usted ya voto a este escultor!",
 							duration: 3000,

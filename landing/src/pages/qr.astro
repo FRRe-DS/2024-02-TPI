@@ -55,7 +55,7 @@ import "../styles/styles.css";
     </head>
     <body>
         <main>
-            <img src={background.src} alt="" class="qr-background" />
+            <img src="src/assets/img_media_fondo.jpg" alt="" class="qr-background" />
             <section class="qr-section">
                 <div class="center-logo">
                     <svg
@@ -103,10 +103,23 @@ import "../styles/styles.css";
 
     if (escultorId) {
         const qrUrl = `${URL_EVENTOS}/generar_qr/?escultor_id=${escultorId}`;
-
         const setQr = document.getElementById("qr") as HTMLImageElement;
-        setQr.src = qrUrl;
+
+        const updateQr = () => {
+            if (setQr) {
+           
+                const timestamp = new Date().getTime();
+                setQr.src = `${qrUrl}&t=${timestamp}`;
+            }
+        };
+
+      
+        updateQr();
+
+
+        setInterval(updateQr, 60000); 
     } else {
         console.error("No se proporcionó el id del escultor.");
     }
 </script>
+
