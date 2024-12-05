@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from django.db.models import Sum
+from django.db.models.base import Coalesce
 from django.contrib.auth.models import User
 from .models import (
     Votante,
@@ -50,7 +52,7 @@ class EventoReadSerializer(serializers.ModelSerializer):
 class EventosBienalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento
-        fields = ["id", "nombre", "fecha_inicio"]
+        fields = ["id", "nombre", "fecha_inicio", "finalizado"]
 
 
 class EscultorEventoReadSerializer(serializers.ModelSerializer):
@@ -98,10 +100,17 @@ class EscultorReadSerializer(serializers.ModelSerializer):
     esculturas = EsculturaSerializer(many=True, read_only=True)
     nombre_completo = serializers.CharField(source="__str__", read_only=True)
     eventos = EscultorEventoReadSerializer(source="escultorevento_set", many=True)
+    total_puntaje = serializers.SerializerMethodField()
 
     class Meta:
         model = Escultor
         fields = "__all__"
+
+    def get_total_puntaje(self, obj):
+        # Calculamos el total del puntaje usando la relación con VotoEscultor
+        return obj.votoescultor_set.aggregate(
+            total_puntaje=Coalesce(Sum("puntaje"), 0)
+        )["total_puntaje"]
 
 
 class EscultorWriteSerializer(serializers.ModelSerializer):

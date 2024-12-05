@@ -5,7 +5,6 @@ import { getUrlParams } from "./utils";
 
 const URL_EVENTOS = `${API_URL}/api/eventos/`;
 const check_puntaje = `${API_URL}/api/check_puntaje`;
-const escultor_por_evento = `${API_URL}/api/escultores_por_evento/`;
 const email = localStorage.getItem("userEmail");
 const overlay = document.querySelector(".overlay") as HTMLDivElement;
 
@@ -30,7 +29,7 @@ async function inicializar() {
 			tematica.textContent = evento.tematica.nombre;
 		}
 
-		await loadEscultores(escultor_por_evento, evento.id);
+		await loadEscultores(API_URL, evento.id, evento.finalizado);
 	} catch (error) {
 		console.error("Error inicializando la página:", error);
 	}
@@ -122,70 +121,87 @@ function Voto(correo: string, escultor_id: string) {
 
 // ------ Get escultores ------
 
-async function loadEscultores(url: string, evento_id: number) {
+async function loadEscultores(baseUrl: string, evento_id:number, estado: boolean) {
 	try {
+		const url = estado
+			? `${baseUrl}/api/estado_votacion/`
+			: `${baseUrl}/api/escultores_por_evento/`;
+
 		const res = await fetch(`${url}?evento_id=${evento_id}`);
-		const escultores = await res.json();
+		const data = await res.json();
+		
 		const contenedor_escultores = document.querySelector(".grid-escultores");
 		const totalEscultores = document.getElementById(
 			"total-escultores",
 		) as HTMLSpanElement;
 
+    const escultores = estado ? data.ranking : data;
+
+	
+		
 		totalEscultores.textContent = escultores.length;
-
+		let puesto = 0;
 		if (contenedor_escultores) {
-			for (const escultor of escultores) {
-				let votado = false;
-				let puntaje = 0;
-				if (email) {
-					try {
-						const response = await fetch(
-							`${check_puntaje}?correo=${email}&escultor_id=${escultor.id}`,
-						);
-						const result = await response.json();
+      for (const escultor of escultores) {
+        let votado = false;
+        let puntaje = 0;
+        
 
-						votado = result.votado;
-						puntaje = result.puntaje;
-					} catch (error) {
-						console.log(`Error al chequear el mensaje: ${error}`);
-					}
-				}
+      
+        if (estado) {
+          puesto += 1
+        } else {
+       
+          if (email) {
+            try {
+              const response = await fetch(`${check_puntaje}?correo=${email}&escultor_id=${escultor.id}`);
+              const result = await response.json();
+
+              votado = result.votado;
+              puntaje = result.puntaje;
+            } catch (error) {
+              console.log(`Error al chequear el mensaje: ${error}`);
+            }
+          }
+        }
 
 				const article = document.createElement("article");
-
 				article.classList.add("card-escultor");
-				const foto = escultor.foto;
+				const foto = escultor.foto ? escultor.foto :'src/assets/img_media_fondo.jpg' ;
 				const pais = escultor.pais.nombre;
-
 				const NyA = escultor.nombre_completo;
 
+				const contenido = estado
+				? `<div class="calificacion-premio">
+							<i class="material-icons-outlined premio-${puesto} premio" id="certamen-tag-footer">&#xe7af;</i>
+					</div>`
+				: votado
+				? `<div class="calificacion">
+							<p>${puntaje}</p>
+							<i class="material-icons-outlined" id="certamen-tag-footer">&#xe838;</i>
+					</div>`
+				: `<button class="btn-votar" data-id="${escultor.id}">Votar</button>`;
+				
 				article.innerHTML = `
-						<img
-								src="${foto}"
-								loading="lazy"
-								alt="${NyA}"
-								class="escultor-img" 
-onerror="this.src='src/assets/img_media_fondo.jpg'; this.onerror=null;"/>
-						<div class="wrap-card">
-							 <a href="/detalle_escultor?id=${escultor.id}">Ver más</a>
+					<img
+							src="${foto}"
+							loading="lazy"
+							alt="${NyA}"
+							class="escultor-img"
+						"
+					/>
+					<div class="wrap-card">
+							<a href="/detalle_escultor?id=${escultor.id}">Ver más</a>
 							<div class="nombre-origen" id="nombreOrigen-${escultor.id}">
 									<div class="space">
-									<h3 id="nombre-escultor" >${NyA}</h3>
+											<h3 id="nombre-escultor">${NyA}</h3>
 									</div>
-									<p class="cursiva">${pais} </p>
-									 ${
-											votado
-												? `<div class="calificacion">
-												<p>${puntaje}</p>
-												<i class="material-icons-outlined" id="certamen-tag-footer">&#xe838;</i>
-												
-											</div>`
-												: `<button class="btn-votar" data-id="${escultor.id}">Votar</button>`
-										}
+									<p class="cursiva">${pais}</p>
+									${contenido}
 							</div>
-							
-						</div>
-						`;
+					</div>
+			`;
+
 				contenedor_escultores.appendChild(article);
 			}
 

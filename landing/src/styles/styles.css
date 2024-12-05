@@ -1062,22 +1062,41 @@ center {
     color: var(--bg-2);
 }
 
-.btn-votar,
-.calificacion {
-    color: var(--text-400);
-    display: inline-flex;
-    gap: 10px;
-    align-items: center;
-    justify-content: center;
-    padding: 8px 36px;
-    border-radius: 16px;
-    font-size: 1.2rem;
-    background-color: #111111;
-    width: fit-content;
-    margin-top: 10px;
-    transition: all .1s ease;
-    border: 1px solid #111111;
-    transition: 0.4s ease;
+.btn-votar, .calificacion, .calificacion-premio{
+	color: var(--text-400);
+	display: inline-flex;
+	gap: 10px;
+	align-items: center;
+	justify-content: center;
+	padding: 8px 36px;
+	border-radius: 16px;
+	font-size: 1.2rem;
+	background-color: #111111;
+	width: fit-content;
+	margin-top: 10px;
+	transition: all .1s ease;
+	border: 1px solid #111111;
+	transition: 0.4s ease;
+}
+
+.calificacion-premio{
+	border-radius: 50%;
+	padding: 8px 8px;
+}
+
+.calificacion-premio .premio{
+	font-size: 42px !important;
+	color: #4e4e4e;
+}
+
+.premio-1{
+	color: #ffcd29 !important;
+}
+.premio-2{
+	color: #b4b4b4 !important;
+}
+.premio-3{
+	color: #cd7f32 !important;
 }
 
 .btn-votar:hover {
@@ -1748,6 +1767,8 @@ form {
     width: 100%;
     max-width: 500px;
 }
+
+
 
 @keyframes loading-wave-animation {
     0% {

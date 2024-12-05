@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import "../pages/pages.css";
-
+import { url } from "../utils";
 type RankingItem = {
-  id: number;
+  id: number
   nombre: string;
-  apellido: string;
+  nacionalidad: string;
+  correo: string;
+  foto: string;
+  bibliografia: string;
   total_puntaje: number;
 };
+type RankingTableProps = {
+  evento_id: number;
+};
 
-export default function RankingTable()
+
+export default function RankingTable({ evento_id }: RankingTableProps)
    {
   const [ranking, setRanking] = useState<RankingItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -19,23 +26,23 @@ export default function RankingTable()
     window.location.href = "/Login";
   }
 
-  const url = "http://localhost:8000/api";
-
   useEffect(() => {
     const fetchRanking = async () => {
       try {
-        const response = await fetch(`${url}/estado_votacion/`, {
+        const response = await fetch(`${url}/estado_votacion/?evento_id=${evento_id}`, {
           headers: {
             Authorization: `Token ${authToken}`, 
           },
         });
 
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+          console.log(`HTTP error! status: ${response.status}`);
         }
 
         const data = await response.json();
-        setRanking(data.result); 
+       
+        setRanking(data.ranking); 
+       
       } catch (err: any) {
         setError(err.message || "Error fetching ranking data");
       } finally {
@@ -56,7 +63,7 @@ export default function RankingTable()
           <tr>
             <th>Posición</th>
             <th>Nombre</th>
-            <th>Apellido</th>
+            
             <th>Puntaje Total</th>
           </tr>
         </thead>
@@ -64,8 +71,7 @@ export default function RankingTable()
           {ranking.map((item, index) => (
             <tr key={item.id}>
               <td>{index + 1}</td>
-              <td>{item.nombre}</td>
-              <td>{item.apellido}</td>
+              <td>{item.nombre}</td>             
               <td>{item.total_puntaje}</td>
             </tr>
           ))}
