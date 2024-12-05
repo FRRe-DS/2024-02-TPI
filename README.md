@@ -292,3 +292,9 @@ Listaremos los requerimientos no funcionales y como fueron implementados:
 11. Sistema de validación de votantes: para evitar fraudes, posiblemente mediante la integración de un sistema de autenticación externo o captcha.
     
     Implementación: Para añadir seguridad al proceso de voto, usamos una alternativa al CAPTCHA desarrollada por Cloudflare llamada Turnstile, diseñada para distinguir entre tráfico humano y automatizado sin requerir necesariamente resolver desafíos y así reducir la frustración del usuario.
+
+### Links
+
+- **Landing**: https://elrincondelinge.org/
+- **Informe**: https://drive.google.com/file/d/15u_LMyq5K9ODy7BVkdM_XwLg-VZJdNHI/view?usp=sharing
+
