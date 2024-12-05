@@ -334,7 +334,7 @@ footer {
     margin-top: 15px;
 }
 
-.action-btns button {
+.action-btns a button {
     display: inline-flex;
     justify-content: center;
     gap: 20px;
@@ -1584,6 +1584,12 @@ form {
     justify-content: end;
 }
 
+.justify-right{
+    width: 100% !important;
+    display: flex !important;
+    justify-content: end !important;
+}
+
 .cerrar-popup {
     color: #8c8c8c;
     font-size: 24px;
@@ -1607,11 +1613,13 @@ form {
     transform: scale(0.9);
 }
 
-.popup div h4 {
+.h4-center {
     font-size: 1.5rem;
     font-weight: 700;
     text-align: center;
 }
+
+
 
 .popup div p {
     text-align: center;
