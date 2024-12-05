@@ -1,8 +1,10 @@
 import logging
+import dj_database_url
 import psycopg
 import os
 from rich.logging import RichHandler
 from rich.traceback import install
+from decouple import config
 
 install(show_locals=True)
 
@@ -22,11 +24,21 @@ logger = logging.getLogger(__name__)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 INSERT_SQL_FILE = os.path.join(BASE_DIR, "insert_data_real.sql")
 
-DB_HOST = "localhost"
-DB_PORT = 5432
-DB_NAME = "tpi"
-DB_USER = "postgres"
-DB_PASSWORD = "password"
+if config("DJANGO_ENV") == "dev":
+    DB_HOST = "localhost"
+    DB_PORT = 5432
+    DB_NAME = "tpi"
+    DB_USER = "postgres"
+    DB_PASSWORD = "password"
+else:
+    DATABASE_URL: dj_database_url.DBConfig = config(
+        "DATABASE_URL", cast=dj_database_url.parse
+    )
+    DB_HOST = DATABASE_URL.get("HOST")
+    DB_PORT = DATABASE_URL.get("PORT")
+    DB_NAME = DATABASE_URL.get("NAME")
+    DB_USER = DATABASE_URL.get("USER")
+    DB_PASSWORD = DATABASE_URL.get("PASSWORD")
 
 conn = psycopg.connect(
     host=DB_HOST, port=DB_PORT, dbname=DB_NAME, user=DB_USER, password=DB_PASSWORD

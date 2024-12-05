@@ -6,65 +6,6 @@
 </div>
 <br>
 
-<!-- ## Client -->
-<!-- Para trabajar en el cliente utilizamos [pnpm](https://pnpm.io/) con [vite](https://vitejs.dev/) como bundler. -->
-<!-- ``` sh -->
-<!-- cd client -->
-<!-- pnpm install -->
-
-<!-- # Para ejecutar el servidor de desarrollo: -->
-<!-- pnpm run dev -->
-<!-- ``` -->
-
-<!-- ## Server -->
-<!-- ``` sh -->
-<!-- # https://github.com/casey/just -->
-<!-- # En ./src/Justfile o en cualquier subdirectorio: -->
-
-<!-- just initdb -->
-<!-- just test -->
-<!-- just serve dev  # Inicializa el servidor http con Django, configurado para desarrollo. -->
-<!-- just serve prod # Inicializa un servidor http con Gunicorn, configurado para producción. -->
-
-<!-- # Ahora en otra terminal pueden ejecutar curl para ver si la aplicación está funcionando. -->
-<!-- curl -v http://127.0.0.1:8000/health_check/ -->
-<!-- ``` -->
-
-<!-- # API DOCS -->
-
-<!-- Se debe consultar desde `/api/` y en cada uno de los recursos listados a continuación: -->
-
-<!-- ## API Endpoints -->
-
-<!-- - **Votantes:** `/api/votantes/` -->
-<!-- - **Escultores:** `/api/escultores/` -->
-<!-- - **Esculturas:** `/api/esculturas/` -->
-<!-- - **Eventos:** `/api/eventos/` -->
-<!-- - **Imágenes:** `/api/imagenes/` -->
-<!-- - **Países:** `/api/paises/` -->
-<!-- - **Administradores del sistema (AdminSis):** `/api/adminsis/` -->
-<!-- - **Temáticas:** `/api/tematica/` -->
-<!-- - **Lugares:** `/api/lugar/` -->
-
-<!-- ## Autenticación por Token -->
-
-<!-- Para autenticarse y obtener un token, envía una solicitud `POST` al endpoint `get_token/` con el `username` y `password` en el cuerpo de la solicitud y luego este devolverá el token. -->
-
-<!-- ### Usuario Administrador por Defecto -->
-
-<!-- La base de datos por defecto incluye un usuario administrador que puedes utilizar para propósitos de prueba: -->
-
-<!-- - **Usuario:** `admin` -->
-<!-- - **Contraseña:** `admin` -->
-
-<!-- ## Base de Datos -->
-
-<!-- Este proyecto utiliza PostgreSQL como base de datos. Previo a ejecutar la aplicación, corremos un script en python para cargar datos de prueba en ella. Si la base de datos está vacía se insertaran datos automáticamente utilizando el archivo SQL que se encuentran en el directorio `server/src/scripts/`. -->
-
-<!-- Para ver ejemplos de la ejecución, leer el `server/Justfile`. -->
-
-
-
 # Tabla de Contenidos
 
 1.  [TRABAJO PRÁCTICO INTEGRADOR](#org4320643)
@@ -130,13 +71,7 @@ Para organizar este trabajo, en el grupo nos dividimos las tareas de acuerdo a n
 
     Para la base de datos decidimos utilizar [PostgreSQL](https://www.postgresql.org/) por su popularidad y robustez, teniendo en cuenta que es una elección común en aplicaciones similares y que sus capacidades alcanzan y sobra para nuestros objetivos.
     
-    En producción, utilizamos [Neón](https://neon.tech/), una plataforma de base de datos PostgreSQL nativa de la nube, porque nos ofrece los siguientes beneficios:
-    
-    -   Plan gratis suficiente para el proyecto.
-    -   Escala automáticamente según es necesario.
-    -   Gestión automática de nuestra base de datos.
-    
-    Decidimos utilizar este servicio de terceros para tener la base de datos separada del deploy de nuestro backend, evitando así un único punto de fallo, ya que podemos replicar instancias de nuestra base de datos si llega a ser necesario (aunque es una feature dentro de un plan de pago).
+    En producción, utilizamos [Azure Database for PostgreSQL Flexible Server](https://azure.microsoft.com/en-us/products/postgresql), un servicio de base de datos administrado ofrecido por Microsoft Azure.
 
 5.  Redis
 
@@ -144,7 +79,7 @@ Para organizar este trabajo, en el grupo nos dividimos las tareas de acuerdo a n
 
 6.  Docker
 
-    Durante el desarrollo utilizamos [[<https://www.docker.com/>][Docker para utilizar instancias de PostgreSQL y Redis. De esta manera aseguramos determinismo en las versiones que utilizamos cada miembro del equipo en sus máquinas locales.
+    Durante el desarrollo utilizamos [Docker](https://www.docker.com/) para utilizar instancias de PostgreSQL y Redis. De esta manera aseguramos determinismo en las versiones que utilizamos cada miembro del equipo en sus máquinas locales.
     
     También lo utilizamos para crear un contenedor de nuestro servicio web de acuerdo al manifiesto declarado por un Dockerfile y utilizarlo para facilitar la distribución de nuestro servicio web, ya que al ser un lenguaje interpretado, resultaba necesario para evitar problemas.
 
