@@ -49,7 +49,6 @@ class EventoReadSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
 class EventosBienalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Evento

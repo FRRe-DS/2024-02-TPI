@@ -2,12 +2,10 @@ import datetime
 import logging
 import urllib.parse
 from io import BytesIO
-from django.http import HttpRequest
 
 import qrcode
 
 
-from app.views.sets import escultores_por_evento
 import ulid
 from django.conf import settings
 from django.db.models import Sum
@@ -16,11 +14,12 @@ from django.http.response import HttpResponse
 from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import authentication, permissions, serializers, status, viewsets
-from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
+from rest_framework.decorators import api_view
 
 from app.models import Escultor, EscultorEvento, Votante, VotoEscultor
 from app.serializers import EscultorReadSerializer, VotoEscultorSerializer
