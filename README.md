@@ -209,11 +209,7 @@ Listaremos los requerimientos funcionales y como fueron implementados:
 
 5.  Aplicación web Pública para visualizar el próximo evento, y los eventos anteriores. Sitio web público para ver los escultores y sus esculturas.
     
-    Implementación: La aplicación web pública permite a los usuarios finales acceder a información clave sobre la Bienal mediante filtrados:
-    
-    -   Detalles del próximo evento.
-    -   Historial de eventos anteriores.
-    -   Información de escultores y sus esculturas.
+    Implementación: La aplicación web pública permite a los usuarios finales explorar los eventos futuros, así como el certamen de la bienal en curso y certámenes anteriores. En cada certamen, se podrá visualizar la lista de escultores participantes y acceder a los perfiles individuales de cada escultor, donde se visualizaran imagenes del progreso del escultor en el desarrollo de su obra presentada en dicho certamen.
     
     Relaciones de Datos:
     
@@ -231,13 +227,13 @@ Listaremos los requerimientos funcionales y como fueron implementados:
         -   El backoffice consume los endpoints y muestra la información en una interfaz intuitiva.
         -   Uso de rutas dinámicas para perfiles de escultores y detalles de eventos.
 
-6.  Sistema de Votación: Votación por Visitantes: Funcionalidad para que los visitantes puedan votar por sus esculturas favoritas. Deberá estar en el sitio web público. El sistema de votación es con valores del 1 al 5.
+6.  Sistema de Votación, Votación por Visitantes: Funcionalidad para que los visitantes puedan votar por sus esculturas favoritas. Deberá estar en el sitio web público. El sistema de votación es con valores del 1 al 5.
     
-    Implementación: Se implementó un sistema de votación en el sitio web público que permite a los visitantes puntuar sus esculturas favoritas. El sistema utiliza un esquema visual de 5 estrellas para que los usuarios seleccionen el puntaje que desean otorgar.
+    Implementación: Se implementó un sistema de votación en el sitio web público que permite a los visitantes puntuar sus esculturas favoritas. El sistema utiliza un esquema visual de 5 estrellas para que los usuarios seleccionen el puntaje que desean otorgar. Desde el backoffice se podria dar fin al evento y mostrar a los votantes quienes fueron los escultores que ganaron el 1er, 2do y 3er puesto.
 
 7.  Autenticación de Votantes: Sistema para asegurar que cada visitante puede votar solo una vez (por ejemplo, a través de una cuenta de usuario o validación por email).
     
-    Implementación: Al seleccionar la opción de votar por un escultor, el sistema realiza primero una verificación en el localStorage para comprobar si ya hay un correo registrado. Si el correo está presente, significa que el visitante ya validó su identidad, por lo que se permite emitir el voto. En caso contrario, se redirige al usuario a una página donde debe completar un desafío y proporcionar su correo electrónico. Si el correo ingresado no está registrado en la base de datos, el backend envía un email con un botón de confirmación. Al hacer clic en este, el visitante es redirigido a una página que registra el correo en el sistema. Una vez que el correo se registra correctamente (o si ya estaba previamente registrado), el sistema verifica si el visitante ya emitió un voto para esa escultura. Si no lo ha hecho, se guarda el voto; de lo contrario, se muestra un mensaje de error indicando que ya votó.
+    Implementación: Al seleccionar la opción de votar por un escultor, el sistema realiza primero una verificación en el localStorage para comprobar si ya hay un correo registrado. Si el correo está presente, significa que el visitante ya validó su identidad, por lo que se permite emitir el voto. En caso contrario, se redirige al usuario a una pantalla donde debe proporcionar su correo electronico. Un captcha verifica automaticamente que el votante no sea un bot. Si el correo ingresado no está registrado en la base de datos, el backend envía un email de validación con un botón de confirmación. Al hacer clic en este, el visitante es redirigido a una página que registra el correo en el sistema y lo guarda en el localStorage. Una vez que el correo se registra correctamente (o si ya estaba previamente registrado), el sistema verifica si el visitante ya emitió un voto para esa escultura. Si no lo ha hecho, se guarda el voto; de lo contrario, se muestra un mensaje de error indicando que ya votó.
     
     Este proceso garantiza la integridad del sistema de votación, evitando duplicados y asegurando la autenticación de los visitantes.
 
@@ -247,12 +243,11 @@ Listaremos los requerimientos funcionales y como fueron implementados:
 
 9.  Sistema de votación por QR.
     
-    Implementación: En cada escultor estará disponible una pantalla que visualizará un QR que deben cambiar cada 1 (uno) minuto. Nos aseguramos que pasado un minuto el QR deje de ser válido, chequeando en la Landing Page un valor ULID insertado como query parameter en la URL del mismo, aprovechando que el valor tiene el tiempo con una precisión en milisegundos codificado en sí.
+    Implementación: Desde el backoffice se genera un QR que es compartido con el escultor. El escultor podrá compartir este qr en cualquier pantalla. El QR se actualizara cada un minuto. Nos aseguramos que pasado un minuto el QR deje de ser válido, chequeando en la Landing Page un valor ULID insertado como query parameter en la URL del mismo, aprovechando que el valor tiene el tiempo con una precisión en milisegundos codificado en sí.
 
 10. Que la aplicación web (Sitio Público) sea una PWA (Aplicación Web Progresiva)
     
     Implementación: Para lograr que nuestra app web sea una PWA utilizamos plugins en el ecosistema de Astro para generar automáticamente el manifest.json necesario y registrar automáticamente el serviceWorker.js
-
 
 <a id="org59e0137"></a>
 
@@ -268,30 +263,32 @@ Listaremos los requerimientos no funcionales y como fueron implementados:
     
     Implementación: Para cumplir con esto, utilizamos CSS, aprovechando el tag \`media query\` para controlar las clases aplicadas de acuerdo a la resolución y utilizamos features estables en los navegadores más usados.
 
-3.  Autenticación y Autorización: Uso de mecanismos seguros para autenticación y autorización de usuarios. Tanto para el área de gestión como para el área de usuarios para la votación.
+3.  Autenticación y Autorización: Uso de mecanismos seguros para autenticación y autorización de usuarios. Tanto para el área de gestión como para el área de usuarios para la votación. En el área de usuarios (backoffice) se proporciona una cuenta de admin con usuario y contraseña que es generada por los administradores del sistema a traves de django admin.
 
 4.  Protección de Datos: Asegurar que los datos de los escultores y visitantes estén protegidos contra accesos no autorizados.
 
-5.  Tiempo de Respuesta: Garantizar tiempos de respuesta rápidos en la carga de vistas/páginas y procesamiento de datos.
+    Implementación: Solo los usuarios admin tiene permisos para hacer operaciones POST, PUT o PATCH; desde el backoffice.
+
+6.  Tiempo de Respuesta: Garantizar tiempos de respuesta rápidos en la carga de vistas/páginas y procesamiento de datos.
     
     Implementación: Aprovechamos la CDN de Cloudflare, reglas de cache y el cache en el deploy de la REST API para minimizar lo mayor posible los tiempos de respuesta.
 
-6.  Optimización de Imágenes: Asegurar que las fotos subidas estén optimizadas para una carga rápida sin pérdida de calidad significativa.
+7.  Optimización de Imágenes: Asegurar que las fotos subidas estén optimizadas para una carga rápida sin pérdida de calidad significativa.
     
     Implementación: Las imágenes subidas mediante el backoffice son optimizadas y transformadas al formato WEBP.
 
-7.  Usabilidad Interfaz Intuitiva: Diseño de una interfaz que sea fácil de usar tanto para administradores como para visitantes.
+8.  Usabilidad Interfaz Intuitiva: Diseño de una interfaz que sea fácil de usar tanto para administradores como para visitantes.
     
     Implementación: Se diseñó una interfaz de usuario intuitiva, basándose en los principios UI/UX, que garantiza una experiencia fluida y sencilla para todos los tipos de usuarios del sistema.
 
-8.  Accesibilidad: Asegurar que la aplicación sea accesible para usuarios con discapacidades.
+9.  Accesibilidad: Asegurar que la aplicación sea accesible para usuarios con discapacidades.
     
-    Implementación: Hicimos uso correcto de los elementos semánticos en HTML, añadiendo aria-labels donde sean necesarios, añadiendo títulos y descripciones a los elementos. También incluimos un botón en la Landing page para modificar la fuente usada en el sitio por una apta para aquellos con dislexia.
+    Implementación: Hicimos uso correcto de los elementos semánticos en HTML, añadiendo aria-labels donde sean necesarios, añadiendo títulos y descripciones a los elementos. También incluimos un botón en la Landing page para modificar la fuente usada en el sitio por una fuente apta para aquellos con dislexia.
 
-9.  Integración con Redes Sociales: Posibilidad de compartir eventos y esculturas en redes sociales.
+10.  Integración con Redes Sociales: Posibilidad de compartir eventos y esculturas en redes sociales.
     
-    Implementación: Para compartir los eventos añadimos un botón de compartir en el detalle de cada evento y escultor, soportamos compartir a WhatsApp, Twitter e Instagram.
+     Implementación: Para compartir los eventos añadimos un botón de compartir en el detalle de cada evento y escultor, soportamos compartir a WhatsApp, Twitter y Facebook.
 
-10. Sistema de validación de votantes: para evitar fraudes, posiblemente mediante la integración de un sistema de autenticación externo o captcha.
+11. Sistema de validación de votantes: para evitar fraudes, posiblemente mediante la integración de un sistema de autenticación externo o captcha.
     
     Implementación: Para añadir seguridad al proceso de voto, usamos una alternativa al CAPTCHA desarrollada por Cloudflare llamada Turnstile, diseñada para distinguir entre tráfico humano y automatizado sin requerir necesariamente resolver desafíos y así reducir la frustración del usuario.
