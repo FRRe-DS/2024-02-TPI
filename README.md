@@ -6,6 +6,26 @@
 </div>
 <br>
 
+Grupo N°2:
+
+- Acosta Quintana, Lautaro.
+- Saucedo, Gonzalo Nicolás.
+- Stegmayer, Tobías Sebastián.
+- Vallejos, Enzo Nahuel.
+- Niveyro, Ivan.
+
+
+Profesores:
+- Jorge Eduardo Villaverde.
+- Jose A. Fernández.
+
+
+Cátedra: Desarrollo de Software.
+
+
+
+Ciclo 2024 - 2do cuatrimestre
+
 # Tabla de Contenidos
 
 1.  [TRABAJO PRÁCTICO INTEGRADOR](#org4320643)
