@@ -66,50 +66,52 @@ function limitarPalabras(texto: string, max: number): string {
 
 
 export default function Esculturas() {
-  const columnHelper = createColumnHelper<Escultura>();
-  const columns = [
- 
-  columnHelper.accessor("nombre", {
-    header: () => "Nombre",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("escultor", {
-    header: () => "Escultor",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("nacionalidad", {
-    header: () => "Nacionalidad",
-    cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.accessor("descripcion", {
-    header: () => "Descripción",
-    cell: (info) => (
-      <span title={info.getValue()}>{limitarPalabras(info.getValue(), 6)}</span>
-    ),
-    footer: (info) => info.column.id,
-  }),
-  columnHelper.display({
-    id: "acciones",
-    header: "Acciones",
-    cell: (props) => {
-      const openEditPopup = (id: number) => {
-        setEsculturaEditId(id);
-        setIsPopupEditOpen(true);
-      };
-  
-      return (
-        <div className="acciones_container">
-          <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
-          <button onClick={() => navigate(`/ver-escultura/${props.row.original.id}`)}>
-          <i className="material-symbols-outlined">&#xe8f4;</i></button>
-        </div>
-      );
-    },
-  }),
-];
+    const columnHelper = createColumnHelper<Escultura>();
+
+    const navigate = useNavigate();
+    const columns = [
+
+        columnHelper.accessor("nombre", {
+            header: () => "Nombre",
+            cell: (info) => info.renderValue(),
+            footer: (info) => info.column.id,
+        }),
+        columnHelper.accessor("escultor", {
+            header: () => "Escultor",
+            cell: (info) => info.renderValue(),
+            footer: (info) => info.column.id,
+        }),
+        columnHelper.accessor("nacionalidad", {
+            header: () => "Nacionalidad",
+            cell: (info) => info.renderValue(),
+            footer: (info) => info.column.id,
+        }),
+        columnHelper.accessor("descripcion", {
+            header: () => "Descripción",
+            cell: (info) => (
+                <span title={info.getValue()}>{limitarPalabras(info.getValue(), 6)}</span>
+            ),
+            footer: (info) => info.column.id,
+        }),
+        columnHelper.display({
+            id: "acciones",
+            header: "Acciones",
+            cell: (props) => {
+                const openEditPopup = (id: number) => {
+                    setEsculturaEditId(id);
+                    setIsPopupEditOpen(true);
+                };
+
+                return (
+                    <div className="acciones_container">
+                        <button onClick={() => openEditPopup(props.row.original.id)}><i className="material-symbols-outlined">&#xe3c9;</i></button>
+                        <button onClick={() => navigate(`/ver-escultura/${props.row.original.id}`)}>
+                            <i className="material-symbols-outlined">&#xe8f4;</i></button>
+                    </div>
+                );
+            },
+        }),
+    ];
 
 
 
